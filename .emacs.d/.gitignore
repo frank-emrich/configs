@@ -1,0 +1,11 @@
+*.lock
+.emacs.desktop
+elpa
+auto-save-list
+.python-environments
+node_modules
+var
+snippes
+package-lock.json
+recentf
+srecode-map.el
