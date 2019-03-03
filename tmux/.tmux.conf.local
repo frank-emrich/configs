@@ -312,3 +312,9 @@ bind-key -n C-F5 send-key F5
 bind-key -n C-F6 send-key F6
 bind-key -n C-F7 send-key F7
 bind-key -n C-F8 send-key F8
+
+#rebind the arrow keys for switching panes to be non-repeating
+bind-key -T prefix       Up                select-pane -U
+bind-key -T prefix       Down              select-pane -D
+bind-key -T prefix       Left              select-pane -L
+bind-key -T prefix       Right             select-pane -R
