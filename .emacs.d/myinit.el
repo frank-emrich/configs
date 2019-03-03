@@ -201,6 +201,8 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 ; no tool bar
 (tool-bar-mode -1)
 
+;hide menu bar (the one at the top)
+(menu-bar-mode -1)
 
 ; auto completion
 (use-package company
@@ -211,10 +213,12 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 (setq company-auto-complete 'company-explicit-action-p)
 
 
-; on-the-fly error checking
-;; (use-package flycheck
-;;   :defer 5
-;;   :init (global-flycheck-mode))
+; move C-SPC to C-S-SPC so that company can use C-SPC
+(global-set-key (kbd "C-S-SPC") 'set-mark-command)
+(global-set-key (kbd "\200") 'set-mark-command)
+
+(global-set-key (kbd "C-SPC") 'company-complete)
+(global-set-key (kbd "C-@") 'company-complete)
 
 
 
@@ -222,15 +226,12 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 (setq-default show-trailing-whitespace t)
 (setq-default indicate-empty-lines t)
 
+
+; on-the-fly error checking
 (use-package flycheck)
 (add-hook 'after-init-hook #'global-flycheck-mode)
 
-(global-set-key (kbd "C-S-SPC") 'set-mark-command)
-(global-set-key (kbd "\200") 'set-mark-command)
 
-(global-set-key (kbd "C-SPC") 'company-complete)
-(global-set-key (kbd "C-@") 'company-complete)
-;
 
 
 
@@ -238,7 +239,7 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 (load "~/.emacs.d/ocaml")
 (load "~/.emacs.d/python")
 (load "~/.emacs.d/haskell")
-;(load "~/.emacs.d/links")
+(load "~/.emacs.d/links")
 
 
 
@@ -260,20 +261,16 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 (use-package ample-theme)
 (load-theme 'ample t t)
 (enable-theme 'ample)
-(set-frame-font "Source Code Pro-12")
 
 
 (global-linum-mode t) ;show line numbers
-;(setq linum-format "%4d\u2502") ; separate line number from text with solid line
-(setq linum-format "%4d \u2502 ")
+(setq linum-format "%4d \u2502 ") ; separate line number from text with solid line
 ;(setq-default left-margin-width 10 right-margin-width 8) ; Define new widths.
 ; (set-window-buffer nil (current-buffer)) ; Use them now.
 ;(set-face-attribute 'fringe nil :background "#2E2920" :foreground "#2E2920")
 (column-number-mode 1)
-(show-paren-mode 1) ;show matching parantheses
+(show-paren-mode 1) ; show matching parantheses
 
-;(use-package sr-speedbar)
-;(global-set-key (kbd "C-S-s") 'sr-speedbar-toggle)
 
 
 
@@ -287,16 +284,10 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 
 ;(use-package git-timemachine)
 
-
+; highlight differences with version control base
 (use-package git-gutter)
 (global-git-gutter-mode)
 (git-gutter:linum-setup)
-; highlight differences with version control base
-;(use-package diff-hl)
-;(add-hook 'emacs-startup-hook (lambda ()
-;(global-diff-hl-mode)
-;(diff-hl-flydiff-mode)
-;  ))
 
 
 (defun my/smarter-move-beginning-of-line (arg)
@@ -400,7 +391,7 @@ point reaches the beginning or end of the buffer, stop there."
   :bind (("C-c h" . helm-mini)
          ("C-h a" . helm-apropos)
          ("C-x C-b" . helm-buffers-list)
-         ("C-x b" . helm-buffers-list)
+         ("C-x b" . helm-for-files)
          ("M-y" . helm-show-kill-ring)
          ("M-x" . helm-M-x)
 	 ("C-x C-f" . helm-find-files)
@@ -416,13 +407,9 @@ point reaches the beginning or end of the buffer, stop there."
   :bind (("C-h b" . helm-descbinds)
          ("C-h w" . helm-descbinds)))
 
+; quickly shows all occurences inside the current file
 (use-package helm-swoop)
 
-;; (global-set-key (kbd "M-x") #'helm-M-x)
-;; (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
-;; (global-set-key (kbd "C-x C-f") #'helm-find-files)
-;; (global-set-key (kbd "C-x b") #'helm-for-files)
-;; (helm-mode 1)
 
 
 
@@ -431,23 +418,6 @@ point reaches the beginning or end of the buffer, stop there."
 					; save and restore buffers
 (if window-system
 (desktop-save-mode 1) )
-
-
-
-;(use-package back-button
-;  :if window-system
-;  :config
-;(back-button-mode 1)
-;; write all marks to global mark ring
-;(fset 'push-mark 'back-button-push-mark-local-and-global)
-;(global-set-key (kbd "M-<left>") 'back-button-global-backward)
-;(global-set-key (kbd "M-<right>") 'back-button-global-forward)
-;;(global-set-key (kbd "C-x SPC") 'rectangle-mark-mode) ;revert rebinding by back-button
-;  )
-;
-
-
-
 
 
 
@@ -473,10 +443,6 @@ point reaches the beginning or end of the buffer, stop there."
 ;debugger
 ;(load-library "realgud")
 
-;(global-set-key (kbd "C-c <left>")  'windmove-left)
-;(global-set-key (kbd "C-c <right>") 'windmove-right)
-;(global-set-key (kbd "C-c <up>")    'windmove-up)
-;(global-set-key (kbd "C-c <down>")  'windmove-down)
 
 
 
@@ -510,14 +476,8 @@ point reaches the beginning or end of the buffer, stop there."
 
 
 
-;(use-package spaceline)
-;(require 'spaceline-config)
-;(spaceline-spacemacs-theme)
-;(spaceline-helm-mode 1)
 
-
-
-;synchronize clipboard between emacs and X server
+;synchronize clipboard between emacs and X server, even in terminal mode
 (load "~/.emacs.d/custom-packages/termclipboard.el")
 
 
@@ -526,19 +486,8 @@ point reaches the beginning or end of the buffer, stop there."
 (load "~/.emacs.d/custom-packages/revbufs.el")
 (require 'revbufs)
 (global-auto-revert-mode)
-;
-;
-;(use-package buffer-flip
-;  :ensure t
-;  :bind  (("C-<tab>" . buffer-flip)
-;          :map buffer-flip-map
-;          ( "C-<tab>" .   buffer-flip-forward)
-;          ( "C-S-<tab>" . buffer-flip-backward)
-;          ( "C-ESC" .     buffer-flip-abort))
-;  :config
-;  (setq buffer-flip-skip-patterns
-;        '("^\\*helm\\b"
-;          "^\\*swiper\\*$")))
+
+
 
 
 ;; (defun compile-pkg (&optional command startdir)
@@ -711,50 +660,8 @@ point reaches the beginning or end of the buffer, stop there."
 (global-set-key (kbd "C-x <up>")    'windmove-up)
 (global-set-key (kbd "C-x <down>")  'windmove-down)
 
-;; (use-package pc-bufsw)
-;; (global-set-key [f12] 'pc-bufsw-mru)
-;; (global-set-key [f11] 'pc-bufsw-lru)
 
 
-;(load "~/.emacs.d/custom-packages/swbuff.el")
-;(load "~/.emacs.d/custom-packages/swbuff-x.el")
-;(use-package iflipb)
-
-
-;; auto off function iflipb'ing
-;;(setq my-iflipb-auto-off-timeout-sec 0.75)
-;;(setq my-iflipb-auto-off-timer-canceler-internal nil)
-;;(setq my-iflipb-ing-internal nil)
-;;(defun my-iflipb-auto-off ()
-;;  (message nil)
-;;  (setq my-iflipb-auto-off-timer-canceler-internal nil
-;;	my-iflipb-ing-internal nil)
-;;  )
-;;(defun my-iflipb-next-buffer (arg)
-;;  (interactive "P")
-;;  (iflipb-next-buffer arg)
-;;  (if my-iflipb-auto-off-timer-canceler-internal
-;;      (cancel-timer my-iflipb-auto-off-timer-canceler-internal))
-;;  (run-with-idle-timer my-iflipb-auto-off-timeout-sec 0 'my-iflipb-auto-off)
-;;  (setq my-iflipb-ing-internal t)
-;;  )
-;;(defun my-iflipb-previous-buffer ()
-;;  (interactive)
-;;  (iflipb-previous-buffer)
-;;  (if my-iflipb-auto-off-timer-canceler-internal
-;;      (cancel-timer my-iflipb-auto-off-timer-canceler-internal))
-;;  (run-with-idle-timer my-iflipb-auto-off-timeout-sec 0 'my-iflipb-auto-off)
-;;  (setq my-iflipb-ing-internal t)
-;;  )
-;;(global-set-key (kbd "<C-tab>") 'my-iflipb-next-buffer)
-;;(global-set-key (kbd "<C-S-tab>") 'my-iflipb-previous-buffer)
-;;(defun iflipb-first-iflipb-buffer-switch-command ()
-;;  "Determines whether this is the first invocation of
-;;  iflipb-next-buffer or iflipb-previous-buffer this round."
-;;  (not (and (or (eq last-command 'my-iflipb-next-buffer)
-;;		(eq last-command 'my-iflipb-previous-buffer))
-;;	    my-iflipb-ing-internal)))
-;;
 ;;(use-package imenu-list)
 ;;(global-set-key (kbd "C-S-i") #'imenu-list-smart-toggle)
 
@@ -817,8 +724,7 @@ point reaches the beginning or end of the buffer, stop there."
                   (interactive)
                   (scroll-up 3))))
 
-;hide menu bar (the one at the top)
-(menu-bar-mode -1)
+
 
 ;no automatic indent on newline
 (electric-indent-mode 0)
@@ -828,16 +734,10 @@ point reaches the beginning or end of the buffer, stop there."
 (set-face-attribute 'hl-line nil :inherit nil :background "gray6")
 
 
+;delete trailing whitespace on save
 (add-hook 'prog-mode-hook
 	  (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
 
-;(global-unset-key (kbd "C-j"))
-;(define-key global-map (kbd "<C-^>") 'avy-goto-word-0)
-;(global-set-key (kbd "C-j") 'avy-goto-word-0)
-;(global-unset-key (kbd "C-_"))
-; (global-unset-key [C-_])
-;(global-set-key (kbd "<C-backspace>") 'backward-kill-word)
-;(global-set-key [C-backspace] 'kill-whole-line)
 
 
 (define-key undo-tree-map "\C-_" nil)
@@ -845,17 +745,6 @@ point reaches the beginning or end of the buffer, stop there."
 
 (global-set-key (kbd "C-k") 'kill-whole-line)
 
-;Hack: only if we explicitly want to copy/kill something, put it in the system clipboard
-(defun copy-once-to-clipboard ()
-  (interactive)
-;    (setq interprogram-cut-function 'xsel-cut-function)
-  (let ((interprogram-cut-function 'xsel-cut-function))
-    (kill-ring-save)
-  )
-)
-; )
-;(setq interprogram-cut-function 'xsel-cut-function)
-;(global-set-key [M-w] 'copy-once-to-clipboard)
 
 
 ; cycle through buffers with C-Tab
