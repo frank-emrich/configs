@@ -282,7 +282,8 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
     (setq undo-tree-visualizer-timestamps t)
     (setq undo-tree-visualizer-diff t)))
 
-;(use-package git-timemachine)
+;easily step through file's history
+(use-package git-timemachine)
 
 ; highlight differences with version control base
 (use-package git-gutter)
