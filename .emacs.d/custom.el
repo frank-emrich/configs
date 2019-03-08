@@ -11,6 +11,16 @@
  '(desktop-restore-frames nil)
  '(diff-hl-margin-mode t)
  '(inhibit-startup-screen t)
+ '(lsp-eldoc-enable-hover nil)
+ '(lsp-eldoc-enable-signature-help nil)
+ '(lsp-ui-flycheck-enable nil)
+ '(lsp-ui-imenu-enable nil)
+ '(lsp-ui-peek-enable nil)
+ '(lsp-ui-sideline-ignore-duplicate t)
+ '(lsp-ui-sideline-show-code-actions nil)
+ '(lsp-ui-sideline-show-diagnostics nil)
+ '(lsp-ui-sideline-show-hover t)
+ '(lsp-ui-sideline-update-mode (quote line))
  '(package-selected-packages
    (quote
     (ocp-indent merlin company-jedi git-gutter flycheck esup hungry-delete tuareg company imenu-list iflipb pc-bufsw helm-swoop helm-descbinds visual-regexp-steroids golden-ratio-scroll-screen avy ace-jump-mode multiple-cursors ample-theme visual-regexp projectile buffer-flip spaceline move-text rainbow-delimiters use-package undo-tree tabbar-ruler sr-speedbar helm-themes helm git-timemachine diff-hl darcula-theme benchmark-init back-button auto-compile)))
@@ -22,6 +32,10 @@
  ;; If there is more than one, they won't work right.
  '(avy-lead-face-0 ((t (:background "color-19" :foreground "#bdbdb3"))))
  '(avy-lead-face-2 ((t (:background "color-22" :foreground "#bdbdb3"))))
+ '(lsp-face-highlight-read ((t (:background "gray13" :underline t))))
+ '(lsp-face-highlight-textual ((t (:background "gray13" :underline t))))
+ '(lsp-face-highlight-write ((t (:inherit nil :background "gray13" :underline t))))
+ '(lsp-ui-sideline-current-symbol ((t (:background "gray13" :foreground "white" :box (:line-width 2 :color "white") :weight bold :height 0.99))))
  '(rainbow-delimiters-depth-1-face ((t (:inherit rainbow-delimiters-base-face :foreground "gold"))))
  '(rainbow-delimiters-depth-2-face ((t (:inherit rainbow-delimiters-base-face :foreground "green"))))
  '(rainbow-delimiters-depth-3-face ((t (:inherit rainbow-delimiters-base-face :foreground "magenta"))))

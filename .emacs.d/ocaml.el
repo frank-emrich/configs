@@ -1,29 +1,47 @@
-; requires ocaml language server: npm install ocaml-language-server
+; requires ocaml language server & merlin
 
 
-;(add-to-list 'load-path "~/.emacs.d/custom-packages/caml/caml-20171209.1232")
-(use-package tuareg
- ; :defer t
-  )
-
+(use-package tuareg)
 (use-package merlin)
-(use-package ocp-indent)
+;(use-package ocp-indent)
 
-;; (require 'caml)
-;; ;; (use-package caml
-;; ;; ;  :defer t
-;; ;;   )
 
-;(use-package lsp-ocaml
-;  :hook tuareg-mode
-;  ;:init (add-hook 'tuareg-mode-hook #'lsp-ocaml-enable)
-;  ;:after tuareg
-;  )
 
-(add-hook 'tuareg-mode-hook 'merlin-mode)
 
-(with-eval-after-load 'company
- (add-to-list 'company-backends 'merlin-company-backend))
+;Load the appropriate modes
+(if
+  (executable-find "ocamlmerlin")
+  (progn
+    (add-hook 'tuareg-mode-hook 'merlin-mode)
+    (if
+      (executable-find "ocaml-language-server")
+      (add-hook 'tuareg-mode-hook 'lsp-noquery))))
+
+
+
+
+; When opening ml files, warn if helpers not available
+(defun check-ocaml-helpers ()
+  (if
+      (executable-find "ocamlmerlin")
+      (progn
+	(unless
+	  (executable-find "ocp-indent")
+	  (warn-echo-area "ocp-indent not found"))
+	(unless
+	  (executable-find "ocaml-language-server")
+	  (warn-echo-area "ocaml-language-server not found")))
+      (warn-echo-area "ocamlmerlin not found")))
+
+
+
+(add-hook 'tuareg-mode-hook (lambda () (run-at-time "3 sec" nil 'check-ocaml-helpers)))
+
+
+
+
+;(with-eval-after-load 'company
+; (add-to-list 'company-backends 'merlin-company-backend))
 
 ;(add-hook 'tuareg-mode-hook #'lsp-ocaml-enable)
 ;(add-hook 'caml-mode-hook #'lsp-ocaml-enable)

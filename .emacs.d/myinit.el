@@ -198,6 +198,76 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 
 
 
+
+
+
+(defun warn-echo-area (format &rest args)
+  "Display lsp warn message with FORMAT with ARGS."
+  (message "%s :: %s" (propertize "Warning" 'face 'warning) (apply #'format format args)))
+
+
+
+;lsp config
+(defun lsp--original-calculate-root (session file-name)
+  "Calculate project root for FILE-NAME in SESSION."
+  (and
+   (->> session
+        (lsp-session-folders-blacklist)
+        (--first (f-ancestor-of? it file-name))
+        not)
+   (or
+    (when lsp-auto-guess-root
+      (lsp--suggest-project-root))
+    (lsp-find-session-folder session file-name)
+    (unless lsp-auto-guess-root
+(lsp--find-root-interactively session)))))
+
+(defun lsp--noquery-calculate-root (session file-name)
+  "Calculate project root for FILE-NAME in SESSION."
+  (and
+   (->> session
+        (lsp-session-folders-blacklist)
+        (--first (f-ancestor-of? it file-name))
+        not)
+   (or
+    (when lsp-auto-guess-root
+      (lsp--suggest-project-root))
+    (lsp-find-session-folder session file-name)
+    (unless lsp-auto-guess-root nil))))
+
+
+
+(use-package lsp-mode
+  :commands lsp
+  :config
+   (require 'lsp-clients)
+   (fset 'lsp--calculate-root 'lsp--noquery-calculate-root)
+)
+
+
+;version of 'lsp that will not interactively ask to specify project root
+(defun lsp-noquery ()
+  (interactive)
+  (progn
+    (fset 'lsp--calculate-root 'lsp--noquery-calculate-root)
+    (lsp)
+    (fset 'lsp--calculate-root 'lsp--original-calculate-root))
+)
+
+
+; after loading file with active LSP, set the LSP workspace root as default-directory
+(defun set-default-dir-lsp-root ()
+  (setq default-directory (lsp-workspace-root)))
+(add-hook 'lsp-after-open-hook 'set-default-dir-lsp-root)
+
+
+(use-package lsp-ui :commands lsp-ui-mode)
+(use-package company-lsp :commands company-lsp)
+
+
+
+
+
 ; move C-SPC to C-S-SPC so that company can use C-SPC
 (global-set-key (kbd "C-S-SPC") 'set-mark-command)
 (global-set-key (kbd "\200") 'set-mark-command)
