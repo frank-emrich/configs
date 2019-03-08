@@ -22,7 +22,7 @@
  '(lsp-ui-sideline-update-mode (quote line))
  '(package-selected-packages
    (quote
-    (lsp-haskell haskell-mode company-lsp lsp-ui lsp-mode ocp-indent merlin company-jedi git-gutter flycheck esup hungry-delete tuareg company imenu-list iflipb pc-bufsw helm-swoop helm-descbinds visual-regexp-steroids golden-ratio-scroll-screen avy multiple-cursors visual-regexp projectile buffer-flip move-text rainbow-delimiters use-package undo-tree helm-themes helm git-timemachine diff-hl auto-compile)))
+    (pc-bufsw golden-ratio-scroll-screen avy multiple-cursors move-text rainbow-delimiters helm-swoop helm-descbinds helm git-gutter git-timemachine undo-tree lsp-haskell haskell-mode merlin tuareg company-lsp lsp-ui lsp-mode company use-package)))
  '(recentf-max-saved-items 40))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
