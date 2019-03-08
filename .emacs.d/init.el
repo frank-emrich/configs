@@ -10,4 +10,4 @@
 ;(setq spacemacs-start-directory "~/.emacs.d/spacemacs/")
 ;(load-file (concat spacemacs-start-directory "init.el"))
 
-(load "~/.emacs.d/myinit")
+(load-file "~/.emacs.d/myinit.el")

@@ -1,22 +1,10 @@
 (require 'package)
 
 
-(setq load-prefer-newer t) ;do not load outdated .elc files
+;(setq load-prefer-newer t) ;do not load outdated .elc files
 
 
 
-; correctly handle tmux' xterm keys
-;(defadvice terminal-init-screen
-;  ;; The advice is named `tmux', and is run before `terminal-init-screen' runs.
-;  (before tmux activate)
-;  ;; Docstring.  This describes the advice and is made available inside emacs;
-;  ;; for example when doing C-h f terminal-init-screen RET
-;  "Apply xterm keymap, allowing use of keys passed through tmux."
-;  ;; This is the elisp code that is run before `terminal-init-screen'.
-;  (if (getenv "TMUX")
-;    (let ((map (copy-keymap xterm-function-map)))
-;    (set-keymap-parent map (keymap-parent input-decode-map))
-;    (set-keymap-parent input-decode-map map))))
 
 
 ;; handle tmux's xterm-keys
@@ -144,15 +132,9 @@
   (require 'use-package))
 (setq use-package-always-ensure t) ;use-package will download missing ones
 
+(add-to-list 'load-path "~/.emacs.d/custom-packages/")
 
 
-
-
-;(use-package benchmark-init
-;  :ensure t
-;  :config
-;  ;; To disable collection of benchmark data after init is done.
-;  (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
 
 ;; (use-package auto-compile)
@@ -204,13 +186,16 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 ;hide menu bar (the one at the top)
 (menu-bar-mode -1)
 
+
+
 ; auto completion
 (use-package company
 ;  :hook prog-mode
   )
-(add-hook 'after-init-hook 'global-company-mode)
-(setq company-async-timeout 5)
+(add-hook 'prog-mode-hook 'global-company-mode)
+;(setq company-async-timeout 5)
 (setq company-auto-complete 'company-explicit-action-p)
+
 
 
 ; move C-SPC to C-S-SPC so that company can use C-SPC
@@ -228,8 +213,8 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 
 
 ; on-the-fly error checking
-(use-package flycheck)
-(add-hook 'after-init-hook #'global-flycheck-mode)
+;(use-package flycheck)
+;(add-hook 'after-init-hook #'global-flycheck-mode)
 
 
 
@@ -333,47 +318,6 @@ point reaches the beginning or end of the buffer, stop there."
 
 
 
-
-
-
-;(if window-system
-;(setq tabbar-ruler-global-tabbar t)    ; get tabbar
-;(setq tabbar-ruler-global-ruler t)     ; get global ruler
-;(setq tabbar-ruler-popup-menu t)       ; get popup menu.
-;(setq tabbar-ruler-popup-toolbar t)    ; get popup toolbar
-;(setq tabbar-ruler-popup-scrollbar t)  ; show scroll-bar on mouse-move
-;(use-package tabbar-ruler
-;  :if window-system
-;  )
-;)
-
-
-;(defun tabbar-buffer-groups ()
-;  "Return the list of group names the current buffer belongs to.
-;This function is a custom function for tabbar-mode's tabbar-buffer-groups.
-;This function group all buffers into 3 groups:
-;Those Dired, those user buffer, and those emacs buffer.
-;Emacs buffer are those starting with “*”."
-;  (list
-;   (cond
-;    ((string-equal "*" (substring (buffer-name) 0 1))
-;     "Emacs Buffer"
-;     )
-;    ((eq major-mode 'dired-mode)
-;     "Dired"
-;     )
-;    (t
-;     "User Buffer"
-;     )
-;    )))
-;(setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
-;
-;(global-set-key (kbd "C-M-S-<left>") 'tabbar-ruler-backward)
-;(global-set-key (kbd "C-M-S-<right>") 'tabbar-ruler-forward)
-;(global-set-key (kbd "C-M-S-<up>") 'tabbar-ruler-up)
-;(global-set-key (kbd "C-M-S-<down>") 'tabbar-ruler-up)
-
-
 (use-package helm
   :diminish helm-mode
   :init
@@ -441,37 +385,6 @@ point reaches the beginning or end of the buffer, stop there."
 
 
 
-;debugger
-;(load-library "realgud")
-
-
-
-
-;(defun switch-between-minibuffer-window ()
-;  "switch to minibuffer window (if active)"
-;  (interactive)
-;  (if (window-minibuffer-p) ;(active-minibuffer-window)
-;    ;((select-frame-set-input-focus (window-frame (active-minibuffer-window)))
-;     (windmove-up)
-;     (select-window (active-minibuffer-window))
-;    ))
-;
-;(global-set-key (kbd "<f7>") 'switch-between-minibuffer-window)
-
-
-
-
-
-;(defun my/kill-this-buffer ()
-;  "Kill the current buffer."
-;  (interactive)
-;  (kill-buffer (current-buffer)))
-;(global-set-key (kbd "C-q") 'my/kill-this-buffer)
-
-
-
-;(global-set-key (kbd "<mouse-2>") 'x-clipboard-yank)
-
 
 
 
@@ -491,130 +404,6 @@ point reaches the beginning or end of the buffer, stop there."
 
 
 
-;; (defun compile-pkg (&optional command startdir)
-;;   "Compile a package, moving up to the parent directory
-;;   containing configure.ac, if it exists. Start in startdir if defined,
-;;   else start in the current directory."
-;;   (interactive)
-
-;;   (let ((dirname)
-;; 	(dir-buffer nil))
-;;     (setq startdir (expand-file-name (if startdir startdir ".")))
-;;     (setq command  (if command command compile-command))
-
-;;     ;(setq dirname (upward-find-file "configure.ac" startdir))
-;;     (setq dirname (upward-find-file "Makefile" startdir))
-;;     (setq dirname (if dirname dirname (expand-file-name ".")))
-;;     ; We've now worked out where to start. Now we need to worry about
-;;     ; calling compile in the right directory
-;;     (save-excursion
-;;       (setq dir-buffer (find-file-noselect dirname))
-;;       (set-buffer dir-buffer)
-;;       (compile command)
-;;       (kill-buffer dir-buffer))))
-
-
-;; (defun upward-find-file (filename &optional startdir)
-;;   "Move up directories until we find a certain filename. If we
-;;   manage to find it, return the containing directory. Else if we
-;;   get to the toplevel directory and still can't find it, return
-;;   nil. Start at startdir or . if startdir not given"
-
-;;   (let ((dirname (expand-file-name
-;; 		  (if startdir startdir ".")))
-;; 	(found nil) ; found is set as a flag to leave loop if we find it
-;; 	(top nil))  ; top is set when we get
-;; 		    ; to / so that we only check it once
-
-;;     ; While we've neither been at the top last time nor have we found
-;;     ; the file.
-;;     (while (not (or found top))
-;;       ; If we're at / set top flag.
-;;       (if (string= (expand-file-name dirname) "/")
-;; 	  (setq top t))
-
-;;       ; Check for the file
-;;       (if (file-exists-p (expand-file-name filename dirname))
-;; 	  (setq found t)
-;; 	; If not, move up a directory
-;; 	(setq dirname (expand-file-name ".." dirname))))
-;;     ; return statement
-;;     (if found dirname nil)))
-
-;; (defun std-compile ()
-;;   "Like 'compile', but uses compile-pkg"
-;;   (interactive)
-;;   (compile-pkg compile-command))
-;; (global-set-key (kbd "C-c c") 'std-compile)
-
-;; ;; (defun compile-next-makefile ()
-;; ;;   (interactive)
-;; ;;   (let* ((default-directory (or (upward-find-file "Makefile") "."))
-;; ;;          (compile-command (concat "cd " default-directory " && "
-;; ;;                                   compile-command)))
-;; ;;     (compile compile-command)))
-
-
-;;(use-package projectile
-;;  ;:bind ("C-c C-c" . projectile-compile-project)
-;;  )
-;;(global-set-key (kbd "C-c C-c") (lambda () (projectile-compile-project "arg")) )
-;;(global-set-key (kbd "C-c C-c") (lambda () (interactive) (projectile-compile-project 1)))
-;;(global-set-key (kbd "C-c C-c") #'my/projectile-compile-project)
-;;(define-key projectile-mode-map [\?C-c C-c] 'projectile-find-dir)
-;;(define-key projectile-mode-map [?\C-t] 'projectile-compile-project)
-;(define-key projectile-mode-map (kbd "C-x m") 'projectile-compile-project)
-;;(define-key projectile-mode-map (kbd "C-c C-c") 'projectile-compile-project)
-;;(global-set-key (kbd "C-c C-c") (lookup-key projectile-mode-map (kbd "c")))
-;;(define-key 'mode-specific-command-prefix (kbd "C-c") (lookup-key projectile-mode-map (kbd "c")))
-;
-;(defun notify-compilation-result(buffer msg)
-;  "Notify that the compilation is finished,cccccccccccccc
-;close the *compilation* buffer if the compilation is successful,
-;and set the focus back to Emacs frame"
-;  (if (string-match "^finished" msg)
-;    (progn
-;     (tooltip-show "\n Compilation Successful :-) \n "))
-;    (progn
-;      (tooltip-show "\n Compilation Failed :-( \n ")
-;      (switch-to-buffer-other-window "*compilation*")
-;      ))
-;  (setq current-frame (car (car (cdr (current-frame-configuration)))))
-;  (select-frame-set-input-focus current-frame)
-;  )
-;(add-to-list 'compilation-finish-functions
-;	     'notify-compilation-result)
-;
-;
-;; prevent compile from showing buffer
-;(defadvice compilation-start
-;  (around inhibit-display
-;      (command &optional mode name-function highlight-regexp))
-;  (if (not (string-match "^\\(find\\|grep\\)" command))
-;      (flet ((display-buffer)
-;         (set-window-point)
-;         (goto-char))
-;    (fset 'display-buffer 'ignore)
-;    (fset 'goto-char 'ignore)
-;    (fset 'set-window-point 'ignore)
-;    (save-window-excursion
-;      ad-do-it))
-;    ad-do-it))
-;(ad-activate 'compilation-start)
-
-
-
-
-;(defun toggle-query-replace-case () (interactive) (setq case-fold-search (not case-fold-search)))
-;(define-key query-replace-map "C" 'toggle-case)
-
-
-;(defun drew/toggle-case ()
-;  "Toggle the value of `case-fold-search' between `nil' and non-nil."
-;  (interactive)
-;  ;; `case-fold-search' automatically becomes buffer-local when set
-;  (setq case-fold-search (not case-fold-search)))
-;(define-key query-replace-map (kbd "M-c") #'drew/toggle-case)
 
 
 ;(use-package visual-regexp)
