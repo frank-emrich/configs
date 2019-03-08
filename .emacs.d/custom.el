@@ -3,7 +3,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(back-button-local-keystrokes (quote ("C-x S-<f12>")))
  '(company-idle-delay nil)
  '(custom-safe-themes
    (quote
@@ -23,7 +22,7 @@
  '(lsp-ui-sideline-update-mode (quote line))
  '(package-selected-packages
    (quote
-    (ocp-indent merlin company-jedi git-gutter flycheck esup hungry-delete tuareg company imenu-list iflipb pc-bufsw helm-swoop helm-descbinds visual-regexp-steroids golden-ratio-scroll-screen avy ace-jump-mode multiple-cursors ample-theme visual-regexp projectile buffer-flip spaceline move-text rainbow-delimiters use-package undo-tree tabbar-ruler sr-speedbar helm-themes helm git-timemachine diff-hl darcula-theme benchmark-init back-button auto-compile)))
+    (lsp-haskell haskell-mode company-lsp lsp-ui lsp-mode ocp-indent merlin company-jedi git-gutter flycheck esup hungry-delete tuareg company imenu-list iflipb pc-bufsw helm-swoop helm-descbinds visual-regexp-steroids golden-ratio-scroll-screen avy multiple-cursors visual-regexp projectile buffer-flip move-text rainbow-delimiters use-package undo-tree helm-themes helm git-timemachine diff-hl auto-compile)))
  '(recentf-max-saved-items 40))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -36,6 +35,7 @@
  '(lsp-face-highlight-textual ((t (:background "gray13" :underline t))))
  '(lsp-face-highlight-write ((t (:inherit nil :background "gray13" :underline t))))
  '(lsp-ui-sideline-current-symbol ((t (:background "gray13" :foreground "white" :box (:line-width 2 :color "white") :weight bold :height 0.99))))
+ '(merlin-type-face ((t (:background "gray13"))))
  '(rainbow-delimiters-depth-1-face ((t (:inherit rainbow-delimiters-base-face :foreground "gold"))))
  '(rainbow-delimiters-depth-2-face ((t (:inherit rainbow-delimiters-base-face :foreground "green"))))
  '(rainbow-delimiters-depth-3-face ((t (:inherit rainbow-delimiters-base-face :foreground "magenta"))))

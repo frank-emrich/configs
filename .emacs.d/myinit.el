@@ -312,10 +312,11 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 
 (fset 'yes-or-no-p 'y-or-n-p) ; replace yes no questions by y n
 
+;load my modified (i.e., darker) ample theme
+(require 'darker-ample-theme)
+(load-theme 'darker-ample t t)
+(enable-theme 'darker-ample)
 
-(use-package ample-theme)
-(load-theme 'ample t t)
-(enable-theme 'ample)
 
 
 (global-linum-mode t) ;show line numbers
@@ -591,7 +592,7 @@ point reaches the beginning or end of the buffer, stop there."
 
 ;highlight current line
 (global-hl-line-mode +1)
-(set-face-attribute 'hl-line nil :inherit nil :background "gray6")
+(set-face-attribute 'hl-line nil :inherit nil :background "gray13")
 
 
 ;delete trailing whitespace on save
