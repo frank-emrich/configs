@@ -47,3 +47,5 @@
 ;(add-hook 'caml-mode-hook #'lsp-ocaml-enable)
 
 ;(add-hook 'ocaml-mode-hook 'flycheck-mode)
+
+(use-package sml-mode)
