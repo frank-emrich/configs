@@ -44,6 +44,7 @@ function install_source {
 }
 
 
+install_symlink .emacs.d ~/.emacs.d
 install_symlink tmux/.tmux.conf.local ~/.tmux.conf.local
 install_symlink tmux/.tmux/.tmux.conf ~/.tmux.conf
 
