@@ -11,7 +11,7 @@ function install_symlink {
   f="$1" #relative path inside of the configs directory
   home_f="$2" #absolute path of the file in the home directory
   target_f="${target}/${f}" #absolute path of file in the configs dir
-  if [ -f "$home_f" ] ; then
+  if [ -e "$home_f" ] ; then
     if [ -L "$home_f" ] ; then
       existing_link_target="$(readlink -f $home_f)"
       if [ "$existing_link_target" = "$target_f" ] ; then
