@@ -7,7 +7,7 @@ function abort {
   exit 1
 }
 
-function install {
+function install_symlink {
   f="$1" #relative path inside of the configs directory
   home_f="$2" #absolute path of the file in the home directory
   target_f="${target}/${f}" #absolute path of file in the configs dir
@@ -30,15 +30,22 @@ function install {
 }
 
 
-install .bash_aliases ~/.bash_aliases
-install tmux/.tmux.conf.local ~/.tmux.conf.local
-install tmux/.tmux/.tmux.conf ~/.tmux.conf
+function install_source {
+  source_to="$target/$1"
+  source_from="$2"
 
-actual_bashrc_end="$(tail -n 1 ~/.bashrc)"
-expected_bashrc_end=". $target/bashrc_footer"
-if [ "$actual_bashrc_end" = "$expected_bashrc_end" ] ; then
-  echo "bashrc_footer already installed"
-else
-  echo "appending $expected_bashrc_end to ~/.bashrc"
-  echo "$expected_bashrc_end" >> ~/.bashrc
-fi
+  source_line=". ${source_to}"
+  if grep -q "${source_line}" "${source_from}"; then
+      echo "File $source_to already sourced from $source_from"
+  else
+      echo "Appending  '$source_line' to $source_from"
+      echo "$source_line" >> "$source_from"
+  fi
+}
+
+
+install_symlink tmux/.tmux.conf.local ~/.tmux.conf.local
+install_symlink tmux/.tmux/.tmux.conf ~/.tmux.conf
+
+install_source .bash_aliases_additions ~/.bash_aliases
+install_source .bashrc_additions ~/.bashrc
