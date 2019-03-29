@@ -20,6 +20,8 @@
  '(lsp-ui-sideline-show-diagnostics nil)
  '(lsp-ui-sideline-show-hover t)
  '(lsp-ui-sideline-update-mode (quote line))
+ '(merlin-error-after-save nil)
+ '(merlin-error-check-then-move nil)
  '(package-selected-packages
    (quote
     (sml-mode pc-bufsw golden-ratio-scroll-screen avy multiple-cursors move-text rainbow-delimiters helm-swoop helm-descbinds helm git-gutter git-timemachine undo-tree lsp-haskell haskell-mode merlin tuareg company-lsp lsp-ui lsp-mode company use-package)))
