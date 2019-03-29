@@ -24,7 +24,7 @@
  '(merlin-error-check-then-move nil)
  '(package-selected-packages
    (quote
-    (sml-mode pc-bufsw golden-ratio-scroll-screen avy multiple-cursors move-text rainbow-delimiters helm-swoop helm-descbinds helm git-gutter git-timemachine undo-tree lsp-haskell haskell-mode merlin tuareg company-lsp lsp-ui lsp-mode company use-package)))
+    (magit sml-mode pc-bufsw golden-ratio-scroll-screen avy multiple-cursors move-text rainbow-delimiters helm-swoop helm-descbinds helm git-gutter git-timemachine undo-tree lsp-haskell haskell-mode merlin tuareg company-lsp lsp-ui lsp-mode company use-package)))
  '(recentf-max-saved-items 40))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
