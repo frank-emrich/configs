@@ -187,6 +187,16 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 (menu-bar-mode -1)
 
 
+(use-package cl-lib)
+
+(use-package magit
+ ;get rid of rebase mode
+ :config
+   (setq
+     auto-mode-alist
+    (cl-remove "/git-rebase-todo\\'" auto-mode-alist :test 'equal :key 'car)))
+
+
 
 ; auto completion
 (use-package company
