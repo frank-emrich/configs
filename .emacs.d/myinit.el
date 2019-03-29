@@ -296,7 +296,7 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 (load "~/.emacs.d/haskell")
 (load "~/.emacs.d/links")
 (load "~/.emacs.d/javascript")
-
+(require 'llvm-mode)
 
 
 
