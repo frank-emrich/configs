@@ -45,8 +45,12 @@ function install_source {
 
 
 install_symlink .emacs.d ~/.emacs.d
+install_symlink powerline ~/.config/powerline
 install_symlink tmux/.tmux.conf.local ~/.tmux.conf.local
 install_symlink tmux/.tmux/.tmux.conf ~/.tmux.conf
 
 install_source .bash_aliases_additions ~/.bash_aliases
 install_source .bashrc_additions ~/.bashrc
+
+
+which powerline-daemon > /dev/null || echo "powerline not installed, consider \"pip install powerline-status\""

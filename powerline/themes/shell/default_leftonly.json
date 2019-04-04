@@ -1,0 +1,64 @@
+{
+    "segments": {
+	"above": [
+	    {
+		"left":[
+		    {
+			"function": "powerline.segments.common.net.hostname",
+			"priority": null
+		    },
+		    {
+			"function": "powerline.segments.common.env.user",
+			"priority": 30
+		    },
+		    {
+			"function": "powerline.segments.common.env.virtualenv",
+			"priority": 50
+		    },
+		    {
+			"function": "powerline.segments.common.vcs.branch",
+			"priority": 40,
+			"args": {"status_colors": true, "ignore_statuses": ["U"]}
+		    },
+
+		    {
+			"function": "powerline.segments.common.env.environment",
+			"priority": 40,
+			"args": {"variable": "EXECUTION_TIME" }
+		    },
+		    {
+			"function": "powerline.segments.shell.cwd",
+			"priority": null,
+			"args": {
+			    "shorten_home" : true,
+			    "dir_limit_depth" : 100,
+			    "use_shortened_path" : false
+			}
+
+		    },
+
+
+		    {
+			"function": "powerline.segments.shell.jobnum",
+			"priority": 20
+		    },
+		    {
+			"function": "powerline.segments.shell.last_status",
+			"priority": 10
+		    }
+
+		]}],
+
+	"left": [
+	    {
+		"type": "string",
+		"contents": "$",
+		"priority": null,
+		"width": 1,
+                "align": "l",
+		"highlight_groups": ["continuation:current"]
+	    }
+	]
+    }
+
+}

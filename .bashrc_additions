@@ -7,3 +7,54 @@ export VISUAL="emacsclient -a '' -t"
 #if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
 #  exec tmux
 #fi
+
+export START_TIME=0
+#export EXECUTION_TIME
+
+
+
+CTRL_C_EXIT_CODE=130
+
+function _set_exec_time() {
+    cur=$(date '+%s%3N');
+    #echo "START_TIME is $START_TIME" ;
+    if [ $START_TIME -ne 0 -a $__bp_last_ret_value -ne $CTRL_C_EXIT_CODE ] ; then
+	diff=$((cur-START_TIME));
+	#echo "diff is $diff"
+	diff_formatted="TODO"
+	if [ $diff -lt  10000 ] ; then
+	    diff_formatted=$(echo "$diff" | sed ':a;s/\B[0-9]\{3\}\>/,&/;ta')
+	    diff_formatted="$diff_formatted ms"
+	    #echo "1: $diff_formatted"
+	elif [ $diff -lt 300000 ] ; then #less than 5 minutes
+	    diff_formatted="$((diff / 1000)) s"
+	else
+	    diff_formatted="$((diff / 60000)) min"
+	fi
+
+	export EXECUTION_TIME="$diff_formatted"
+    else
+	unset EXECUTION_TIME
+    fi
+    #printf "Execution time: %.6f seconds\n" $dur;
+}
+
+
+preexec() {
+    START_TIME=$(date '+%s%3N') ;
+}
+
+if which "powerline" > /dev/null ; then
+    powerline-daemon -q
+    POWERLINE_BASH_CONTINUATION=1
+    POWERLINE_BASH_SELECT=1
+    root_path=$(pip3 show powerline-status | grep "Location: " | cut -c 11-)
+    . ${root_path}/powerline/bindings/bash/powerline.sh
+
+    PROMPT_COMMAND=" _set_exec_time ; $PROMPT_COMMAND"
+#    PROMPT_COMMAND="$PROMPT_COMMAND ; _append_break"
+
+    source ~/bash-preexec.sh
+
+
+fi
