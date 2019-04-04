@@ -54,7 +54,7 @@ if which "powerline" > /dev/null ; then
     PROMPT_COMMAND=" _set_exec_time ; $PROMPT_COMMAND"
 #    PROMPT_COMMAND="$PROMPT_COMMAND ; _append_break"
 
-    source ~/bash-preexec.sh
+    source ~/.config/configs/bash-preexec/bash-preexec/bash-preexec.sh
 
 
 fi
