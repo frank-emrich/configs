@@ -1,3 +1,4 @@
 alias ec="emacsclient -a '' -t"
 alias e=ec
 alias l1='ls -1'
+alias less='less -i'
