@@ -1,0 +1,6 @@
+{
+	"name": "Default color scheme for shell prompts",
+	"groups": {
+		"hostname":         { "fg": "custom:gray-background", "bg": "custom:orange", "attrs": [] }
+	}
+}
