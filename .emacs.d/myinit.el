@@ -623,5 +623,16 @@ point reaches the beginning or end of the buffer, stop there."
 (setq pc-bufsw-quit-time 3)
 (pc-bufsw t)
 
+
+
+(defun kill-buffer-and-frame ()
+  (interactive)
+  (kill-buffer)
+  (delete-frame)
+)
+(global-set-key (kbd "C-q")  'kill-buffer-and-frame)
+
+
+
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))

@@ -161,3 +161,9 @@ set_exec_time() {
 
 add-zsh-hook preexec set_start_time
 add-zsh-hook precmd set_exec_time
+
+
+#man via emacs
+man() {
+  emacsclient -a '' -t -e "(man \"$@\")"
+}
