@@ -21,7 +21,7 @@ ZSH_THEME="robbyrussell"
 
 # Uncomment the following line to use hyphen-insensitive completion.
 # Case-sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
+ HYPHEN_INSENSITIVE="true"
 
 # Uncomment the following line to disable bi-weekly auto-update checks.
 # DISABLE_AUTO_UPDATE="true"
@@ -62,7 +62,7 @@ ZSH_CUSTOM=~/.config/configs/zsh/oh-my-zsh-custom
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git history-substring-search)
+plugins=(zaw zsh-autosuggestions zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -109,3 +109,55 @@ if which "powerline" > /dev/null ; then
 
 
 fi
+
+
+source ~/.config/configs/.bash_aliases_additions
+
+#source /home/frank/build/zaw/zaw.zsh
+bindkey '^R' zaw-history
+bindkey -M filterselect '^R' down-line-or-history
+bindkey -M filterselect '^S' up-line-or-history
+bindkey -M filterselect '^E' accept-search
+zstyle ':filter-select' case-insensitive yes # enable case-insensitive
+
+#bindkey "^R" znt-history-widget
+
+#move by words:
+bindkey "^[[1;5D" backward-word
+bindkey "^[[1;5C" forward-word
+
+#darker auto suggestions:
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=234'
+
+
+
+export START_TIME=0
+set_start_time() {
+  START_TIME=$(date '+%s%3N') ;
+}
+
+CTRL_C_EXIT_CODE=130
+
+set_exec_time() {
+    cur=$(date '+%s%3N');
+    if [[ ($START_TIME -ne 0) && ($? -ne $CTRL_C_EXIT_CODE) ]] ; then
+	diff=$((cur-START_TIME));
+	diff_formatted="TODO"
+	if [[ $diff -lt  10000 ]] ; then
+	    diff_formatted=$(echo "$diff" | sed ':a;s/\B[0-9]\{3\}\>/,&/;ta')
+	    diff_formatted="$diff_formatted ms"
+	elif [ $diff -lt 300000 ] ; then #less than 5 minutes
+	    diff_formatted="$((diff / 1000)) s"
+	else
+	    diff_formatted="$((diff / 60000)) min"
+	fi
+
+	export EXECUTION_TIME="$diff_formatted"
+    else
+	unset EXECUTION_TIME
+    fi
+}
+
+
+add-zsh-hook preexec set_start_time
+add-zsh-hook precmd set_exec_time
