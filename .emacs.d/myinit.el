@@ -497,6 +497,9 @@ point reaches the beginning or end of the buffer, stop there."
 ;(define-key esc-map (kbd "C-s") 'vr/isearch-forward) ;; C-M-s
 
 
+; case insensitive search by default
+(setq case-fold-search t)
+
 (setq split-height-threshold nil)
 (setq split-width-threshold 160)
 
