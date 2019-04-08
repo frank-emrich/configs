@@ -96,8 +96,8 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 
-
-
+#Magic fix for long line pasting
+zstyle ':bracketed-paste-magic' active-widgets '.self-*'
 
 
 source "${MY_DOTFILE_CONFIGS_DIR}/aliases"
