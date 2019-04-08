@@ -85,3 +85,16 @@ install_source "zshrc_redirect" ~/.zshrc
 
 
 which powerline-daemon > /dev/null || echo "powerline not installed, consider \"pip install powerline-status\""
+
+
+#Somehow, the permissions of the submodules are messed up?
+submods=()
+submods+=("zsh/oh-my-zsh")
+submods+=("zsh/oh-my-zsh-custom/plugins")
+submods+=("zsh/oh-my-zsh-custom/plugins/zaw")
+submods+=("zsh/oh-my-zsh-custom/plugins/zsh-autosuggestions")
+submods+=("zsh/oh-my-zsh-custom/plugins/zsh-syntax-highlighting")
+
+for f in ${submods[@]}; do
+    chmod o-wx "$f"
+done
