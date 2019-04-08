@@ -437,6 +437,8 @@ point reaches the beginning or end of the buffer, stop there."
 (use-package helm-swoop)
 
 
+(use-package helm-ag)
+
 
 
 
