@@ -78,7 +78,7 @@ install_symlink powerline ~/.config/powerline
 install_symlink tmux/.tmux.conf.local ~/.tmux.conf.local
 install_symlink tmux/.tmux/.tmux.conf ~/.tmux.conf
 
-install_source .aliases ~/.bash_aliases
+install_source aliases ~/.bash_aliases
 install_source "bashrc_redirect" ~/.bashrc
 
 install_source "zshrc_redirect" ~/.zshrc
