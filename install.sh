@@ -60,16 +60,18 @@ function install_source {
 }
 
 
-function create_switch_file() {
+function create_redirect_file() {
   cat <<EOF > $1
+# Generated in order to define the following:
 MY_DOTFILE_CONFIGS_DIR="$PWD"
+
 source $2
 EOF
 }
 
 
-create_switch_file "zshrc_switch" "${target}/zsh/zshrc_additions"
-create_switch_file "bashrc_switch" "${target}/bash/bashrc_additions"
+create_redirect_file "zshrc_redirect" "${target}/zsh/zshrc_additions"
+create_redirect_file "bashrc_redirect" "${target}/bash/bashrc_additions"
 
 install_symlink .emacs.d ~/.emacs.d
 install_symlink powerline ~/.config/powerline
@@ -77,9 +79,9 @@ install_symlink tmux/.tmux.conf.local ~/.tmux.conf.local
 install_symlink tmux/.tmux/.tmux.conf ~/.tmux.conf
 
 install_source .aliases ~/.bash_aliases
-install_source "bashrc_switch" ~/.bashrc
+install_source "bashrc_redirect" ~/.bashrc
 
-install_source "bashrc_switch" ~/.zshrc
+install_source "zshrc_redirect" ~/.zshrc
 
 
 which powerline-daemon > /dev/null || echo "powerline not installed, consider \"pip install powerline-status\""
