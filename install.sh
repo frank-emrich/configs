@@ -98,3 +98,11 @@ submods+=("zsh/oh-my-zsh-custom/plugins/zsh-syntax-highlighting")
 for f in ${submods[@]}; do
     chmod o-wx "$f"
 done
+
+
+
+#Emacs daemon
+misc/create_systemd_file.sh "emacs.service" "$target/misc"
+
+echo "created emacs.service file, consider installing it via"
+echo "cp emacs.service ~/.config/systemd/user/ && systemctl --user enable emacs.service"
