@@ -10,7 +10,8 @@ Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
 Type=forking
 ExecStart="${script_dir}/start_emacs_daemon.sh"
 ExecStop=/usr/bin/emacsclient --eval "(kill-emacs)"
-Restart=on-failure
+Restart=always
+RestartSec=3
 
 [Install]
 WantedBy=default.target
