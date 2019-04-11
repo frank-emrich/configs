@@ -6,4 +6,4 @@ alias l1='ls -1'
 alias less='less -ri'
 
 #let ag search in hidden files by default
-alias ag='ag --hidden'
+alias ag='ag --hidden --color'

@@ -63,3 +63,5 @@ if which "powerline" > /dev/null ; then
 
 
 fi
+
+alias e-="${MY_DOTFILE_CONFIGS_DIR}/.emacs.d/piper.sh"

@@ -639,5 +639,43 @@ point reaches the beginning or end of the buffer, stop there."
 
 
 
+
+(use-package cl)
+
+(add-to-list 'load-path "~/.emacs.d/custom-packages/e-sink")
+(require 'tty-format)
+(require 'ansi-color)
+
+
+(defun display-ansi-colors ()
+  (interactive)
+  ; locally disable the "file changed on disk while you edited" check
+  (flet ((ask-user-about-supersession-threat (fn)
+         nil))
+  (format-decode-buffer 'ansi-colors)
+  )
+)
+
+
+(setq revert-without-query '(".*"))
+
+
+(defun open-color-file (filename)
+  (find-file filename)
+  (buffer-disable-undo)
+  (read-only-mode)
+  (display-ansi-colors)
+  (end-of-buffer)
+  (setq auto-revert-interval 0.5)
+  (auto-revert-set-timer)
+  (add-hook 'after-revert-hook `display-ansi-colors nil t)
+)
+
+(add-hook 'after-revert-hook `linum-update-current)
+
+
+
+
+
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))
