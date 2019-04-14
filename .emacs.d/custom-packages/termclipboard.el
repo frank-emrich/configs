@@ -30,9 +30,9 @@
     (let ((xsel-output (shell-command-to-string "xsel --clipboard --output")))
       (unless (string= (car kill-ring) xsel-output)
 	xsel-output )))
-  ;; Attach callbacks to hooks
-  (setq interprogram-cut-function 'xsel-cut-function)
-  (setq interprogram-paste-function 'xsel-paste-function)
+  ;; Do not setup functions by default, but rely on it happening on demand
+  (setq interprogram-cut-function nil)
+  (setq interprogram-paste-function 'nil)
   ;(setq interprogram-paste-function 'xsel-paste-function)
   ;; Idea from
   ;; http://shreevatsa.wordpress.com/2006/10/22/emacs-copypaste-and-x/

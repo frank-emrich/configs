@@ -674,6 +674,27 @@ point reaches the beginning or end of the buffer, stop there."
 (add-hook 'after-revert-hook `linum-update-current)
 
 
+; modify C-w and M-w such that they use the system clipboard
+; it seems like advising the functions works poorly in
+; combination with interactive functions
+; If interprogram-paste-function stays active,
+; this effectively makes C-y use the clipboard only
+(defun clipboard-enabled-kill-ring-save  ()
+  (interactive)
+
+  (setq interprogram-cut-function 'xsel-cut-function)
+  (call-interactively 'kill-ring-save)
+  (setq interprogram-cut-function nil)
+)
+(defun clipboard-enabled-kill-region ()
+  (interactive)
+  (setq interprogram-cut-function 'xsel-cut-function)
+  (call-interactively 'kill-region)
+  (setq interprogram-cut-function nil)
+)
+(global-set-key (kbd "M-w") 'clipboard-enabled-kill-ring-save)
+(global-set-key (kbd "C-w") 'clipboard-enabled-kill-region)
+
 
 
 
