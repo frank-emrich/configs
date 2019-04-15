@@ -275,6 +275,13 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 (use-package company-lsp :commands company-lsp)
 
 
+(defun lsp-disable-highlighting ()
+  (interactive)
+
+   (advice-add 'lsp-document-highlight  :override
+            (lambda () nil))
+
+)
 
 
 
