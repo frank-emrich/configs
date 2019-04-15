@@ -706,6 +706,22 @@ point reaches the beginning or end of the buffer, stop there."
 
 
 
+(use-package back-button)
+
+(advice-add 'push-mark  :override
+            'back-button-push-mark-local-and-global)
+(back-button-mode 1)
+(global-set-key (kbd "<M-left>") 'back-button-global-backward)
+(global-set-key (kbd "<M-right>") 'back-button-global-forward)
+
+
+(advice-add 'xref-push-marker-stack :after
+  (lambda  (&optional m)
+    (back-button-push-mark-local-and-global (or m (point-marker)))))
+
+
+
+
 
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))

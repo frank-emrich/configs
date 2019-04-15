@@ -17,6 +17,7 @@
     ("36ca8f60565af20ef4f30783aa16a26d96c02df7b4e54e9900a5138fb33808da" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" default)))
  '(desktop-restore-frames nil)
  '(diff-hl-margin-mode t)
+ '(helm-advice-push-mark nil)
  '(inhibit-startup-screen t)
  '(lsp-eldoc-enable-hover nil)
  '(lsp-eldoc-enable-signature-help nil)
