@@ -508,8 +508,10 @@ point reaches the beginning or end of the buffer, stop there."
 (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
 
 
-
-(use-package avy) ;quickly jump around
+;quickly jump around
+(use-package avy
+  :pin MELPA ; the MELPA-stable version is outdated
+)
 (define-key global-map (kbd "<S-return>") 'avy-goto-word-0)
 (global-set-key (kbd "C-j") 'avy-goto-word-0)
 
