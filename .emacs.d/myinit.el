@@ -710,7 +710,7 @@ point reaches the beginning or end of the buffer, stop there."
 
 (advice-add 'push-mark  :override
             'back-button-push-mark-local-and-global)
-(back-button-mode 1)
+;(back-button-mode 1)
 (global-set-key (kbd "<M-left>") 'back-button-global-backward)
 (global-set-key (kbd "<M-right>") 'back-button-global-forward)
 
