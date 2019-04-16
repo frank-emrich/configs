@@ -720,6 +720,8 @@ point reaches the beginning or end of the buffer, stop there."
     (back-button-push-mark-local-and-global (or m (point-marker)))))
 
 
+(global-set-key (kbd "<M-up>")  (lambda () (interactive) (scroll-up -10)))
+(global-set-key (kbd "<M-down>")  (lambda () (interactive) (scroll-down -10)))
 
 
 
