@@ -1,2 +1,5 @@
-(push "~/.emacs.d/custom-packages/links" load-path)
-(require 'links-mode)
+(use-package links-mode
+  :load-path "./custom-packages/links"
+  :commands links-mode
+  :mode "\\.links\\'"
+)

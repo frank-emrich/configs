@@ -1,10 +1,15 @@
 ; requires ocaml language server & merlin
 
 
-(use-package tuareg)
-(use-package merlin)
-;(use-package ocp-indent)
-
+(use-package tuareg
+  :defer t
+)
+(use-package merlin
+  :commands merlin-mode
+)
+(use-package sml-mode
+  :defer t
+)
 
 
 
@@ -15,7 +20,10 @@
     (add-hook 'tuareg-mode-hook 'merlin-mode)
     (if
       (executable-find "ocaml-language-server")
-      (add-hook 'tuareg-mode-hook 'lsp-noquery))))
+      (progn
+	(add-hook 'tuareg-mode-hook 'lsp-noquery)
+	(add-hook 'tuareg-mode-hook 'imenu-list-minor-mode))))
+)
 
 
 
@@ -47,5 +55,3 @@
 ;(add-hook 'caml-mode-hook #'lsp-ocaml-enable)
 
 ;(add-hook 'ocaml-mode-hook 'flycheck-mode)
-
-(use-package sml-mode)

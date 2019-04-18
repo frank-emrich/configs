@@ -190,21 +190,27 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 (use-package cl-lib)
 
 (use-package magit
- ;get rid of rebase mode
- :config
-   (setq
-     auto-mode-alist
-    (cl-remove "/git-rebase-todo\\'" auto-mode-alist :test 'equal :key 'car)))
+  :defer t
+  :config
+    ;get rid of rebase mode
+    (setq
+      auto-mode-alist
+      (cl-remove "/git-rebase-todo\\'" auto-mode-alist :test 'equal :key 'car))
+)
 
 
 
 ; auto completion
 (use-package company
 ;  :hook prog-mode
-  )
-(add-hook 'prog-mode-hook 'global-company-mode)
+  :config
+    (setq company-dabbrev-downcase nil) ; make company-dabbrev case-sensitive
+    (setq company-idle-delay nil)
+    (setq company-auto-complete 'company-explicit-action-p)
+)
+;(add-hook 'prog-mode-hook 'global-company-mode)
 ;(setq company-async-timeout 5)
-(setq company-auto-complete 'company-explicit-action-p)
+
 
 
 
@@ -313,7 +319,10 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 (load "~/.emacs.d/haskell")
 (load "~/.emacs.d/links")
 (load "~/.emacs.d/javascript")
-(require 'llvm-mode)
+(load "~/.emacs.d/latex")
+(load "~/.emacs.d/lisp")
+(load "~/.emacs.d/llvm")
+
 
 
 
@@ -353,10 +362,11 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
   (progn
     (global-undo-tree-mode)
     (setq undo-tree-visualizer-timestamps t)
-    (setq undo-tree-visualizer-diff t)))
+    (setq undo-tree-visualizer-diff t))
+)
 
 ;easily step through file's history
-(use-package git-timemachine)
+(use-package git-timemachine :defer t)
 
 ; highlight differences with version control base
 (use-package git-gutter)
@@ -444,7 +454,7 @@ point reaches the beginning or end of the buffer, stop there."
 (use-package helm-swoop)
 
 
-(use-package helm-ag)
+(use-package helm-ag :defer t)
 
 
 
@@ -459,7 +469,7 @@ point reaches the beginning or end of the buffer, stop there."
 
 
 ; matching parantheses are colored
-(use-package rainbow-delimiters)
+(use-package rainbow-delimiters :defer t)
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 
 
@@ -468,9 +478,11 @@ point reaches the beginning or end of the buffer, stop there."
 
 
 ; move current line or selected region up/down
-(use-package move-text)
-(global-set-key [M-S-down] 'move-text-down)
-(global-set-key [M-S-up]   'move-text-up)
+(use-package move-text
+  :bind
+    ([M-S-down] . move-text-down)
+    ([M-S-up]   . move-text-up)
+)
 
 
 
@@ -518,15 +530,32 @@ point reaches the beginning or end of the buffer, stop there."
 ;quickly jump around
 (use-package avy
   :pin MELPA ; the MELPA-stable version is outdated
+  :init
+
+  :config
+    (setq avy-all-windows nil)
+    (setq avy-goto-word-0-regexp
+      "\\([-_a-zA-Z0-9]\\{3,1000\\}\\|[-_a-zA-Z0-9]\\{2\\}$\\|[-_a-zA-Z0-9]\\{2\\}[^-_a-zA-Z0-9]\\{2\\}\\|[-_a-zA-Z0-9]$\\|[-_a-zA-Z0-9][^-_a-zA-Z0-9]\\{3\\}\\|^[ \\t]*?[ \\t]\\{0,3\\}[;/,(){}]+$\\)")
+   (setq avy-style (quote words))
+   (setq avy-words
+     (quote
+       ("at" "by" "if" "is" "it" "my" "ob" "oh" "ok" "ox" "up" "ace" "act" "add" "age" "ago" "aim" "air" "ale" "all" "and" "ant" "any" "ape" "apt" "arc" "are" "arm" "art" "ash" "ate" "avy" "awe" "axe" "bad" "bag" "ban" "bar" "bat" "bay" "bed" "bee" "beg" "bet" "bid" "big" "bit" "bob" "bot" "bon" "bow" "box" "boy" "but" "cab" "can" "cap" "car" "cat" "cog" "cop" "cow" "cry" "cup" "cut" "day" "dew" "did" "die" "dig" "dim" "dip" "dog" "dot" "dry" "dub" "dug" "dye" "ear" "eat" "eel" "egg" "ego" "elf" "eve" "eye" "fan" "far" "fat" "fax" "fee" "few" "fin" "fit" "fix" "flu" "fly" "foe" "fog" "for" "fox" "fry" "fun" "fur" "gag" "gap" "gas" "gel" "gem" "get" "gig" "gin" "gnu" "god" "got" "gum" "gun" "gut" "guy" "gym" "had" "hag" "ham" "has" "hat" "her" "hid" "him" "hip" "hit" "hop" "hot" "how" "hub" "hue" "hug" "hut" "ice" "icy" "imp" "ink" "inn" "ion" "ire" "ivy" "jab" "jam" "jar" "jaw" "jet" "job" "jog" "joy" "key" "kid" "kit" "lag" "lap" "lay" "let" "lid" "lie" "lip" "lit" "lob" "log" "lot" "low" "mad" "man" "map" "mat" "may" "men" "met" "mix" "mob" "mop" "mud" "mug" "nag" "nap" "new" "nil" "nod" "nor" "not" "now" "nun" "oak" "odd" "off" "oil" "old" "one" "orb" "ore" "ork" "our" "out" "owl" "own" "pad" "pan" "par" "pat" "paw" "pay" "pea" "pen" "pet" "pig" "pin" "pit" "pod" "pot" "pry" "pub" "pun" "put" "rag" "ram" "ran" "rat" "raw" "ray" "red" "rib" "rim" "rip" "rob" "rod" "rot" "row" "rub" "rug" "rum" "run" "sad" "sat" "saw" "say" "sea" "see" "sew" "she" "shy" "sin" "sip" "sit" "six" "ski" "sky" "sly" "sob" "son" "soy" "spy" "sum" "sun" "tab" "tad" "tag" "tan" "tap" "tar" "tax" "tea" "the" "tie" "tin" "tip" "toe" "ton" "too" "top" "toy" "try" "tub" "two" "urn" "use" "van" "war" "was" "wax" "way" "web" "wed" "wet" "who" "why" "wig" "win" "wit" "woe" "won" "wry" "you" "zap" "zip" "zit" "zoo" "ade" "bei" "das" "der" "dem" "den" "ein" "eng" "eva" "feg" "geb" "geh" "hin" "ode" "nem" "nen" "neu" "reg" "reh" "wer" "wie" "wir" "wo" "weh" "wen" "zen" "aba" "gop" "blo" "bla" "klo" "gar" "glo" "per" "mer" "ret" "spe" "zer" "ala" "era" "lad" "raa" "hof" "mof" "tof" "got" "mot" "tra" "fra" "aaa" "aad" "ada" "daa" "aar" "ara" "aag" "aga" "gaa" "aah" "aha" "haa" "aaj" "aja" "jaa" "aak" "aka" "kaa" "aal" "sss" "ssd" "sds" "dss" "ssf" "sfs")))
+
+    (face-spec-set 'avy-lead-face   '((t (:background "brightwhite" :foreground "color-52"))))
+    (face-spec-set 'avy-lead-face-0 '((t (:background "brightwhite" :foreground "color-17"))))
+    (face-spec-set 'avy-lead-face-2 '((t (:background "brightwhite" :foreground "color-22"))))
 )
+
 (define-key global-map (kbd "<S-return>") 'avy-goto-word-0)
 (global-set-key (kbd "C-j") 'avy-goto-word-0)
 
 
 
-(use-package golden-ratio-scroll-screen)
-(global-set-key (kbd "<C-prior>") 'golden-ratio-scroll-screen-down)
-(global-set-key (kbd "<C-next>") 'golden-ratio-scroll-screen-up)
+(use-package golden-ratio-scroll-screen
+  :bind
+    ("<C-prior>" . golden-ratio-scroll-screen-down)
+    ("<C-next>" . golden-ratio-scroll-screen-up)
+)
 
 
 (prefer-coding-system 'utf-8)
@@ -537,18 +566,14 @@ point reaches the beginning or end of the buffer, stop there."
 
 (use-package windmove
   :config
-  ;; use shift + arrow keys to switch between visible buffers
-  ;(windmove-default-keybindings)
-  )
-(global-set-key (kbd "C-x <left>")  'windmove-left)
-(global-set-key (kbd "C-x <right>") 'windmove-right)
-(global-set-key (kbd "C-x <up>")    'windmove-up)
-(global-set-key (kbd "C-x <down>")  'windmove-down)
+  :bind
+    ("C-x <left>"  . windmove-left)
+    ("C-x <right>" . windmove-right)
+    ("C-x <up>"    . windmove-up)
+    ("C-x <down>"  . windmove-down)
+)
 
 
-
-;;(use-package imenu-list)
-;;(global-set-key (kbd "C-S-i") #'imenu-list-smart-toggle)
 
 
 ;; (defun my-smart-backspace ()
