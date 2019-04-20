@@ -750,5 +750,79 @@ point reaches the beginning or end of the buffer, stop there."
 
 
 
+
+(defun skip-chars-unless-leads-to (scf p)
+  (let ((op (point)))
+    (funcall scf  " \t")
+    (if (eq (point) p)
+        (goto-char op)))
+)
+
+
+(defun my/forward-word (&optional skip-post-ws count)
+  (interactive)
+  (setq count (or count 1))
+  ; The following tricks right-char into handling shift
+  ; withought visibly moving the point
+  (save-excursion (call-interactively 'right-char))
+  ;(backward-word 1)
+  (while (/= count 0)
+
+    (let*
+	((forward
+	  (> count 0))
+	 (line-boundary
+	  (if forward (line-end-position) (line-beginning-position)))
+	 (skip-chars-fun
+	  (if forward 'skip-chars-forward 'skip-chars-backward))
+	 (skip-syntax-fun
+	  (if forward 'skip-syntax-forward 'skip-syntax-backward))
+	 (cur-char
+	  (if forward (char-after) (char-before))))
+
+      ;(message (string (char-syntax cur-char)))
+      (cond
+       ((eq line-boundary (point))
+	(funcall skip-chars-fun " \n\t")
+	(if forward (beginning-of-line) (end-of-line)))
+
+       ((eq (char-syntax cur-char) ?\s )
+	(funcall skip-chars-fun " \t"))
+
+
+       ((eq (char-syntax cur-char) ?>) ; special case: syntax class > may contain \n
+        (funcall skip-syntax-fun ">")
+	(if skip-post-ws
+	    (skip-chars-unless-leads-to skip-chars-fun line-boundary)))
+
+       ((member (char-syntax cur-char) '(?w ?_ ?\\))
+	(funcall skip-syntax-fun "w_\\")
+	(if skip-post-ws
+	    (skip-chars-unless-leads-to skip-chars-fun line-boundary)))
+
+
+       (t
+	(funcall skip-syntax-fun ".()\"<$'") ;was .()\"/\\'<>
+	(if skip-post-ws
+	    (skip-chars-unless-leads-to skip-chars-fun line-boundary)))))
+
+    (setq count (- count (signum count)))))
+
+
+(defun my/kill-word (arg)
+  (interactive "p")
+  (kill-region (point) (progn (my/forward-word nil arg) (point))))
+
+(defun my/backward-kill-word (arg)
+  (interactive "p")
+  (my/kill-word (- arg)))
+
+
+(global-set-key (kbd "<C-right>") (lambda () (interactive) (my/forward-word t 1)))
+(global-set-key (kbd "<C-left>")  (lambda () (interactive) (my/forward-word t -1)))
+
+(global-set-key (kbd "<C-backspace>")  'my/backward-kill-word)
+(global-set-key (kbd "C-_")  'my/backward-kill-word)
+(global-set-key (kbd "<C-delete>")  'my/kill-word)
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))
