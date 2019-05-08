@@ -11,3 +11,4 @@
 ;(load-file (concat spacemacs-start-directory "init.el"))
 
 (load-file "~/.emacs.d/myinit.el")
+(put 'narrow-to-region 'disabled nil)
