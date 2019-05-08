@@ -831,5 +831,15 @@ point reaches the beginning or end of the buffer, stop there."
 (global-set-key (kbd "<C-backspace>")  'my/backward-kill-word)
 (global-set-key (kbd "C-_")  'my/backward-kill-word)
 (global-set-key (kbd "<C-delete>")  'my/kill-word)
+
+
+(use-package shackle
+  :config
+  (progn
+    (shackle-mode 1)
+    ;(setq helm-display-function #'pop-to-buffer)
+    (setq shackle-rules
+      '(("*TeX errors*" :popup t :align 'below :ratio 0.10)))))
+
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))

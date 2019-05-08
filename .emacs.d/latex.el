@@ -12,19 +12,59 @@
     (setq-default TeX-master nil)
     (setq TeX-auto-save t)
     (setq TeX-parse-self t)
+    (setq TeX-display-help nil)
+    (setq TeX-error-overview-open-after-TeX-run t)
     (setq TeX-source-correlate-mode t)
     (setq TeX-source-correlate-start-server t)
   :config
-    (setcar (cdr (assoc 'output-pdf TeX-view-program-selection)) "Okular")
+    (setcar (cdr (assoc 'output-pdf TeX-view-program-selection)) "Atril-no-dbus")
+    (add-to-list
+     'TeX-view-program-list
+     '("Atril-no-dbus" ("atril" (mode-io-correlate " -i %(outpage)") " %o") "atril"))
     (add-hook 'LaTeX-mode-hook
-          (lambda() (define-key LaTeX-mode-map (kbd "C-j") nil)))
+          (lambda()
+	    (define-key LaTeX-mode-map (kbd "C-j") nil)
+	    (define-key LaTeX-mode-map (kbd "$") nil)))
     (add-hook 'LaTeX-mode-hook 'imenu-list-minor-mode)
     (add-hook 'LaTeX-mode-hook #'rainbow-delimiters-mode)
     (company-auctex-init)
     (add-hook 'LaTeX-mode-hook 'company-mode)
+    (advice-add 'TeX-LaTeX-sentinel :after #'my/TeX-LaTeX-sentinel)
 )
 
 
+(add-hook 'bibtex-mode-hook (lambda () (define-key bibtex-mode-map (kbd "C-j") nil)))
+(add-hook 'BibTeX-mode-hook (lambda () (define-key bibtex-mode-map (kbd "C-j") nil)))
+
+; auto closing of error buffer:
+
+(defun my/TeX-LaTeX-sentinel (process name)
+  "If showing error overview, re-focus on the tex window"
+  (if TeX-error-overview-orig-window
+       (select-window TeX-error-overview-orig-window)))
+
+
+
+(defun TeX-error-delete-window ()
+  "Delete TeX error window when there are no errors to show."
+  (let ((w (get-buffer-window))
+    (b (get-buffer "*TeX Help*")))
+    (when w
+      (delete-window w))
+    (when b
+      (setq w (get-buffer-window b))
+      (when w
+    (delete-window w)))))
+
+(defun TeX-error-install-delete-window-hook ()
+  "Install `TeX-error-delete-window' in buffer-local `kill-buffer-hook'."
+  (add-hook 'kill-buffer-hook #'TeX-error-delete-window nil t))
+
+(add-hook 'TeX-error-overview-mode-hook #'TeX-error-install-delete-window-hook)
+
+
+
+;(add-hook 'TeX-after-compilation-finished-hook 'handle-TeX-help)
 
 ;; ; lsp latex stuff :
 
