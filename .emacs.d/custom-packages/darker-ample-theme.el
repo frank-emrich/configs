@@ -53,7 +53,7 @@
       (darker-ample/rb4 "#4170a3")
       (darker-ample/rb5 "#757575")
 
-      (darker-ample/bg "gray6")
+      (darker-ample/bg "gray5")
       (darker-ample/fg "#bdbdb3"))
 
 
