@@ -854,5 +854,15 @@ point reaches the beginning or end of the buffer, stop there."
     (setq shackle-rules
       '(("*TeX errors*" :popup t :align 'below :ratio 0.10)))))
 
+
+(use-package highlight-thing
+  :defer t
+  :init
+    (add-hook 'prog-mode-hook 'highlight-thing-mode)
+    (setq highlight-thing-delay-seconds 1.5)
+    (setq highlight-thing-case-sensitive-p t)
+    (setq highlight-thing-exclude-thing-under-point t)
+    (setq highlight-thing-prefer-active-region t))
+
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))
