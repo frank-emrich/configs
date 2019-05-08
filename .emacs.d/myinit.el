@@ -344,9 +344,18 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 (enable-theme 'darker-ample)
 
 
+; highlight differences with version control base
+(use-package git-gutter)
 
-(global-linum-mode t) ;show line numbers
-(setq linum-format "%4d \u2502 ") ; separate line number from text with solid line
+(if (version< emacs-version "26")
+     (progn (setq linum-format "%4d \u2502 ")
+	    (global-linum-mode t)
+	    (global-git-gutter-mode t)
+	    (git-gutter:linum-setup)
+	    (add-hook 'after-revert-hook `linum-update-current))
+  (global-display-line-numbers-mode t)
+  (setq display-line-numbers "%4d \u2502 ")
+  (global-git-gutter-mode t))
 ;(setq-default left-margin-width 10 right-margin-width 8) ; Define new widths.
 ; (set-window-buffer nil (current-buffer)) ; Use them now.
 ;(set-face-attribute 'fringe nil :background "#2E2920" :foreground "#2E2920")
@@ -368,10 +377,6 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 ;easily step through file's history
 (use-package git-timemachine :defer t)
 
-; highlight differences with version control base
-(use-package git-gutter)
-(global-git-gutter-mode)
-(git-gutter:linum-setup)
 
 
 (defun my/smarter-move-beginning-of-line (arg)
