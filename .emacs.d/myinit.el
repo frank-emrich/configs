@@ -202,7 +202,10 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 
 ; auto completion
 (use-package company
-;  :hook prog-mode
+  :defer t
+  :bind
+    ("C-S-SPC" . company-complete)
+    ("\200"    . company-complete)
   :config
     (setq company-dabbrev-downcase nil) ; make company-dabbrev case-sensitive
     (setq company-idle-delay nil)
@@ -292,11 +295,10 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 
 
 ; move C-SPC to C-S-SPC so that company can use C-SPC
-(global-set-key (kbd "C-S-SPC") 'set-mark-command)
-(global-set-key (kbd "\200") 'set-mark-command)
+;(global-set-key (kbd "C-S-SPC") 'set-mark-command)
+;(global-set-key (kbd "\200") 'set-mark-command)
 
-(global-set-key (kbd "C-SPC") 'company-complete)
-(global-set-key (kbd "C-@") 'company-complete)
+
 
 
 
