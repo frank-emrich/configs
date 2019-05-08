@@ -178,7 +178,7 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
        (or (null confirm-kill-emacs)
        (funcall confirm-kill-emacs "Really exit Emacs? "))
        (kill-emacs)))
-(fset 'save-buffers-kill-emacs 'my-save-buffers-kill-emacs)
+;(fset 'save-buffers-kill-emacs 'my-save-buffers-kill-emacs)
 
 ; no tool bar
 (tool-bar-mode -1)
@@ -712,7 +712,6 @@ point reaches the beginning or end of the buffer, stop there."
   (add-hook 'after-revert-hook `display-ansi-colors nil t)
 )
 
-(add-hook 'after-revert-hook `linum-update-current)
 
 
 ; modify C-w and M-w such that they use the system clipboard
@@ -768,6 +767,20 @@ point reaches the beginning or end of the buffer, stop there."
   ("C-<right>" (windsize-right 10) nil)
   ("C-<left>" (windsize-left 10) nil))
 
+
+
+(use-package imenu-list
+  :defer t
+  :config
+    (add-hook 'imenu-list-update-hook
+	      (lambda ()
+		(overlay-put
+		 (buffer-local-value
+		  'hl-line-overlay
+		  (imenu-list-get-buffer-create))
+		 'face
+		 '(:background "#656565"))))
+    (setq imenu-list-size 50))
 
 
 
