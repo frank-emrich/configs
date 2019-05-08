@@ -757,6 +757,19 @@ point reaches the beginning or end of the buffer, stop there."
 
 
 
+(use-package windsize
+  :commands (windsize-right windsize-left))
+(use-package hydra)
+
+; stays active while C-right/C-left keeps being pressed
+(defhydra hydra-resize
+  (global-map "C-x")
+  "resize window with C + left/right arrow keys"
+  ("C-<right>" (windsize-right 10) nil)
+  ("C-<left>" (windsize-left 10) nil))
+
+
+
 
 (defun skip-chars-unless-leads-to (scf p)
   (let ((op (point)))
