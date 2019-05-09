@@ -59,6 +59,23 @@ function install_source {
   fi
 }
 
+function suggest_source {
+  source_to="$target/$1"
+  source_from="$2"
+
+  if [ ! -e "$source_from" ] ; then
+      echo "File $source_from did not exist, consider adding it and sourcing $source_to from it"
+  else
+      source_line=". ${source_to}"
+      if grep -q "${source_line}" "${source_from}"; then
+	  echo "File $source_to already sourced from $source_from"
+      else
+	  echo "File $source_from exists, consider adding the following:"
+	  echo "$source_line"
+      fi
+  fi
+}
+
 
 function create_redirect_file() {
   cat <<EOF > $1
@@ -82,7 +99,8 @@ install_source aliases ~/.bash_aliases
 install_source "bashrc_redirect" ~/.bashrc
 
 install_source "zshrc_redirect" ~/.zshrc
-
+install_symlink "zsh/.zprofile" ~/.zprofile
+suggest_source "zsh/load_zshrc_if_zsh" ~/.profile
 
 which powerline-daemon > /dev/null || echo "powerline not installed, consider \"pip install powerline-status\""
 
