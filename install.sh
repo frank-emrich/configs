@@ -106,3 +106,7 @@ misc/create_systemd_file.sh "emacs.service" "$target/misc"
 
 echo "created emacs.service file, consider installing it via"
 echo "cp emacs.service ~/.config/systemd/user/ && systemctl --user enable emacs.service"
+
+#Konsole
+mkdir -p ~/.local/share/
+install_symlink konsole/share ~/.local/share/konsole
