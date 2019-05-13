@@ -11,11 +11,22 @@ if [[ "$target" != "$script_path" ]] ; then
 fi
 
 
-
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+ORANGE='\033[0;32m'
+NC='\033[0m' # No Color
 
 function abort {
-  echo "$1"
+  echo -e "${RED}$1${NC}"
   exit 1
+}
+
+function warn {
+  echo -e "${ORANGE}$1${NC}"
+}
+
+function ok {
+  echo -e "${GREEN}$1${NC}"
 }
 
 function install_symlink {
@@ -26,7 +37,7 @@ function install_symlink {
     if [ -L "$home_f" ] ; then
       existing_link_target="$(readlink -f $home_f)"
       if [ "$existing_link_target" = "$target_f" ] ; then
-        echo "Right symlink for $f exists"
+        ok "Right symlink for $f exists"
       else
         abort "Existing symlink $home_f, pointing somewhere else"
       fi
@@ -64,13 +75,13 @@ function suggest_source {
   source_from="$2"
 
   if [ ! -e "$source_from" ] ; then
-      echo "File $source_from did not exist, consider adding it and sourcing $source_to from it"
+      warn "File $source_from did not exist, consider adding it and sourcing $source_to from it"
   else
       source_line=". ${source_to}"
       if grep -q "${source_line}" "${source_from}"; then
 	  echo "File $source_to already sourced from $source_from"
       else
-	  echo "File $source_from exists, consider adding the following:"
+	  warn "File $source_from exists, consider adding the following:"
 	  echo "$source_line"
       fi
   fi
@@ -91,7 +102,9 @@ create_redirect_file "zshrc_redirect" "${target}/zsh/zshrc_additions"
 create_redirect_file "bashrc_redirect" "${target}/bash/bashrc_additions"
 
 install_symlink .emacs.d ~/.emacs.d
+
 install_symlink powerline ~/.config/powerline
+
 install_symlink tmux/.tmux.conf.local ~/.tmux.conf.local
 install_symlink tmux/.tmux/.tmux.conf ~/.tmux.conf
 
@@ -102,7 +115,7 @@ install_source "zshrc_redirect" ~/.zshrc
 install_symlink "zsh/.zprofile" ~/.zprofile
 suggest_source "zsh/load_zshrc_if_zsh" ~/.profile
 
-which powerline-daemon > /dev/null || echo "powerline not installed, consider \"pip install powerline-status\""
+which powerline-daemon > /dev/null || warn "powerline not installed, consider \"pip install powerline-status\""
 
 
 #Somehow, the permissions of the submodules are messed up?
