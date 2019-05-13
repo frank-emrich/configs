@@ -63,7 +63,7 @@ function install_source {
 
   source_line=". ${source_to}"
   if grep -q "${source_line}" "${source_from}"; then
-      echo "File $source_to already sourced from $source_from"
+      ok "File $source_to already sourced from $source_from"
   else
       echo "Appending  '$source_line' to $source_from"
       echo "$source_line" >> "$source_from"
@@ -79,7 +79,7 @@ function suggest_source {
   else
       source_line=". ${source_to}"
       if grep -q "${source_line}" "${source_from}"; then
-	  echo "File $source_to already sourced from $source_from"
+	  ok "File $source_to already sourced from $source_from"
       else
 	  warn "File $source_from exists, consider adding the following:"
 	  echo "$source_line"
