@@ -1,3 +1,162 @@
+(require 'help-fns)
+
+(defun require--tracing-function (orig-fun &rest args)
+"When testing with `emacs -q`, start by requiring `help-fns.el`."
+  (message "`require' called with args %S" args)
+  (with-current-buffer (get-buffer-create "*TRACE*")
+    (let* ((standard-output (current-buffer))
+           (print-escape-newlines t)
+           (print-level 8)
+           (print-length 50)
+           beg end)
+        (goto-char (point-max))
+        (setq beg (point))
+        (setq truncate-lines t)
+        (set-buffer-multibyte t)
+        (setq buffer-undo-list t)
+        (backtrace)
+        (insert "===============================\n")
+        (setq end (point))
+        (narrow-to-region beg end)
+        (let ((regex
+                (concat
+                  "^\s+byte-code\("
+                  "\\(\\(?:.\\)*?\\)"
+                  "\s"
+                  "\\[\\(.*\\)\\]"
+                  "\s"
+                  "\\([0-9]+\\)"
+                  "\)"))
+              (bytestr (propertize "BYTESTR" 'face '(:foreground "RoyalBlue")))
+              (maxdepth (propertize "MAXDEPTH" 'face '(:foreground "RoyalBlue"))))
+          (goto-char (point-max))
+          (while (re-search-backward regex nil t)
+            (when (match-string 1)
+              (replace-match bytestr nil nil nil 1))
+            (when (match-string 2)
+              (let ((constants
+                     (propertize (match-string 2) 'face '(:foreground "purple"))))
+                (replace-match constants nil 'literal nil 2)))
+            (when (match-string 3)
+              (replace-match maxdepth nil nil nil 3))))
+        ;;; See the Emacs Lisp manual:  Byte-Code Function Objects
+        (let ((regex
+                (concat
+                   "#\\["
+                   ;;; argdesc
+                   "\\([0-9]+\\)"
+                   ;;; byte-code
+                   "\\(?:\s\\(.*?\\)\\)?"
+                   "\s"
+                   ;;; constants
+                   "\\[\\(.*\\)\\]"
+                   "\s"
+                   ;;; stacksize
+                   "\\([0-9]+\\)"
+                   ;;; docstring
+                   "\\(?:\s\\(.*?\\)\\)?"
+                   ;;; interactive
+                   "\\(?:\s\\(.*?\\)\\)?"
+                   "\\]"))
+              (argdesc
+                (propertize "ARGDESC" 'face '(:foreground "orange")))
+              (byte-code
+                (propertize "BYTE-CODE" 'face '(:foreground "orange")))
+              (stacksize
+                (propertize "STACKSIZE" 'face '(:foreground "orange")))
+              (docstring
+                (propertize "DOCSTRING" 'face '(:foreground "orange")))
+              (interactive
+                (propertize "INTERACTIVE" 'face '(:foreground "orange"))))
+          (goto-char (point-max))
+          (while (re-search-backward regex nil t)
+            (when (match-string 1)
+              (replace-match argdesc nil nil nil 1))
+            (when (match-string 2)
+              (replace-match byte-code nil nil nil 2))
+            (when (match-string 3)
+              (let ((constants
+                      (propertize
+                        (match-string 3) 'face '(:foreground "ForestGreen"))))
+                (replace-match constants nil 'literal nil 3)))
+            (when (match-string 4)
+              (replace-match stacksize nil nil nil 4))
+            (when (match-string 5)
+              (replace-match docstring nil nil nil 5))
+            (when (match-string 6)
+              (replace-match interactive nil nil nil 6))))
+        (let ((regex
+                (concat
+                  "^\s+\(let\\*\s\(\(standard-output.*\(current-buffer\)\)\)$"
+                  "\\|"
+                  "^\s+\(let\s\(\(res\s.*res\)\sres\)$"
+                  "\\|"
+                  (concat "^\s+\(save-current-buffer\s\(set-buffer.*"
+                          "\(current-buffer\)\)\)\)$")
+                  "\\|"
+                  "^\s+backtrace\(\)$"
+                  "\\|"
+                  "^\s+apply\(require--tracing-function .*\)$"
+                  "\\|"
+                  "^\s+require--tracing-function\(.*\)$")))
+          (goto-char (point-max))
+          (while (re-search-backward regex nil t)
+            (delete-region (match-beginning 0) (1+ (match-end 0)))))
+        (goto-char (point-min))
+        ;;; A slight variation of the built-in `debugger-make-xrefs'.
+        (while (progn
+           (goto-char (+ (point) 2))
+           (skip-syntax-forward "^w_")
+           (not (eobp)))
+          (let* ((beg (point))
+                 (end (progn (skip-syntax-forward "w_") (point)))
+                 (fn (function-called-at-point))
+                 (sym (intern-soft (buffer-substring-no-properties beg end)))
+                 (file
+                   (if fn
+                     (let* (
+                          (function fn)
+                          (advised (and (symbolp function)
+                              (featurep 'nadvice)
+                              (advice--p (advice--symbol-function function))))
+                          ;; If the function is advised, use the symbol that has the
+                          ;; real definition, if that symbol is already set up.
+                          (real-function
+                            (or (and advised
+                                     (advice--cd*r
+                                       (advice--symbol-function function)))
+                               function))
+                          ;; Get the real definition.
+                         (def (if (symbolp real-function)
+                                 (or (symbol-function real-function)
+                                     (signal 'void-function (list real-function)))
+                                 real-function))
+                         (aliased (or (symbolp def)
+                               ;; Advised & aliased function.
+                               (and advised (symbolp real-function)
+                              (not (eq 'autoload (car-safe def))))))
+                         (file-name
+                           (find-lisp-object-file-name
+                             function (if aliased 'defun def))))
+                      file-name)
+                  (and sym (symbol-file sym 'defun)))))
+            (when file
+              (goto-char beg)
+              ;; help-xref-button needs to operate on something matched
+              ;; by a regexp, so set that up for it.
+              (re-search-forward "\\(\\sw\\|\\s_\\)+")
+              (help-xref-button 0 'help-function-def sym file)))
+          (forward-line 1))
+        (widen)
+      (display-buffer (current-buffer))))
+  (let ((res (apply orig-fun args)))
+    (message "`require' returned %S" res)
+    res))
+
+; enable to profile package loading
+;(advice-add 'require :around #'require--tracing-function)
+
+
 (require 'package)
 
 
