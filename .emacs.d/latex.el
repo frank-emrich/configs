@@ -5,6 +5,16 @@
   :defer t
 )
 
+(defun viewer-from-ssh-client (client-string)
+  (cond
+    ((not (stringp client-string))
+     "Atril-no-dbus")
+    ((string-prefix-p "192.168.56.1" client-string)
+     "display1_Okular")
+    ((string-prefix-p "129.215" client-string)
+     "remote_Okular"))
+)
+
 (use-package tex
   :defer t
   :ensure auctex
@@ -17,10 +27,24 @@
     (setq TeX-source-correlate-mode t)
     (setq TeX-source-correlate-start-server t)
   :config
-    (setcar (cdr (assoc 'output-pdf TeX-view-program-selection)) "Atril-no-dbus")
+    ;(setcar (cdr (assoc 'output-pdf TeX-view-program-selection)) "Atril-no-dbus")
+    ;(setcar (cdr (assoc 'output-pdf TeX-view-program-selection)) "remote_Okular")
+    (setcar (cdr (assoc 'output-pdf TeX-view-program-selection)) (viewer-from-ssh-client (getenv "SSH_CONNECTION")))
     (add-to-list
      'TeX-view-program-list
      '("Atril-no-dbus" ("atril" (mode-io-correlate " -i %(outpage)") " %o") "atril"))
+    (add-to-list
+     'TeX-view-program-list
+     '("Atril-no-dbus-display-1" ("atril" (mode-io-correlate " --display :1 -i %(outpage)") " %o") "atril"))
+    ;(add-to-list
+    ; 'TeX-view-program-list
+    ; '("Atril-remote" ("/home/frank/remote_atril.sh" (mode-io-correlate " -i %(outpage)") " %o") "/home/frank/remote_atril.sh"))
+    (add-to-list
+     'TeX-view-program-list
+     '("remote_Okular" ("/home/frank/remote_okular.sh --unique %o" (mode-io-correlate "#src:%n%a")) "/home/frank/remote_okular.sh"))
+    (add-to-list
+     'TeX-view-program-list
+     '("display1_Okular" ("/home/frank/display1_okular.sh --noraise --unique %o" (mode-io-correlate "#src:%n%a")) "/home/frank/display1_okular.sh"))
     (add-hook 'LaTeX-mode-hook
           (lambda()
 	    (define-key LaTeX-mode-map (kbd "C-j") nil)
