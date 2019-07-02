@@ -812,10 +812,15 @@ point reaches the beginning or end of the buffer, stop there."
 (global-hl-line-mode +1)
 (set-face-attribute 'hl-line nil :inherit nil :background "gray13")
 
+(defvar ignore-trailing-whitespace nil)
+
+(defun may-delete-whitespace ()
+  (unless ignore-trailing-whitespace
+    (delete-trailing-whitespace)))
 
 ;delete trailing whitespace on save
 (add-hook 'prog-mode-hook
-	  (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
+	  (lambda () (add-to-list 'write-file-functions 'may-delete-whitespace)))
 
 
 
