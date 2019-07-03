@@ -1028,9 +1028,13 @@ point reaches the beginning or end of the buffer, stop there."
 
 (global-set-key (kbd "M-p")  (lambda nil (interactive) (scroll-up -10)))
 (global-set-key (kbd "M-n")  (lambda nil (interactive) (scroll-up 10)))
-;accounting for Linux' AltGr behavior
+
+; accounting for Linux' AltGr behavior
 (global-set-key (kbd "þ")  (lambda nil (interactive) (scroll-up -10)))
 (global-set-key (kbd "”")  (lambda nil (interactive) (scroll-up 10)))
+(global-set-key (kbd "đ")  (lambda () (interactive) (my/forward-word t 1)))
+(global-set-key (kbd "“")  (lambda () (interactive) (my/forward-word t -1)))
+
 
 (use-package shackle
   :config
