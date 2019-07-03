@@ -8,7 +8,7 @@
 (defun viewer-from-ssh-client (client-string)
   (cond
     ((not (stringp client-string))
-     "Atril-no-dbus")
+     "Okular")
     ((string-prefix-p "192.168.56.1" client-string)
      "display1_Okular")
     ((string-prefix-p "129.215" client-string)
@@ -45,6 +45,10 @@
     (add-to-list
      'TeX-view-program-list
      '("display1_Okular" ("/home/frank/display1_okular.sh --noraise --unique %o" (mode-io-correlate "#src:%n%a")) "/home/frank/display1_okular.sh"))
+    (add-to-list
+     'TeX-view-program-list
+     '("Okular" ("okular --noraise --unique %o" (mode-io-correlate "#src:%n%a")) "okular"))
+
     (add-hook 'LaTeX-mode-hook
           (lambda()
 	    (define-key LaTeX-mode-map (kbd "C-j") nil)
