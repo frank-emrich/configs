@@ -64,7 +64,7 @@
 
 (defun my/TeX-LaTeX-sentinel (process name)
   "If showing error overview, re-focus on the tex window"
-  (if TeX-error-overview-orig-window
+  (if (window-live-p TeX-error-overview-orig-window)
        (select-window TeX-error-overview-orig-window)))
 
 
