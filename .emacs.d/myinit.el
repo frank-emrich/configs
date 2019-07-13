@@ -289,11 +289,15 @@
   ;; Following line is not needed if use-package.el is in ~/.emacs.d
   ;;(add-to-list 'load-path "<path where use-package is installed>")
   (require 'use-package))
+(require 'bind-key)                ;; if you use any :bind variant
+
+(require 'use-package-ensure)
 (setq use-package-always-ensure t) ;use-package will download missing ones
 
 (add-to-list 'load-path "~/.emacs.d/custom-packages/")
 
 
+(use-package delight)
 
 
 ;; (use-package auto-compile)
@@ -349,7 +353,7 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 (use-package cl-lib)
 
 (use-package magit
-  :defer t
+  :defer 30
   :config
     ;get rid of rebase mode
     (setq
@@ -361,7 +365,7 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 
 ; auto completion
 (use-package company
-  :defer t
+  :defer 30
   :bind
     ("C-S-SPC" . company-complete)
     ("\200"    . company-complete)
@@ -380,7 +384,7 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 
 
 (defun warn-echo-area (format &rest args)
-  "Display lsp warn message with FORMAT with ARGS."
+  "Display warn message with FORMAT with ARGS."
   (message "%s :: %s" (propertize "Warning" 'face 'warning) (apply #'format format args)))
 
 
@@ -417,6 +421,7 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 
 (use-package lsp-mode
   :commands lsp
+  :defer 30
   :config
    (require 'lsp-clients)
    (fset 'lsp--calculate-root 'lsp--noquery-calculate-root)
@@ -439,8 +444,17 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 (add-hook 'lsp-after-open-hook 'set-default-dir-lsp-root)
 
 
-(use-package lsp-ui :commands lsp-ui-mode)
-(use-package company-lsp :commands company-lsp)
+(use-package lsp-ui
+  :defer 30
+  :commands lsp-ui-mode
+  :pin MELPA
+  :after lsp-mode
+)
+
+(use-package company-lsp
+  :defer 30
+  :commands company-lsp
+  :after lsp-mode)
 
 
 (defun lsp-disable-highlighting ()
@@ -506,7 +520,7 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 
 
 ; highlight differences with version control base
-(use-package git-gutter)
+(use-package git-gutter :delight)
 
 (if (version< emacs-version "26")
      (progn (setq linum-format "%4d \u2502 ")
@@ -527,16 +541,20 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 
 
 (use-package undo-tree
-  :diminish undo-tree-mode
+  :delight
+  :defer 30
+  :bind
+    (("C-x u" . undo-tree-visualize))
   :config
   (progn
     (global-undo-tree-mode)
     (setq undo-tree-visualizer-timestamps t)
-    (setq undo-tree-visualizer-diff t))
+    (setq undo-tree-visualizer-diff t)
+    (define-key undo-tree-map "\C-_" nil))
 )
 
 ;easily step through file's history
-(use-package git-timemachine :defer t)
+(use-package git-timemachine :defer 30)
 
 
 
@@ -583,7 +601,7 @@ point reaches the beginning or end of the buffer, stop there."
 
 
 (use-package helm
-  :diminish helm-mode
+  :delight
   :init
   (progn
     (require 'helm-config)
@@ -612,7 +630,7 @@ point reaches the beginning or end of the buffer, stop there."
          ("C-x c SPC" . helm-all-mark-rings)))
 
 (use-package helm-descbinds
-  :defer t
+  :defer 30
   :bind (("C-h b" . helm-descbinds)
          ("C-h w" . helm-descbinds)))
 
@@ -620,7 +638,7 @@ point reaches the beginning or end of the buffer, stop there."
 (use-package helm-swoop)
 
 
-(use-package helm-ag :defer t)
+(use-package helm-ag :defer 30)
 
 
 
@@ -635,7 +653,7 @@ point reaches the beginning or end of the buffer, stop there."
 
 
 ; matching parantheses are colored
-(use-package rainbow-delimiters :defer t)
+(use-package rainbow-delimiters :defer 30)
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 
 
@@ -824,7 +842,7 @@ point reaches the beginning or end of the buffer, stop there."
 
 
 
-(define-key undo-tree-map "\C-_" nil)
+
 (global-set-key (kbd "C-_") 'backward-kill-word)
 
 (global-set-key (kbd "C-k") 'kill-whole-line)
@@ -937,7 +955,7 @@ point reaches the beginning or end of the buffer, stop there."
 
 
 (use-package imenu-list
-  :defer t
+  :defer 30
   :config
     (add-hook 'imenu-list-update-hook
 	      (lambda ()
@@ -1044,9 +1062,25 @@ point reaches the beginning or end of the buffer, stop there."
     (setq shackle-rules
       '(("*TeX errors*" :popup t :align 'below :ratio 0.10)))))
 
+; Spelling
+(setq ispell-dictionary "en_US")
+(defun look-for-aspell ()
+  (unless (executable-find "aspell")
+    (warn-echo-area "aspell not installed"))
+)
+(add-hook
+ 'flyspell-mode-hook
+ (lambda () ; only do flyspell-buffer after file local vars are available
+   (add-hook 'hack-local-variables-hook
+	     'flyspell-buffer
+	     nil t)))
+; check whole buffer once entering flyspell mode
+(add-hook 'flyspell-mode-hook (lambda () (run-at-time "3 sec" nil 'look-for-aspell)))
+
+
 
 (use-package highlight-thing
-  :defer t
+  :defer 30
   :init
     (add-hook 'prog-mode-hook 'highlight-thing-mode)
     (setq highlight-thing-delay-seconds 1.5)
