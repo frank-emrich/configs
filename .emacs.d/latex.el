@@ -55,6 +55,7 @@
 	    (define-key LaTeX-mode-map (kbd "$") nil)))
     (add-hook 'LaTeX-mode-hook 'imenu-list-minor-mode)
     (add-hook 'LaTeX-mode-hook #'rainbow-delimiters-mode)
+    (add-hook 'LaTeX-mode-hook 'flyspell-mode)
     (company-auctex-init)
     (add-hook 'LaTeX-mode-hook 'company-mode)
     (advice-add 'TeX-LaTeX-sentinel :after #'my/TeX-LaTeX-sentinel)
