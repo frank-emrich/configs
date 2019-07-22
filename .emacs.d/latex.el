@@ -91,6 +91,42 @@
 
 (add-hook 'TeX-error-overview-mode-hook #'TeX-error-install-delete-window-hook)
 
+(defun beautify-unicode ()
+  (interactive)
+    (let ((case-fold-search nil)
+	  (replacements
+	   '(
+	     ("\\forall" "∀")
+	     ("\\Delta" "Δ")
+	     ;("\\delta" "δ")
+	     ("\\vdash" "꜔")
+	     ;("\\theta" "θ")
+	     ("\\Theta" "Θ")
+	     ("\\lambda" "λ")
+	     ("\\Lambda" "Λ")
+	     ("\\alpha" "α")
+	     ("\\Gamma" "Γ")
+	     ("\\not\\in" "∉")
+	     ("\\in" "∈")
+	    )))
+
+      (dolist (elt replacements)
+	(goto-char (point-min))
+	;(message (car (cdr elt))))
+	(while (search-forward (car elt) nil t)
+	  (replace-match (car (cdr elt)))
+	))
+
+      ;; (goto-char (point-min))
+      ;; (while (search-forward "\\forall" nil t)
+      ;; 	(replace-match "∀"))
+
+      ;; (goto-char (point-min))
+      ;; (while (search-forward "\\Delta" nil t)
+      ;; 	(replace-match "Δ"))
+
+      ;; repeat for other string pairs
+      ))
 
 
 ;(add-hook 'TeX-after-compilation-finished-hook 'handle-TeX-help)
