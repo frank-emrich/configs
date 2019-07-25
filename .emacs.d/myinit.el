@@ -1068,14 +1068,68 @@ point reaches the beginning or end of the buffer, stop there."
   (unless (executable-find "aspell")
     (warn-echo-area "aspell not installed"))
 )
+
 (add-hook
  'flyspell-mode-hook
  (lambda () ; only do flyspell-buffer after file local vars are available
-   (add-hook 'hack-local-variables-hook
-	     'flyspell-buffer
-	     nil t)))
+   (run-at-time "3 sec" nil 'flyspell-buffer))
+	     )
 ; check whole buffer once entering flyspell mode
 (add-hook 'flyspell-mode-hook (lambda () (run-at-time "3 sec" nil 'look-for-aspell)))
+
+(defun string-list-p (l)
+  (when (listp l)
+    (cl-every 'stringp l)
+ )
+)
+
+; ispell-buffer-session-localwords is safe for any list of strings
+(put 'ispell-buffer-session-localwords 'safe-local-variable #'string-list-p)
+
+;(setq ispell-dictionary "american")
+
+(defun *-ispell-buffer-local-words-list ()
+  (let (words)
+    (or ispell-buffer-local-name
+        (setq ispell-buffer-local-name (buffer-name)))
+    (save-excursion
+      (goto-char (point-min))
+      (while (search-forward ispell-words-keyword nil t)
+        (let ((end (point-at-eol))
+              (ispell-casechars (ispell-get-casechars))
+              string)
+          (while (re-search-forward " *\\([^ ]+\\)" end t)
+            (setq string (match-string-no-properties 1))
+            (if (and (< 1 (length string))
+                     (equal 0 (string-match ispell-casechars string)))
+                (push string words))))))
+    words))
+
+
+(defun ispell-move-buffer-words-to-dir-locals ()
+  (interactive)
+  (unless (buffer-file-name)
+    (user-error "buffer not attached to file"))
+  (let ((words (*-ispell-buffer-local-words-list)))
+    (save-excursion
+      (add-dir-local-variable
+       nil ; or name of major mode
+       'ispell-buffer-session-localwords
+       (setq ispell-buffer-session-localwords
+             (cl-remove-duplicates
+              (append ispell-buffer-session-localwords words)
+              :test #'string=)))
+      (when (y-or-n-p "Save .dir-locals.el?")
+        (save-buffer))
+      (bury-buffer))
+    (or ispell-buffer-local-name
+        (setq ispell-buffer-local-name (buffer-name)))
+    (save-excursion
+      (goto-char (point-min))
+      (while (search-forward ispell-words-keyword nil t)
+        (delete-region (point-at-bol) (1+ (point-at-eol)))))))
+
+
 
 
 
