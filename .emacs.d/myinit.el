@@ -496,6 +496,8 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 (load "~/.emacs.d/javascript")
 (load "~/.emacs.d/latex")
 (load "~/.emacs.d/lisp")
+(load "~/.emacs.d/racket")
+(load "~/.emacs.d/agda")
 (load "~/.emacs.d/llvm")
 
 
