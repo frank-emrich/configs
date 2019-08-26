@@ -712,8 +712,8 @@ point reaches the beginning or end of the buffer, stop there."
 (use-package  multiple-cursors)
 ; make return in mc mode insert new line rather than aborting
 (define-key mc/keymap (kbd "<return>") nil)
-(global-set-key (kbd "C-S-c") 'mc/edit-lines)
-(global-set-key (kbd "\203") 'mc/edit-lines)
+(global-set-key (kbd "M-£") 'mc/edit-lines)
+(global-set-key (kbd "M-§") 'mc/edit-lines)
 
 
 ;quickly jump around
