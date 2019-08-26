@@ -261,13 +261,19 @@
 
 ;set priorities for repos:
 (setq package-archives
-      '(("GNU ELPA"     . "https://elpa.gnu.org/packages/")
+      '(
+        ("GNU ELPA"     . "https://elpa.gnu.org/packages/")
         ("MELPA Stable" . "https://stable.melpa.org/packages/")
-        ("MELPA"        . "https://melpa.org/packages/"))
+        ("MELPA"        . "https://melpa.org/packages/")
+	; To make use of mirror, comment out other archives
+	; To update mirror, require elpa-mirror, then execute elpamr-....
+        ("My GNU ELPA Mirror" . "https://raw.githubusercontent.com/frank-emrich/my-elpa/master/"))
+
       package-archive-priorities
       '(("MELPA Stable" . 10)
         ("GNU ELPA"     . 5)
-        ("MELPA"        . 0)))
+	("My GNU ELPA Mirror" . 0)
+        ("MELPA"        . 1)))
 
 
 
