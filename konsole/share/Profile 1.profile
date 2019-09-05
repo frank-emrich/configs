@@ -10,7 +10,7 @@ UseFontLineChararacters=false
 CursorShape=1
 
 [General]
-Command=/usr/bin/tmux
+Command=/bin/zsh
 Name=Profile 1
 Parent=FALLBACK/
 
