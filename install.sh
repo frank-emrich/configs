@@ -120,8 +120,8 @@ suggest_source "zsh/load_zshrc_if_zsh" ~/.profile
 which powerline-daemon > /dev/null || warn "powerline not installed, consider \"pip install powerline-status\""
 
 #Spelling
-install_symlink "spelling/.aspell.en.prepl" ~/.aspell.en.prepl
-install_symlink "spelling/.aspell.en.pws" ~/.aspell.en.pws
+install_symlink "aspell/.aspell.en.prepl" ~/.aspell.en.prepl
+install_symlink "aspell/.aspell.en.pws" ~/.aspell.en.pws
 
 
 #Somehow, the permissions of the submodules are messed up?
