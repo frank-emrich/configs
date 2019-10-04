@@ -360,12 +360,13 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 
 (use-package magit
   :defer 30
+  :init
+    (setq magit-auto-revert-mode nil)
   :config
     ;get rid of rebase mode
     (setq
       auto-mode-alist
       (cl-remove "/git-rebase-todo\\'" auto-mode-alist :test 'equal :key 'car))
-    (setq magit-auto-revert-mode nil)
 )
 
 
