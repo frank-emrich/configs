@@ -1,5 +1,8 @@
-alias ec="emacsclient -a '' -t"
+alias ec="~/.config/configs/scripts/emacsclient_tmux_session.sh"
 alias e=ec
+alias e-="${MY_DOTFILE_CONFIGS_DIR}/.emacs.d/piper.sh"
+
+
 alias l1='ls -1'
 
 #let less ignore case, obey color code
