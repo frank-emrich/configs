@@ -194,10 +194,11 @@ man() {
 
 #start tmux on ssh login into this machine
 if [ -z "$TMUX" ] && [ -n "$SSH_TTY" ] && [[ $- =~ i ]]; then
-    client_ip=$(echo "$SSH_CLIENT" | grep -oE '^([[:digit:]]{1,3}\.){3}[[:digit:]]{1,3}')
-    export DISPLAY="$client_ip:0"
-    tmux attach-session -t ssh || tmux new-session -s ssh
-    exit
+    tmux attach-session || tmux new-session -s "misc"
+    #exit
+else
+  #unset TMUX, was probably due to SSH forwarding
+  unset TMUX
 fi
 
-alias e-="${MY_DOTFILE_CONFIGS_DIR}/.emacs.d/piper.sh"
+
