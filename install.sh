@@ -91,7 +91,7 @@ function suggest_source {
 function create_redirect_file() {
   cat <<EOF > $1
 # Generated in order to define the following:
-MY_DOTFILE_CONFIGS_DIR="$PWD"
+export MY_DOTFILE_CONFIGS_DIR="$PWD"
 
 source $2
 EOF
