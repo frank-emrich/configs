@@ -321,3 +321,8 @@ bind-key -T prefix       Up                select-pane -U
 bind-key -T prefix       Down              select-pane -D
 bind-key -T prefix       Left              select-pane -L
 bind-key -T prefix       Right             select-pane -R
+
+
+
+run-shell ~/.config/configs/tmux/tmux-resurrect/resurrect.tmux
+

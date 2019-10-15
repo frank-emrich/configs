@@ -19,3 +19,6 @@
 [submodule "zsh/oh-my-zsh-custom/plugins/zsh-autosuggestions"]
 	path = zsh/oh-my-zsh-custom/plugins/zsh-autosuggestions
 	url = https://github.com/zsh-users/zsh-autosuggestions.git
+[submodule "tmux/tmux-resurrect"]
+	path = tmux/tmux-resurrect
+	url = https://github.com/tmux-plugins/tmux-resurrect
