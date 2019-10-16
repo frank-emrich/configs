@@ -359,7 +359,8 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 (use-package cl-lib)
 
 (use-package magit
-  :defer 30
+  :defer t
+  :bind (("C-x g" . magit-status))
   :init
     (setq magit-auto-revert-mode nil)
   :config
@@ -373,7 +374,7 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 
 ; auto completion
 (use-package company
-  :defer 30
+  :defer t
   :bind
     ("C-S-SPC" . company-complete)
     ("\200"    . company-complete)
