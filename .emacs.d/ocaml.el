@@ -22,7 +22,8 @@
       (executable-find "ocaml-language-server")
       (progn
 	(add-hook 'tuareg-mode-hook 'lsp-noquery)
-	(add-hook 'tuareg-mode-hook 'imenu-list-minor-mode))))
+	;(add-hook 'tuareg-mode-hook 'imenu-list-minor-mode)
+	)))
 )
 
 
