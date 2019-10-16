@@ -1208,14 +1208,41 @@ point reaches the beginning or end of the buffer, stop there."
         ("C-x t C-t" . treemacs-find-file)
         ("C-x t M-t" . treemacs-find-tag)))
 
-(use-package highlight-thing
-  :defer 30
-  :init
-    (add-hook 'prog-mode-hook 'highlight-thing-mode)
-    (setq highlight-thing-delay-seconds 1.5)
-    (setq highlight-thing-case-sensitive-p t)
-    (setq highlight-thing-exclude-thing-under-point t)
-    (setq highlight-thing-prefer-active-region t))
+;; (use-package highlight-thing
+;;   :defer 30
+;;   :init
+;;     (add-hook 'prog-mode-hook 'highlight-thing-mode)
+;;     (setq highlight-thing-delay-seconds 1.5)
+;;     (setq highlight-thing-case-sensitive-p t)
+;;     (setq highlight-thing-exclude-thing-under-point t)
+;;     (setq highlight-thing-prefer-active-region t))
+
+; Highlighting:
+
+
+(defface my-hi-yellow
+  '(
+    (t (:foreground "color-226" :background "black" :underline t)))
+  "Default face for hi-lock mode."
+  )
+
+(defface my-hi-pink
+  '(
+    (t (:foreground "color-132" :background "black" :underline t)))
+  "Default face for hi-lock mode."
+  )
+
+(defface my-hi-green
+  '(
+    (t (:foreground "color-45" :background "black" :underline t)))
+  "Default face for hi-lock mode."
+  )
+
+(setq hi-lock-face-defaults
+  '("my-hi-yellow" "my-hi-pink" "my-hi-green" ))
+
+
+
 
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))
