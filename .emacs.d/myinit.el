@@ -1141,7 +1141,12 @@ point reaches the beginning or end of the buffer, stop there."
         (delete-region (point-at-bol) (1+ (point-at-eol)))))))
 
 
-
+;; Tmux interaction
+(defun get-tmux-session ()
+  (when
+      (getenv "TMUX")
+    (replace-regexp-in-string "\n$" ""
+      (shell-command-to-string "tmux display-message -p '#S'"))))
 
 
 
@@ -1151,6 +1156,7 @@ point reaches the beginning or end of the buffer, stop there."
   :init
   (with-eval-after-load 'winum
     (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+  (setq treemacs-persist-file                  (format "%s.%s" (expand-file-name ".cache/treemacs-persist" user-emacs-directory) (or (get-tmux-session) "notmux")))
   :config
   (progn
     (setq treemacs-collapse-dirs                 (if (executable-find "python3") 3 0)
@@ -1170,7 +1176,7 @@ point reaches the beginning or end of the buffer, stop there."
           treemacs-no-png-images                 nil
           treemacs-no-delete-other-windows       t
           treemacs-project-follow-cleanup        nil
-          treemacs-persist-file                  (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
+
           treemacs-recenter-distance             0.1
           treemacs-recenter-after-file-follow    nil
           treemacs-recenter-after-tag-follow     nil
@@ -1240,6 +1246,18 @@ point reaches the beginning or end of the buffer, stop there."
 
 (setq hi-lock-face-defaults
   '("my-hi-yellow" "my-hi-pink" "my-hi-green" ))
+
+
+
+
+
+
+;; Recent files
+(use-package recentf
+  :config
+  (setq recentf-save-file
+	(format "%s.%s" (expand-file-name ".cache/recentf" user-emacs-directory) (or (get-tmux-session) "notmux"))))
+
 
 
 

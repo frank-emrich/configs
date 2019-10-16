@@ -1,3 +1,4 @@
 bashrc_redirect
 zshrc_redirect
 emacs.service
+.emacs.d/.cache
