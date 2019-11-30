@@ -1152,7 +1152,7 @@ point reaches the beginning or end of the buffer, stop there."
       (shell-command-to-string "tmux display-message -p '#S'"))))
 
 
-
+(unless t
 (use-package treemacs
   :ensure t
   :defer 30
@@ -1216,6 +1216,8 @@ point reaches the beginning or end of the buffer, stop there."
         ("C-x t B"   . treemacs-bookmark)
         ("C-x t C-t" . treemacs-find-file)
         ("C-x t M-t" . treemacs-find-tag)))
+)
+
 
 ;; (use-package highlight-thing
 ;;   :defer 30
