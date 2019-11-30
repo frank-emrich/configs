@@ -116,7 +116,7 @@
 	    (define-key LaTeX-mode-map (kbd "$") nil)))
     (add-hook 'LaTeX-mode-hook
 	  (lambda () (add-to-list 'write-file-functions 'may-delete-whitespace)))
-    (add-hook 'LaTeX-mode-hook 'imenu-list-minor-mode)
+    ; (add-hook 'LaTeX-mode-hook 'imenu-list-minor-mode)
     (add-hook 'LaTeX-mode-hook #'rainbow-delimiters-mode)
     (add-hook 'LaTeX-mode-hook 'flyspell-mode)
     (company-auctex-init)
