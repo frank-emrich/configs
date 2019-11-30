@@ -874,7 +874,8 @@ point reaches the beginning or end of the buffer, stop there."
   (kill-buffer)
   (delete-frame)
 )
-(global-set-key (kbd "C-q")  'kill-buffer-and-frame)
+
+(global-set-key (kbd "M-C-Q")  'kill-buffer-and-frame)
 
 
 
