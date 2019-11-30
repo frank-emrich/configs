@@ -368,6 +368,7 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
     (setq
       auto-mode-alist
       (cl-remove "/git-rebase-todo\\'" auto-mode-alist :test 'equal :key 'car))
+    (setq ediff-split-window-function 'split-window-horizontally)
     (add-hook 'magit-post-commit-hook 'git-gutter:update-all-windows)
 )
 
