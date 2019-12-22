@@ -145,5 +145,7 @@ echo "created emacs.service file, consider installing it via"
 echo "cp emacs.service ~/.config/systemd/user/ && systemctl --user enable emacs.service"
 
 #Konsole
-mkdir -p ~/.local/share/
+mkdir -p ~/.local/share/kxmlgui5/konsole
 install_symlink konsole/share ~/.local/share/konsole
+install_symlink konsole/sessionui.rc ~/.local/share/kxmlgui5/konsole/sessionui.rc
+install_symlink konsole/konsoleui.rc ~/.local/share/kxmlgui5/konsole/konsoleui.rc
