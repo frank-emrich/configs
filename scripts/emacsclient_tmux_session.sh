@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ -z "$TMUX" ]
+if [ -z "$TMUX" ] && [ -z "$TMUX_PANE" ]
 then
       cname="notmux"
 else
