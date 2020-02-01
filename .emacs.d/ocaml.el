@@ -2,14 +2,17 @@
 
 
 (use-package tuareg
-  :defer t
-)
+  :defer t)
+
 (use-package merlin
-  :commands merlin-mode
-)
+  :commands merlin-mode)
+
 (use-package sml-mode
-  :defer t
-)
+  :defer t)
+
+(with-eval-after-load 'lsp-clients
+  (setq lsp-ocaml-lsp-server-command "ocaml-lsp-server"))
+
 
 
 
@@ -19,12 +22,10 @@
   (progn
     (add-hook 'tuareg-mode-hook 'merlin-mode)
     (if
-      (executable-find "ocaml-language-server")
+      (executable-find "ocaml-lsp-server")
       (progn
-	(add-hook 'tuareg-mode-hook 'lsp-noquery)
-	;(add-hook 'tuareg-mode-hook 'imenu-list-minor-mode)
-	)))
-)
+	(add-hook 'tuareg-mode-hook 'lsp-noquery)))))
+
 
 
 
@@ -38,8 +39,8 @@
 	  (executable-find "ocp-indent")
 	  (warn-echo-area "ocp-indent not found"))
 	(unless
-	  (executable-find "ocaml-language-server")
-	  (warn-echo-area "ocaml-language-server not found")))
+	  (executable-find "ocaml-lsp-server")
+	  (warn-echo-area "ocaml-lsp-server not found")))
       (warn-echo-area "ocamlmerlin not found")))
 
 
