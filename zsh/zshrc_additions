@@ -179,6 +179,25 @@ add-zsh-hook preexec set_start_time
 add-zsh-hook precmd set_exec_time
 
 
+#Update variables like DISPLAY from tmux environment
+if [ -n "$TMUX" ]; then
+  function refresh_env_from_tmux {
+    vars="DISPLAY SSH_CONNECTION"
+    for v in $vars ; do
+      #test if variable is in environment (entry does not start with -)
+      if tmux show-environment | grep -E "^$v" > /dev/null ; then
+        #outer " " to suppport variable whose contents support spaces
+        export "$(tmux show-environment $v)"
+      fi
+    done
+
+  }
+  add-zsh-hook preexec refresh_env_from_tmux
+fi
+
+
+
+
 if which "powerline" > /dev/null ; then
     powerline-daemon -q
     root_path=$(pip3 show powerline-status | grep "Location: " | cut -c 11-)
@@ -198,7 +217,5 @@ if [ -z "$TMUX" ] && [ -n "$SSH_TTY" ] && [[ $- =~ i ]]; then
     #exit
 else
   #unset TMUX, was probably due to SSH forwarding
-  unset TMUX
+  #unset TMUX
 fi
-
-

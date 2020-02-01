@@ -1268,6 +1268,12 @@ point reaches the beginning or end of the buffer, stop there."
 
 
 
+(defun update-display-from-tmux ()
+  (interactive)
+  (setenv "DISPLAY" (substring (shell-command-to-string "tmux show-environment DISPLAY") 8 -1))
+)
+
+
 
 
 ;; Recent files

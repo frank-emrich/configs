@@ -44,9 +44,25 @@ function _set_exec_time() {
     #printf "Execution time: %.6f seconds\n" $dur;
 }
 
+#Update variables like DISPLAY from tmux environment
+
+refresh_env_from_tmux () {
+  if [ -n "$TMUX" ]; then
+    vars="DISPLAY SSH_CONNECTION"
+    for v in $vars ; do
+      #test if variable is in environment (entry does not start with -)
+      if tmux show-environment | grep -E "^$v" > /dev/null ; then
+        #outer " " to suppport variable whose contents support spaces
+        export "$(tmux show-environment $v)"
+      fi
+    done
+  fi
+}
+
 
 preexec() {
     START_TIME=$(date '+%s%3N') ;
+    refresh_env_from_tmux ;
 }
 
 if which "powerline" > /dev/null ; then
