@@ -402,6 +402,11 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 
 
 
+;; code folding
+(use-package origami
+  :bind ("M-+" . origami-toggle-node)
+  :init
+    (add-hook 'prog-mode-hook 'origami-mode))
 
 
 
@@ -476,6 +481,10 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 (use-package company-lsp
   :defer 30
   :commands company-lsp
+  :after lsp-mode)
+
+
+(use-package lsp-origami
   :after lsp-mode)
 
 
