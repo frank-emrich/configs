@@ -358,6 +358,16 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 
 (use-package cl-lib)
 
+
+(defun setup-magit-inbuffer-keys ()
+  ;; (define-prefix-command 'emacs-inbuffer-map)
+  ;; (define-key emacs-inbuffer-map (kbd "s") 'magit-stage-file)
+  ;; (define-key emacs-inbuffer-map (kbd "u") 'magit-unstage-file)
+  ;; (global-set-key (kbd "C-x G") 'emacs-inbuffer-map)
+  (define-key magit-file-mode-map (kbd "C-x G") 'magit-file-popup)
+
+)
+
 (use-package magit
   :defer t
   :bind (("C-x g" . magit-status))
@@ -370,6 +380,7 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
       (cl-remove "/git-rebase-todo\\'" auto-mode-alist :test 'equal :key 'car))
     (setq ediff-split-window-function 'split-window-horizontally)
     (add-hook 'magit-post-commit-hook 'git-gutter:update-all-windows)
+    (setup-magit-inbuffer-keys)
 )
 
 
