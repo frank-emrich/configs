@@ -14,26 +14,21 @@
  '(helm-swoop-split-with-multiple-windows t)
  '(helm-use-frame-when-more-than-two-windows nil)
  '(inhibit-startup-screen t)
- '(lsp-eldoc-enable-hover nil)
- '(lsp-eldoc-enable-signature-help nil)
- '(lsp-enable-symbol-highlighting nil)
  '(lsp-ui-doc-enable nil)
- '(lsp-ui-flycheck-enable nil)
  '(lsp-ui-imenu-enable nil)
  '(lsp-ui-peek-enable nil)
- '(lsp-ui-sideline-delay 1.5)
  '(lsp-ui-sideline-enable nil)
- '(lsp-ui-sideline-ignore-duplicate t)
- '(lsp-ui-sideline-show-code-actions nil)
- '(lsp-ui-sideline-show-diagnostics nil)
- '(lsp-ui-sideline-show-hover t)
- '(lsp-ui-sideline-update-mode (quote line))
  '(merlin-error-after-save nil)
  '(merlin-error-check-then-move nil)
  '(package-selected-packages
    (quote
-    (magit sml-mode pc-bufsw golden-ratio-scroll-screen avy multiple-cursors move-text rainbow-delimiters helm-swoop helm-descbinds helm git-gutter git-timemachine undo-tree lsp-haskell haskell-mode merlin tuareg company-lsp lsp-ui lsp-mode company use-package)))
- '(recentf-max-saved-items 40))
+    (window-purpose flycheck visual-regexp-steroids nadvice spinner auctex company-auctex racket-mode delight treemacs highlight-thing shackle imenu-list hydra windsize back-button helm-ag magit sml-mode pc-bufsw golden-ratio-scroll-screen avy multiple-cursors move-text rainbow-delimiters helm-swoop helm-descbinds helm git-gutter git-timemachine undo-tree lsp-haskell haskell-mode merlin tuareg company-lsp lsp-ui lsp-mode company use-package)))
+ '(recentf-max-saved-items 40)
+ '(safe-local-variable-values
+   (quote
+    ((ispell-local-dictionary . american)
+     (ispell-local-dictionary . en_US)
+     (ignore-trailing-whitespace . t)))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
