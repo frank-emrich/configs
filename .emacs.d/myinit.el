@@ -586,18 +586,46 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 
 
 
+
+
+
 (use-package undo-tree
   :delight
-  :defer 30
+  :defer t
   :bind
     (("C-x u" . undo-tree-visualize))
   :config
-  (progn
     (global-undo-tree-mode)
     (setq undo-tree-visualizer-timestamps t)
-    (setq undo-tree-visualizer-diff t)
+    (setq undo-tree-visualizer-diff t) ;; show diff view by default
     (define-key undo-tree-map "\C-_" nil))
-)
+
+
+
+(eval-after-load "undo-tree"
+  '(defun undo-tree-visualizer-show-diff (&optional node)
+     "Override undo-tree-visualizer-show-diff such that it calls
+      switch-to-buffer-other-window instead of split-window and
+      doesn't shrink it"
+
+  ;; show visualizer diff display
+  (setq undo-tree-visualizer-diff t)
+  (let ((buff (with-current-buffer undo-tree-visualizer-parent-buffer
+		(undo-tree-diff node)))
+	(display-buffer-mark-dedicated 'soft)
+	(win (get-buffer-window " *undo-tree*")) )
+    (switch-to-buffer-other-window buff)
+
+    ;; go back to the undo-tree-visualizer window
+    (select-window win))))
+
+
+
+
+
+
+
+
 
 ;easily step through file's history
 (use-package git-timemachine :defer 30)
