@@ -1317,19 +1317,26 @@ point reaches the beginning or end of the buffer, stop there."
   :defer t
   :pin MELPA ;; MELPA-STABLE version 31 is from 2017
   :config
+  ;; We decide to only ever allow lsp-ui, but maybe we also want flycheck for tex and lisp?
   (setq flycheck-checkers (quote (lsp-ui)))
-  (setq flycheck-check-syntax-automatically (quote (save))) ;; flycheck on save only
+  ;; flycheck on save and loading of mode only ... doesn't seem to work
+  ;; properly with lsp-ui though.
+  (setq flycheck-check-syntax-automatically (quote (save mode-enabled)))
   (setq flycheck-highlighting-mode nil) ;; do not highlight errors in buffer itself
 
-  ;; workaround for flickering of errors when flycheck error list enabled
-  ;; check if still exists in newer versions
-  ;; (add-hook 'flycheck-mode-hook 'flycheck-disable-error-list-update)
+  ;; do not show errors in minibuffer when the cursor is on them
+  (setq flycheck-display-errors-function #'ignore)
+  ;; alternative: show errors in minibuffer, unless extra error list buffer is visible
+  ;;  (setq flycheck-display-errors-function
+  ;;    #'flycheck-display-error-messages-unless-error-list)
 
+
+  ;; workaround for flickering of errors when flycheck error list enabled
+  ;; seems to be solved in newer versions of flymake
+  ;; (add-hook 'flycheck-mode-hook 'flycheck-disable-error-list-update)
 )
 
-;; (require 'lsp-ui-flycheck)
-;; (with-eval-after-load 'lsp-mode
-;;   (add-hook 'lsp-after-open-hook (lambda () (lsp-ui-flycheck-enable 1))))
+
 
 
 
