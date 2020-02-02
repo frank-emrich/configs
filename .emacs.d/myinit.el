@@ -1277,6 +1277,10 @@ point reaches the beginning or end of the buffer, stop there."
 
 
 
+(setq create-lockfiles nil)
+
+
+
 
 (defun update-display-from-tmux ()
   (interactive)
