@@ -1002,17 +1002,20 @@ point reaches the beginning or end of the buffer, stop there."
 
 
 (use-package imenu-list
-  :defer 30
+  :defer t
+  :init
+    (setq imenu-list-size 45)
   :config
-    (add-hook 'imenu-list-update-hook
-	      (lambda ()
-		(overlay-put
-		 (buffer-local-value
-		  'hl-line-overlay
-		  (imenu-list-get-buffer-create))
-		 'face
-		 '(:background "#656565"))))
-    (setq imenu-list-size 50))
+    ;; This was once a workaround for some display issue .... dead?
+    ;; (add-hook 'imenu-list-update-hook
+    ;; 	      (lambda ()
+    ;; 		(overlay-put
+    ;; 		 (buffer-local-value
+    ;; 		  'hl-line-overlay
+    ;; 		  (imenu-list-get-buffer-create))
+    ;; 		 'face
+    ;; 		 '(:background "#656565"))))
+    )
 
 
 
