@@ -1,30 +1,42 @@
-(defun display-buffer-below-given (window-to-split buffer alist)
-  "Try displaying BUFFER in a window below the selected window.
-If there is a window below the selected one and that window
-already displays BUFFER, use that window.  Otherwise, try to
-create a new window below the selected one and show BUFFER there.
-If that attempt fails as well and there is a non-dedicated window
-below the selected one, use that window."
-  (let (window)
-    (or (and (setq window (window-in-direction 'below))
-	     (eq buffer (window-buffer window))
-	     (window--display-buffer buffer window 'reuse alist))
-	(and (not (frame-parameter nil 'unsplittable))
-	     (let ((split-height-threshold 0)
-		   split-width-threshold)
-	       (setq window (window--try-to-split-window
-                             window-to-split alist)))
-	     (window--display-buffer
-	      buffer window 'window alist display-buffer-mark-dedicated))
-	(and (setq window (window-in-direction 'below))
-	     (not (window-dedicated-p window))
-	     (window--display-buffer
-	      buffer window 'reuse alist display-buffer-mark-dedicated)))))
+;; Replaced by window-purpose
+;; (use-package shackle
+;;   :config
+;;   (progn
+;;     (shackle-mode 1)
+;;     ;(setq helm-display-function #'pop-to-buffer)
+;;     (setq shackle-rules
+;;       '(("*TeX errors*" :popup t :align 'right :ratio 0.10)))))
 
 
+
+;; (defun display-buffer-below-given (window-to-split buffer alist)
+;;   "Try displaying BUFFER in a window below the selected window.
+;; If there is a window below the selected one and that window
+;; already displays BUFFER, use that window.  Otherwise, try to
+;; create a new window below the selected one and show BUFFER there.
+;; If that attempt fails as well and there is a non-dedicated window
+;; below the selected one, use that window."
+;;   (let (window)
+;;     (or (and (setq window (window-in-direction 'below))
+;; 	     (eq buffer (window-buffer window))
+;; 	     (window--display-buffer buffer window 'reuse alist))
+;; 	(and (not (frame-parameter nil 'unsplittable))
+;; 	     (let ((split-height-threshold 0)
+;; 		   split-width-threshold)
+;; 	       (setq window (window--try-to-split-window
+;;                              window-to-split alist)))
+;; 	     (window--display-buffer
+;; 	      buffer window 'window alist display-buffer-mark-dedicated))
+;; 	(and (setq window (window-in-direction 'below))
+;; 	     (not (window-dedicated-p window))
+;; 	     (window--display-buffer
+;; 	      buffer window 'reuse alist display-buffer-mark-dedicated)))))
+
+
+
+;; Shared logic for helm and purpose windows
 
 (defconst popup-size-percentage 0.3)
-
 
 (defun all-children-have-purpose (window purpose)
   "Return true if window is a leave with the given purpose or an
@@ -58,6 +70,11 @@ below the selected one, use that window."
 ;; it's important that this works correctly if window is nil,
 ;; then using the active window.
 (defun split-window-main-window-aware (orig-fun &rest args)
+  "Replacement of split-window that, if purpose is enabled, makes sure
+   that main windows are always split in a way such that a *new*
+   parent window is created, containing the existing window and the
+   newly created one. In particular, it prevents reusing an existing
+   internal window as the parent."
   (if purpose--active-p ;; this variable is used by without-purpose
       (let* ((win (car args))
 	     (win-purpose (purpose-window-purpose-safe win))
@@ -97,6 +114,8 @@ below the selected one, use that window."
 
 
 
+;; Functions specific to handling purpose-managed windows
+
 (defun purpose-popup-creation-function (buffer alist &optional height)
   (purpose-display--at
    #'(lambda ()
@@ -114,12 +133,15 @@ below the selected one, use that window."
    alist))
 
 
+;; Functions specific to handling helm windows
 
+
+;; Buffers whose name matches one of these will be put into the info purpose
+;; rather than being handled as popups
 (defconst helm-info-buffers-regexps
   '("helm-ag" "Helm Swoop"))
 
 
-;; (setq debug-on-error t)
 
 (defun create-new-helm-popup-window (buffer _resume)
   (let*
@@ -162,6 +184,7 @@ below the selected one, use that window."
 
 
 
+;; Loading
 
 
 (use-package window-purpose
@@ -251,8 +274,11 @@ below the selected one, use that window."
    (define-key purpose-mode-map (kbd "C-x C-f") nil)
    (define-key purpose-mode-map (kbd "C-x b") nil)
 
+   ;; install our own function for creating helm popups
    (setq helm-display-function #'my-helm-display-function)
 
-   ;; must go somewhere else:
-   ;; (advice-add 'split-window :around #'split-window-main-window-aware)
+
+   ;; modify split-window with special handling of 'main windows
+   ;; maybe this should go somewhere else?
+   (advice-add 'split-window :around #'split-window-main-window-aware)
 )

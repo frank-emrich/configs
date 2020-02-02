@@ -1101,13 +1101,6 @@ point reaches the beginning or end of the buffer, stop there."
 (global-set-key (kbd "“")  (lambda () (interactive) (my/forward-word t -1)))
 
 
-(use-package shackle
-  :config
-  (progn
-    (shackle-mode 1)
-    ;(setq helm-display-function #'pop-to-buffer)
-    (setq shackle-rules
-      '(("*TeX errors*" :popup t :align 'below :ratio 0.10)))))
 
 (load "~/.emacs.d/window_management")
 
