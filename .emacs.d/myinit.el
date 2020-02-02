@@ -449,6 +449,8 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 (use-package lsp-mode
   :commands lsp
   :defer 30
+  :init
+    (setq lsp-prefer-flymake nil)
   :config
    (require 'lsp-clients)
    (fset 'lsp--calculate-root 'lsp--noquery-calculate-root)
@@ -1300,6 +1302,30 @@ point reaches the beginning or end of the buffer, stop there."
 	(format "%s.%s" (expand-file-name ".cache/recentf" user-emacs-directory) (or (get-tmux-session) "notmux"))))
 
 
+(use-package visual-regexp-steroids)
+
+
+
+(defun flycheck-disable-error-list-update ()
+  (remove-hook 'post-command-hook 'flycheck-error-list-highlight-errors 'local))
+
+(use-package flycheck
+  :defer t
+  :pin MELPA ;; MELPA-STABLE version 31 is from 2017
+  :config
+  (setq flycheck-checkers (quote (lsp-ui)))
+  (setq flycheck-check-syntax-automatically (quote (save))) ;; flycheck on save only
+  (setq flycheck-highlighting-mode nil) ;; do not highlight errors in buffer itself
+
+  ;; workaround for flickering of errors when flycheck error list enabled
+  ;; check if still exists in newer versions
+  ;; (add-hook 'flycheck-mode-hook 'flycheck-disable-error-list-update)
+
+)
+
+;; (require 'lsp-ui-flycheck)
+;; (with-eval-after-load 'lsp-mode
+;;   (add-hook 'lsp-after-open-hook (lambda () (lsp-ui-flycheck-enable 1))))
 
 
 
