@@ -1175,22 +1175,24 @@ point reaches the beginning or end of the buffer, stop there."
       (shell-command-to-string "tmux display-message -p '#S'"))))
 
 
-(unless t
+
 (use-package treemacs
   :ensure t
-  :defer 30
+  :defer t
   :init
   (with-eval-after-load 'winum
     (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
-  (setq treemacs-persist-file                  (format "%s.%s" (expand-file-name ".cache/treemacs-persist" user-emacs-directory) (or (get-tmux-session) "notmux")))
   :config
   (progn
-    (setq treemacs-collapse-dirs                 (if (executable-find "python3") 3 0)
+    (setq treemacs-collapse-dirs                 (if treemacs-python-executable 3 0)
           treemacs-deferred-git-apply-delay      0.5
+          treemacs-directory-name-transformer    #'identity
           treemacs-display-in-side-window        t
           treemacs-eldoc-display                 t
           treemacs-file-event-delay              5000
+          ;; treemacs-file-extension-regex          treemacs-last-period-regex-value ;; yields error
           treemacs-file-follow-delay             0.2
+          treemacs-file-name-transformer         #'identity
           treemacs-follow-after-init             t
           treemacs-git-command-pipe              ""
           treemacs-goto-tag-strategy             'refetch-index
@@ -1202,7 +1204,8 @@ point reaches the beginning or end of the buffer, stop there."
           treemacs-no-png-images                 nil
           treemacs-no-delete-other-windows       t
           treemacs-project-follow-cleanup        nil
-
+          treemacs-persist-file                  (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
+          treemacs-position                      'left
           treemacs-recenter-distance             0.1
           treemacs-recenter-after-file-follow    nil
           treemacs-recenter-after-tag-follow     nil
@@ -1212,11 +1215,11 @@ point reaches the beginning or end of the buffer, stop there."
           treemacs-show-hidden-files             t
           treemacs-silent-filewatch              nil
           treemacs-silent-refresh                nil
-          treemacs-sorting                       'alphabetic-desc
+          treemacs-sorting                       'alphabetic-asc
           treemacs-space-between-root-nodes      t
           treemacs-tag-follow-cleanup            t
           treemacs-tag-follow-delay              1.5
-          treemacs-width                         60)
+          treemacs-width                         50)
 
     ;; The default width and height of the icons is 22 pixels. If you are
     ;; using a Hi-DPI display, uncomment this to double the icon size.
@@ -1226,7 +1229,7 @@ point reaches the beginning or end of the buffer, stop there."
     (treemacs-filewatch-mode t)
     (treemacs-fringe-indicator-mode t)
     (pcase (cons (not (null (executable-find "git")))
-                 (not (null (executable-find "python3"))))
+                 (not (null treemacs-python-executable)))
       (`(t . t)
        (treemacs-git-mode 'deferred))
       (`(t . _)
@@ -1239,7 +1242,7 @@ point reaches the beginning or end of the buffer, stop there."
         ("C-x t B"   . treemacs-bookmark)
         ("C-x t C-t" . treemacs-find-file)
         ("C-x t M-t" . treemacs-find-tag)))
-)
+
 
 
 ;; (use-package highlight-thing
