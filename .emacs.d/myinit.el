@@ -456,22 +456,32 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 
 (use-package lsp-mode
   :commands lsp
-  :defer 30
+  :defer t
   :init
     (setq lsp-prefer-flymake nil)
   :config
-   (require 'lsp-clients)
-   (fset 'lsp--calculate-root 'lsp--noquery-calculate-root)
-)
+
+   ;; (fset 'lsp--calculate-root 'lsp--noquery-calculate-root)
+
+   ;; do not highlight symbol under cursor + its other references
+   ;; can be changed using lsp-toggle-symbol-highlight
+   (setq lsp-enable-symbol-highlighting nil)
+
+   (setq lsp-enable-snippet nil)
+   (setq lsp-eldoc-enable-hover nil) ;; disable showing info in minibuffer about current symbol... it's a bit annoying
+   (setq lsp-eldoc-enable-signature-help nil))
 
 
-;version of 'lsp that will not interactively ask to specify project root
+; version of 'lsp that will not interactively ask to specify project root
+; currently overriden to use default version
 (defun lsp-noquery ()
   (interactive)
-  (progn
-    (fset 'lsp--calculate-root 'lsp--noquery-calculate-root)
-    (lsp)
-    (fset 'lsp--calculate-root 'lsp--original-calculate-root))
+  ;; (progn
+  ;;   (fset 'lsp--calculate-root 'lsp--noquery-calculate-root)
+  ;;   (lsp)
+  ;;   (fset 'lsp--calculate-root 'lsp--original-calculate-root))
+  (lsp)
+
 )
 
 
@@ -481,36 +491,32 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 (add-hook 'lsp-after-open-hook 'set-default-dir-lsp-root)
 
 
+;;  lsp-ui-flycheck gets initialized during lsp-mode auto config
 (use-package lsp-ui
-  :defer 30
+  :defer t
   :commands lsp-ui-mode
-  :pin MELPA
-  :after lsp-mode
-)
+  :pin MELPA)
 
+
+
+;; enable this to get error messages only when manually invoking flycheck-buffer
+;; (with-eval-after-load 'lsp-ui-flycheck
+;;   (setq lsp-ui-flycheck-live-reporting nil))
+
+
+
+;;  company-lsp gets initialized during lsp-mode auto config
 (use-package company-lsp
-  :defer 30
-  :commands company-lsp
-  :after lsp-mode)
+  :defer t
+  :pin MELPA
+  :commands company-lsp)
 
 
 (use-package lsp-origami
-  :after lsp-mode)
+  :defer t)
 
-
-(defun lsp-disable-highlighting ()
-  (interactive)
-
-   (advice-add 'lsp-document-highlight  :override
-            (lambda () nil))
-
-)
-
-
-
-; move C-SPC to C-S-SPC so that company can use C-SPC
-;(global-set-key (kbd "C-S-SPC") 'set-mark-command)
-;(global-set-key (kbd "\200") 'set-mark-command)
+;; When invoking xref-find-*, don't ask which identifier to use if xref can figure it out automatically
+(setq xref-prompt-for-identifier nil)
 
 
 
