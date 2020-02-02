@@ -306,6 +306,14 @@
 (use-package delight)
 
 
+
+;; run elpamr-create-mirror-for-installed to dump current packages tp ~/myelpa
+(use-package elpa-mirror
+  :defer t
+  :init
+    (setq elpamr-default-output-directory "~/.emacs.d/my-elpa-mirror"))
+
+
 ;; (use-package auto-compile)
 ;; (auto-compile-on-load-mode)
 ;; (auto-compile-on-save-mode)

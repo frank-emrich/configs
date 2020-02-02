@@ -22,3 +22,6 @@
 [submodule "tmux/tmux-resurrect"]
 	path = tmux/tmux-resurrect
 	url = https://github.com/tmux-plugins/tmux-resurrect
+[submodule ".emacs.d/my-elpa-mirror"]
+	path = .emacs.d/my-elpa-mirror
+	url = https://github.com/frank-emrich/my-elpa.git
