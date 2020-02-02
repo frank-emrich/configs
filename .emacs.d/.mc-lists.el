@@ -3,9 +3,12 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+	TeX-insert-backslash
 	))
 
 (setq mc/cmds-to-run-once
       '(
 	helm-M-x
+	helm-find-files
+	undo-tree-visualize
 	))
