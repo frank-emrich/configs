@@ -421,34 +421,6 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 
 
 
-;lsp config
-(defun lsp--original-calculate-root (session file-name)
-  "Calculate project root for FILE-NAME in SESSION."
-  (and
-   (->> session
-        (lsp-session-folders-blacklist)
-        (--first (f-ancestor-of? it file-name))
-        not)
-   (or
-    (when lsp-auto-guess-root
-      (lsp--suggest-project-root))
-    (lsp-find-session-folder session file-name)
-    (unless lsp-auto-guess-root
-(lsp--find-root-interactively session)))))
-
-(defun lsp--noquery-calculate-root (session file-name)
-  "Calculate project root for FILE-NAME in SESSION."
-  (and
-   (->> session
-        (lsp-session-folders-blacklist)
-        (--first (f-ancestor-of? it file-name))
-        not)
-   (or
-    (when lsp-auto-guess-root
-      (lsp--suggest-project-root))
-    (lsp-find-session-folder session file-name)
-    (unless lsp-auto-guess-root nil))))
-
 
 
 (use-package lsp-mode
@@ -457,8 +429,6 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
   :init
     (setq lsp-prefer-flymake nil)
   :config
-
-   ;; (fset 'lsp--calculate-root 'lsp--noquery-calculate-root)
 
    ;; do not highlight symbol under cursor + its other references
    ;; can be changed using lsp-toggle-symbol-highlight
@@ -469,17 +439,23 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
    (setq lsp-eldoc-enable-signature-help nil))
 
 
-; version of 'lsp that will not interactively ask to specify project root
-; currently overriden to use default version
+
+
+; version of function lsp that will not interactively ask to specify
+; project root
 (defun lsp-noquery ()
   (interactive)
-  ;; (progn
-  ;;   (fset 'lsp--calculate-root 'lsp--noquery-calculate-root)
-  ;;   (lsp)
-  ;;   (fset 'lsp--calculate-root 'lsp--original-calculate-root))
-  (lsp)
+   ;; make sure that lsp--find-root-interactively exists:
+   (require 'lsp-mode)
 
-)
+   (defun lsp--find-root-interactively-noop (_session) nil)
+
+   (cl-letf
+       (((symbol-function 'lsp--find-root-interactively)
+	 'lsp--find-root-interactively-noop) )
+     ;; call lsp with lsp--find-root-interactively being temporarily
+     ;; overriden to always return nil
+     (lsp)))
 
 
 ; after loading file with active LSP, set the LSP workspace root as default-directory
