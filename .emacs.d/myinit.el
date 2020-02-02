@@ -521,6 +521,7 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 
 ;languages:
 (load "~/.emacs.d/ocaml")
+(load "~/.emacs.d/c_cpp")
 (load "~/.emacs.d/python")
 (load "~/.emacs.d/haskell")
 (load "~/.emacs.d/links")
