@@ -263,17 +263,17 @@
 (setq package-archives
       '(
         ("GNU ELPA"     . "https://elpa.gnu.org/packages/")
-        ("MELPA Stable" . "https://stable.melpa.org/packages/")
+        ("MELPA-Stable" . "https://stable.melpa.org/packages/")
         ("MELPA"        . "https://melpa.org/packages/")
 	; To make use of mirror, comment out other archives
 	; To update mirror, require elpa-mirror, then execute elpamr-....
         ("My GNU ELPA Mirror" . "https://raw.githubusercontent.com/frank-emrich/my-elpa/master/"))
 
       package-archive-priorities
-      '(("MELPA Stable" . 10)
+      '(("MELPA-Stable" . 10)
         ("GNU ELPA"     . 5)
-	("My GNU ELPA Mirror" . 0)
-        ("MELPA"        . 1)))
+        ("MELPA"        . 1)
+	("My GNU ELPA Mirror" . 0)))
 
 
 
@@ -377,7 +377,7 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 )
 
 (use-package magit
-  :defer t
+  ;; :defer t
   :bind (("C-x g" . magit-status))
   :init
     (setq magit-auto-revert-mode nil)
@@ -402,10 +402,7 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
   :config
     (setq company-dabbrev-downcase nil) ; make company-dabbrev case-sensitive
     (setq company-idle-delay nil)
-    (setq company-auto-complete 'company-explicit-action-p)
-)
-;(add-hook 'prog-mode-hook 'global-company-mode)
-;(setq company-async-timeout 5)
+    (setq company-auto-complete 'company-explicit-action-p))
 
 
 
@@ -527,10 +524,6 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 (setq-default indicate-empty-lines t)
 
 
-; on-the-fly error checking
-;(use-package flycheck)
-;(add-hook 'after-init-hook #'global-flycheck-mode)
-
 
 
 
@@ -634,7 +627,7 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 
 
 ;easily step through file's history
-(use-package git-timemachine :defer 30)
+(use-package git-timemachine :defer t)
 
 
 
@@ -734,8 +727,10 @@ point reaches the beginning or end of the buffer, stop there."
 
 
 ; matching parantheses are colored
-(use-package rainbow-delimiters :defer 30)
-(add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+(use-package rainbow-delimiters
+  :init
+    (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+
 
 
 
@@ -788,11 +783,15 @@ point reaches the beginning or end of the buffer, stop there."
 (setq split-width-threshold 200)
 
 
-(use-package  multiple-cursors)
-; make return in mc mode insert new line rather than aborting
-(define-key mc/keymap (kbd "<return>") nil)
-(global-set-key (kbd "M-£") 'mc/edit-lines)
-(global-set-key (kbd "M-§") 'mc/edit-lines)
+(use-package  multiple-cursors
+  :defer t
+  :init
+   (global-set-key (kbd "M-£") 'mc/edit-lines)
+   (global-set-key (kbd "M-§") 'mc/edit-lines)
+  :config
+    ; make return in mc mode insert new line rather than aborting
+     (define-key mc/keymap (kbd "<return>") nil))
+
 
 
 ;quickly jump around
@@ -1025,8 +1024,10 @@ point reaches the beginning or end of the buffer, stop there."
 
 (use-package windsize
   :commands (windsize-right windsize-left))
-(use-package hydra)
 
+
+
+(use-package hydra)
 ; stays active while C-right/C-left keeps being pressed
 (defhydra hydra-resize
   (global-map "C-x")
@@ -1249,6 +1250,7 @@ point reaches the beginning or end of the buffer, stop there."
           treemacs-no-delete-other-windows       t
           treemacs-project-follow-cleanup        nil
           treemacs-persist-file                  (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
+	  ;;treemacs-persist-file                  (format "%s.%s" (expand-file-name ".cache/treemacs-persist" user-emacs-directory) (or (get-tmux-session) "notmux")))
           treemacs-position                      'left
           treemacs-recenter-distance             0.1
           treemacs-recenter-after-file-follow    nil
