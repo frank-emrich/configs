@@ -679,8 +679,9 @@ point reaches the beginning or end of the buffer, stop there."
 
 
 
-
+;; Note that helm-display-function is changed once window-purpose is loaded!!
 (use-package helm
+  :ensure t
   :delight
   :init
   (progn
@@ -710,15 +711,15 @@ point reaches the beginning or end of the buffer, stop there."
          ("C-x c SPC" . helm-all-mark-rings)))
 
 (use-package helm-descbinds
-  :defer 30
+  :defer t
   :bind (("C-h b" . helm-descbinds)
          ("C-h w" . helm-descbinds)))
 
 ; quickly shows all occurences inside the current file
 (use-package helm-swoop)
 
+(use-package helm-ag :defer t)
 
-(use-package helm-ag :defer 30)
 
 
 
