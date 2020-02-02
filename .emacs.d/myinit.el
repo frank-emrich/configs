@@ -1101,6 +1101,9 @@ point reaches the beginning or end of the buffer, stop there."
     (setq shackle-rules
       '(("*TeX errors*" :popup t :align 'below :ratio 0.10)))))
 
+(load "~/.emacs.d/window_management")
+
+
 ; Spelling
 (setq ispell-dictionary "en_US")
 (defun look-for-aspell ()
