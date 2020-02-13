@@ -1188,7 +1188,7 @@ point reaches the beginning or end of the buffer, stop there."
     words))
 
 
-(defun ispell-move-buffer-words-to-dir-locals ()
+(defun ispell-move-localwords-to-dir-locals ()
   (interactive)
   (unless (buffer-file-name)
     (user-error "buffer not attached to file"))
