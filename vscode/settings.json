@@ -1,0 +1,11 @@
+{
+    "remote.SSH.remotePlatform": {
+        "frank-lpc.lan": "linux"
+    },
+    "clangd.arguments": [
+        "--background-index",
+        "-j=8"
+    ],
+    "extensions.ignoreRecommendations": false,
+    "editor.fontSize": 13
+}
