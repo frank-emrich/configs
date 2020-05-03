@@ -755,8 +755,17 @@ point reaches the beginning or end of the buffer, stop there."
 ;(define-key esc-map (kbd "C-s") 'vr/isearch-forward) ;; C-M-s
 
 
-; case insensitive search by default
-(setq case-fold-search t)
+
+; isearch+ wants to be loaded as follows:
+ (eval-after-load "isearch" '(require 'isearch+))
+(setq isearchp-deactivate-region-flag nil)
+(setq isearchp-restrict-to-region-flag t)
+
+;(define-key minibuffer-local-isearch-map (kbd "<left>") 'isearch-edit-string)
+;(define-key minibuffer-local-isearch-map (kbd "<right>") 'isearch-edit-string)
+
+; case sensitive search by default
+(setq case-fold-search nil)
 
 (setq split-height-threshold nil)
 (setq split-width-threshold 200)
