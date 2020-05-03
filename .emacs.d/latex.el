@@ -124,6 +124,8 @@
     (add-hook 'LaTeX-mode-hook 'TeX-view-update)
     ;; (advice-add 'TeX-LaTeX-sentinel :after #'my/TeX-LaTeX-sentinel)
     (advice-add 'TeX-command-run-all :before #'save-server-name)
+    (define-key LaTeX-mode-map (kbd "\"") nil)
+    (define-key LaTeX-mode-map (kbd "{") nil)
 )
 
 
