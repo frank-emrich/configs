@@ -122,7 +122,7 @@
     (company-auctex-init)
     (add-hook 'LaTeX-mode-hook 'company-mode)
     (add-hook 'LaTeX-mode-hook 'TeX-view-update)
-    (advice-add 'TeX-LaTeX-sentinel :after #'my/TeX-LaTeX-sentinel)
+    ;; (advice-add 'TeX-LaTeX-sentinel :after #'my/TeX-LaTeX-sentinel)
     (advice-add 'TeX-command-run-all :before #'save-server-name)
 )
 
@@ -130,31 +130,44 @@
 (add-hook 'bibtex-mode-hook (lambda () (define-key bibtex-mode-map (kbd "C-j") nil)))
 (add-hook 'BibTeX-mode-hook (lambda () (define-key bibtex-mode-map (kbd "C-j") nil)))
 
+
+
+
+(defun TeX-error-overview-no-select (oldfun &rest args)
+  (let ((orig-res (apply oldfun args))
+	(tbuff (TeX-active-buffer)))
+    ;;(switch-to-buffer tbuff)
+    (if (windowp TeX-error-overview-orig-window)
+	(select-window TeX-error-overview-orig-window))
+    orig-res))
+
+(advice-add 'TeX-error-overview :around #'TeX-error-overview-no-select)
+
 ; auto closing of error buffer:
 
-(defun my/TeX-LaTeX-sentinel (process name)
-  "If showing error overview, re-focus on the tex window"
-  (if (window-live-p TeX-error-overview-orig-window)
-       (select-window TeX-error-overview-orig-window)))
+;; (defun my/TeX-LaTeX-sentinel (process name)
+;;   "If showing error overview, re-focus on the tex window"
+;;   (if (window-live-p TeX-error-overview-orig-window)
+;;        (select-window TeX-error-overview-orig-window)))
 
 
 
-(defun TeX-error-delete-window ()
-  "Delete TeX error window when there are no errors to show."
-  (let ((w (get-buffer-window))
-    (b (get-buffer "*TeX Help*")))
-    (when w
-      (delete-window w))
-    (when b
-      (setq w (get-buffer-window b))
-      (when w
-    (delete-window w)))))
+;; (defun TeX-error-delete-window ()
+;;   "Delete TeX error window when there are no errors to show."
+;;   (let ((w (get-buffer-window))
+;;     (b (get-buffer "*TeX Help*")))
+;;     (when w
+;;       (delete-window w))
+;;     (when b
+;;       (setq w (get-buffer-window b))
+;;       (when w
+;;     (delete-window w)))))
 
-(defun TeX-error-install-delete-window-hook ()
-  "Install `TeX-error-delete-window' in buffer-local `kill-buffer-hook'."
-  (add-hook 'kill-buffer-hook #'TeX-error-delete-window nil t))
+;; (defun TeX-error-install-delete-window-hook ()
+;;   "Install `TeX-error-delete-window' in buffer-local `kill-buffer-hook'."
+;;   (add-hook 'kill-buffer-hook #'TeX-error-delete-window nil t))
 
-(add-hook 'TeX-error-overview-mode-hook #'TeX-error-install-delete-window-hook)
+;; (add-hook 'TeX-error-overview-mode-hook #'TeX-error-install-delete-window-hook)
 
 (defun beautify-unicode ()
   (interactive)
