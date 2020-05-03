@@ -128,16 +128,50 @@ bindkey "^_" backward-delete-word #Ctrl+backspace
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=235'
 
 
+mkdir -p ~/.zsh_histories
+
+
+#TODO: this is the same as in the ec script,
+# unify!
+if [ -z "$TMUX" ] && [ -z "$TMUX_PANE" ]
+then
+      cname="notmux"
+else
+      cname="tmux-$(tmux display-message -p '#S')"
+fi
+
+
 #History config:
 
+## normal history browsing (shared history)
+bindkey "${key[Up]}" up-line-or-history
+bindkey "${key[Down]}" down-line-or-history
+
+up-line-or-local-history() {
+    zle set-local-history 1
+    zle up-line-or-history
+    zle set-local-history 0
+}
+zle -N up-line-or-local-history
+down-line-or-local-history() {
+    zle set-local-history 1
+    zle down-line-or-history
+    zle set-local-history 0
+}
+zle -N down-line-or-local-history
+
+
+# with Ctrl, browse local history only
+bindkey "^[[1;5A" up-line-or-local-history    # [CTRL] + Cursor up
+bindkey "^[[1;5B" down-line-or-local-history  # [CTRL] + Cursor down
+
 HISTSIZE=5000                #How many lines of history to keep in memory
-HISTFILE=~/.zsh_history      #Where to save history to disk
+HISTFILE=~/.zsh_histories/"$cname"      #Where to save history to disk
 SAVEHIST=50000               #Number of history entries to save to disk
 #HISTDUP=erase               #Erase duplicates in the history file
-setopt    appendhistory      #Append history to the history file (no overwriting)
-#setopt    sharehistory      #Share history across terminals
-setopt incappendhistory      #Immediately append to the history file, not just when a term is killed
-
+#setopt    appendhistory      #Append history to the history file (no overwriting)
+setopt    sharehistory      #Share history across terminals
+#setopt incappendhistory      #Immediately append to the history file, not just when a term is killed
 
 
 # Split variables like sh/bash:
