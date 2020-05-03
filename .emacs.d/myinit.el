@@ -426,6 +426,7 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 (use-package lsp-mode
   :commands lsp
   :defer t
+  :pin MELPA-Stable
   :init
     (setq lsp-prefer-flymake nil)
   :config
@@ -468,7 +469,8 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 (use-package lsp-ui
   :defer t
   :commands lsp-ui-mode
-  :pin MELPA)
+  :pin MELPA-Stable
+)
 
 
 
@@ -481,11 +483,12 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 ;;  company-lsp gets initialized during lsp-mode auto config
 (use-package company-lsp
   :defer t
-  :pin MELPA
+  :pin MELPA-Stable
   :commands company-lsp)
 
 
 (use-package lsp-origami
+  :pin MELPA-Stable
   :defer t)
 
 ;; When invoking xref-find-*, don't ask which identifier to use if xref can figure it out automatically
