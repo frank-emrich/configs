@@ -1021,7 +1021,10 @@ point reaches the beginning or end of the buffer, stop there."
   (global-map "C-x")
   "resize window with C + left/right arrow keys"
   ("C-<right>" (windsize-right 10) nil)
-  ("C-<left>" (windsize-left 10) nil))
+  ("C-<left>" (windsize-left 10) nil)
+  ("C-<up>" (windsize-up 10) nil)
+  ("C-<down>" (windsize-down 10) nil)
+)
 
 
 
