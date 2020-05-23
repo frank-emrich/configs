@@ -952,9 +952,14 @@ point reaches the beginning or end of the buffer, stop there."
 
 
 ; cycle through buffers with C-Tab
-(use-package pc-bufsw)
-(setq pc-bufsw-quit-time 3)
-(pc-bufsw t)
+(use-package pc-bufsw
+  :init
+  (setq pc-bufsw-quit-time 3)
+  ; Use a high-contact face ("tooltip") for the currenctly select buffer
+  (setq pc-bufsw-selected-buffer-face (quote tooltip))
+  (pc-bufsw t)
+)
+
 
 
 
