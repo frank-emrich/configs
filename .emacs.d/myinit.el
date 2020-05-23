@@ -433,7 +433,9 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
   :config
     (setq company-dabbrev-downcase nil) ; make company-dabbrev case-sensitive
     (setq company-idle-delay nil)
-    (setq company-auto-complete 'company-explicit-action-p))
+    ; only complete when specifically asked to
+    (setq company-auto-complete 'company-explicit-action-p)
+    (setq company-backends (quote (company-capf company-dabbrev))))
 
 
 
@@ -514,13 +516,6 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 ;; (with-eval-after-load 'lsp-ui-flycheck
 ;;   (setq lsp-ui-flycheck-live-reporting nil))
 
-
-
-;;  company-lsp gets initialized during lsp-mode auto config
-(use-package company-lsp
-  :defer t
-  :pin MELPA-Stable
-  :commands company-lsp)
 
 
 (use-package lsp-origami
