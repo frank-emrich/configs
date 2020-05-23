@@ -1316,14 +1316,14 @@ point reaches the beginning or end of the buffer, stop there."
 
 
 
-;; (use-package highlight-thing
-;;   :defer 30
-;;   :init
-;;     (add-hook 'prog-mode-hook 'highlight-thing-mode)
-;;     (setq highlight-thing-delay-seconds 1.5)
-;;     (setq highlight-thing-case-sensitive-p t)
-;;     (setq highlight-thing-exclude-thing-under-point t)
-;;     (setq highlight-thing-prefer-active-region t))
+(use-package highlight-thing
+  :defer
+  :init
+    ;;(add-hook 'prog-mode-hook 'highlight-thing-mode)
+    (setq highlight-thing-delay-seconds 0.25)
+    (setq highlight-thing-case-sensitive-p t)
+    (setq highlight-thing-exclude-thing-under-point t)
+    (setq highlight-thing-prefer-active-region t))
 
 ; Highlighting:
 
