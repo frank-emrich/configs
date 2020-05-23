@@ -33,7 +33,7 @@
   (progn
     (add-hook 'tuareg-mode-hook 'merlin-mode)
     (if
-      (executable-find "ocaml-lsp-server")
+      (executable-find lsp-ocaml-lsp-server-command)
       (progn
 	(add-hook 'tuareg-mode-hook 'lsp-noquery)))))
 
@@ -50,8 +50,8 @@
 	  (executable-find "ocp-indent")
 	  (warn-echo-area "ocp-indent not found"))
 	(unless
-	  (executable-find "ocaml-lsp-server")
-	  (warn-echo-area "ocaml-lsp-server not found")))
+	  (executable-find lsp-ocaml-lsp-server-command)
+	  (warn-echo-area "ocaml lsp server execuable not found")))
       (warn-echo-area "ocamlmerlin not found")))
 
 
