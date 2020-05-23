@@ -18,8 +18,6 @@
  '(lsp-ui-imenu-enable nil)
  '(lsp-ui-peek-enable nil)
  '(lsp-ui-sideline-enable nil)
- '(merlin-error-after-save nil)
- '(merlin-error-check-then-move nil)
  '(package-selected-packages
    (quote
     (window-purpose flycheck visual-regexp-steroids nadvice spinner auctex company-auctex racket-mode delight treemacs highlight-thing shackle imenu-list hydra windsize back-button helm-ag magit sml-mode pc-bufsw golden-ratio-scroll-screen avy multiple-cursors move-text rainbow-delimiters helm-swoop helm-descbinds helm git-gutter git-timemachine undo-tree lsp-haskell haskell-mode merlin tuareg company-lsp lsp-ui lsp-mode company use-package)))

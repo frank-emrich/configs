@@ -5,13 +5,24 @@
   :defer t)
 
 (use-package merlin
-  :commands merlin-mode)
+  :commands merlin-mode
+  :config
+  ; dont check for errors after saving
+  (setq merlin-error-after-save nil)
+
+  ; update errors, then move line (irrelevant now?)
+  (setq merlin-error-check-then-move nil)
+
+  ; Only highlight first line of multi-line error messages
+  (setq merlin-error-on-single-line t)
+)
 
 (use-package sml-mode
   :defer t)
 
-(with-eval-after-load 'lsp-clients
-  (setq lsp-ocaml-lsp-server-command "ocaml-lsp-server"))
+(setq lsp-ocaml-lsp-server-command "ocamllsp")
+
+;(with-eval-after-load 'lsp-clients)
 
 
 
