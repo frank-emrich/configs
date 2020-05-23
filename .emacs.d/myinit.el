@@ -386,9 +386,17 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
     (setq
       auto-mode-alist
       (cl-remove "/git-rebase-todo\\'" auto-mode-alist :test 'equal :key 'car))
+
     (setq ediff-split-window-function 'split-window-horizontally)
     (add-hook 'magit-post-commit-hook 'git-gutter:update-all-windows)
     (setup-magit-inbuffer-keys)
+
+    ; add switches for rebasing and autostashing to pull menu
+    (magit-define-popup-switch 'magit-pull-popup ?r "Rebase" "--rebase")
+    (magit-define-popup-switch 'magit-pull-popup ?a "Autostash" "--autostash")
+
+    ; Force magit-diff-visit-file to always open in other window
+    (setq magit-display-file-buffer-function 'magit-display-file-buffer-other-window)
 )
 
 
