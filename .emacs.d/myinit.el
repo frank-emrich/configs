@@ -722,7 +722,11 @@ point reaches the beginning or end of the buffer, stop there."
          ("C-h w" . helm-descbinds)))
 
 ; quickly shows all occurences inside the current file
-(use-package helm-swoop)
+(use-package helm-swoop
+  ;; currently pinned to non-stable due to nil being passed, causing
+  ;; all lines to be matched. re-visit later.
+  :pin MELPA
+)
 
 (use-package helm-ag :defer t)
 
