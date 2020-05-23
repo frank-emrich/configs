@@ -367,6 +367,10 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 (use-package cl-lib)
 
 
+; highlight differences with version control base
+(use-package git-gutter :delight)
+
+
 (defun setup-magit-inbuffer-keys ()
   ;; (define-prefix-command 'emacs-inbuffer-map)
   ;; (define-key emacs-inbuffer-map (kbd "s") 'magit-stage-file)
@@ -398,6 +402,25 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
     ; Force magit-diff-visit-file to always open in other window
     (setq magit-display-file-buffer-function 'magit-display-file-buffer-other-window)
 )
+
+
+(defun git-stage-region ()
+  (interactive)
+  (let ((git-gutter:ask-p nil)
+        (start (region-beginning))
+        (end (region-end)))
+    (save-excursion
+      (goto-char start)
+      (git-gutter:next-hunk 1)
+      (while (< (point) end)
+        (git-gutter:stage-hunk)
+        ;; This is a hack to wait for git-gutter to finish
+        ;; updating information (git-gutter kicks
+        ;; of a process to update the diff information
+        ;; and does not block)
+        (while (get-buffer (git-gutter:diff-process-buffer (git-gutter:base-file)))
+          (sit-for 0.05))
+        (git-gutter:next-hunk 1)))))
 
 
 
@@ -556,8 +579,6 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 (enable-theme 'darker-ample)
 
 
-; highlight differences with version control base
-(use-package git-gutter :delight)
 
 (if (version< emacs-version "26")
      (progn (setq linum-format "%4d \u2502 ")
