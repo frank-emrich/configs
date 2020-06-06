@@ -1326,7 +1326,7 @@ and act on the buffer text."
     words))
 
 
-(defun ispell-move-buffer-words-to-dir-locals ()
+(defun ispell-move-localwords-to-dir-locals ()
   (interactive)
   (unless (buffer-file-name)
     (user-error "buffer not attached to file"))
