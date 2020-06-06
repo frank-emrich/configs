@@ -424,6 +424,10 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 
 
 
+(use-package projectile
+  :init (projectile-mode +1))
+
+
 ; auto completion
 (use-package company
   :defer t
@@ -725,7 +729,10 @@ point reaches the beginning or end of the buffer, stop there."
 
 (use-package helm-ag :defer t)
 
-
+(use-package helm-projectile
+  :init
+  (helm-projectile-on)
+)
 
 
 
