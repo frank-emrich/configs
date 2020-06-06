@@ -791,12 +791,25 @@ point reaches the beginning or end of the buffer, stop there."
 
 
 
-;(use-package visual-regexp)
-;(use-package visual-regexp-steroids)
-;(define-key global-map (kbd "C-c r") 'vr/replace)
-;(define-key global-map (kbd "C-c q") 'vr/query-replace)
-;(define-key esc-map (kbd "C-r") 'vr/isearch-backward) ;; C-M-r
-;(define-key esc-map (kbd "C-s") 'vr/isearch-forward) ;; C-M-s
+(use-package visual-regexp
+  :defer t
+  ;; trying to defer this seems to cause trouble
+)
+
+(use-package visual-regexp-steroids
+  :defer t
+  ;; trying to defer this seems to cause trouble
+  ;;:after visual-regexp
+  ;;:commands (vr/isearch-forward vr/isearch-backward vr/mc-mark vr/replace vr/query-replace vr/select-query-replace vr/select-mc-mark)
+  ;; :bind
+  ;;   (("C-M-s" . vr/isearch-forward)
+  ;;   (("C-M-r" . vr/isearch-backward)))
+  :init
+    (define-key global-map (kbd "C-M-s") 'vr/isearch-forward)
+    (define-key global-map (kbd "C-M-r") 'vr/isearch-backward)
+)
+
+
 
 
 
