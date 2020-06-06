@@ -1428,6 +1428,16 @@ point reaches the beginning or end of the buffer, stop there."
 
 
 
+; save history of commands, searches, etc
+(setq savehist-additional-variables '(kill-ring search-ring regexp-search-ring query-replace-history extended-command-history))
+(setq savehist-file
+      (format
+       "%s.%s"
+       (expand-file-name
+	".cache/savehist"
+	user-emacs-directory)
+       (or (get-tmux-session) "notmux")))
+(savehist-mode 1)
 
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))
