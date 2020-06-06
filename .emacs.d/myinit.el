@@ -512,6 +512,10 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
   :defer t
   :commands lsp-ui-mode
   :pin MELPA-Stable
+  :config
+  ; Don't update flycheck immediately, but according to
+  ; flycheck-check-syntax-automatically
+  (setq lsp-ui-flycheck-live-reporting nil)
 )
 
 
