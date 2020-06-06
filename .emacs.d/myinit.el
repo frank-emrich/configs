@@ -814,12 +814,88 @@ point reaches the beginning or end of the buffer, stop there."
 
 
 ; isearch+ wants to be loaded as follows:
- (eval-after-load "isearch" '(require 'isearch+))
-(setq isearchp-deactivate-region-flag nil)
-(setq isearchp-restrict-to-region-flag t)
+ ;; (eval-after-load "isearch" '(require 'isearch+))
+;; (setq isearchp-deactivate-region-flag nil)
+;; (setq isearchp-restrict-to-region-flag t)
 
-;(define-key minibuffer-local-isearch-map (kbd "<left>") 'isearch-edit-string)
-;(define-key minibuffer-local-isearch-map (kbd "<right>") 'isearch-edit-string)
+
+;; Functions enabling the arrow-key-intitate-edit
+;; behavior of isearchp
+
+  ;; Emacs 24.4 removed this.  This is the original definition (from Emacs 24.3).
+  ;;
+  (unless (fboundp 'isearch-unread-key-sequence)
+    (defun isearch-unread-key-sequence (keylist)
+      "Unread the given key-sequence KEYLIST.
+      Scroll-bar or mode-line events are processed appropriately."
+      (cancel-kbd-macro-events)
+      (apply 'isearch-unread keylist)
+      (when (and (> (length keylist) 1)  (symbolp (car keylist))  (listp (cadr keylist))
+                 (not (numberp (posn-point (event-start (cadr keylist))))))
+        (pop unread-command-events))))
+
+  (defun isearchp-init-edit (&rest ignored)
+    "Invoke current key sequence, but after calling `isearch-edit-string'."
+    (interactive)
+    (isearch-unread-key-sequence (listify-key-sequence (this-command-keys)))
+    (isearch-edit-string))
+
+  (defun isearchp-update-edit-init-commands ()
+    "Make `isearchp-initiate-edit-commands' edit the search string."
+    (dolist (cmd  isearchp-initiate-edit-commands)
+      (substitute-key-definition cmd 'isearchp-init-edit isearch-mode-map (current-global-map))))
+
+  ;; No autoload cookie - need function `isearchp-update-edit-init-commands'.
+  (defcustom isearchp-initiate-edit-commands
+    '(backward-char                     ; `C-b'
+      left-char                         ; `left' (Emacs 24+)
+      ;; backward-delete-char                ; `DEL'
+      ;; backward-delete-char-untabify       ; `DEL'
+      ;; backward-kill-paragraph             ; `C-backspace'
+      ;; backward-kill-sentence              ; `C-x DEL'
+      ;; backward-kill-sexp                  ; `C-M-backspace'
+      ;; backward-kill-word                  ; `M-DEL'
+      ;; backward-list                       ; `C-M-p'
+      ;; backward-page                       ; `C-x ['
+      ;; backward-paragraph                  ; `C-up', `M-{'
+      ;; backward-sentence                   ; `M-a'
+      backward-sexp                     ; `C-M-b', `C-M-left'
+      ;; backward-to-indentation             ; Not bound by default
+      ;; backward-up-list                    ; `C-M-u', `C-M-up'
+      backward-word                     ; `M-b', `M-left'
+      left-word                         ; `C-left'
+      ;; delete-backward-char
+      ;; kill-backward-up-list               ; Not bound by default
+      ;; beginning-of-buffer                 ; `M-<', `C-home'
+      ;; beginning-of-defun                  ; `C-M-a', `C-M-home',
+      ;; beginning-of-line                   ; `C-a', `home'
+      ;; beginning-of-line+                  ; `C-a', `home'
+      ;; beginning-of-line-text              ; Not bound by default
+      ;; beginning-of-visual-line            ; `C-a', `home'
+      )
+    "*Commands whose key bindings initiate Isearch edit.
+When invoked by a key sequence, Isearch edits the search string,
+applying the command to it immediately.
+
+Commands you might want to include here are typically commands that
+move point to the left, possibly deleting text along the way.
+
+Set this to `nil' if you always want all such commands to exit Isearch
+and act on the buffer text."
+    :set #'(lambda (sym defs)
+             (substitute-key-definition 'isearchp-init-edit nil isearch-mode-map) ; Get rid of any old ones.
+             (custom-set-default sym defs)
+             (isearchp-update-edit-init-commands)) ; Apply the current ones.
+    :type '(repeat (restricted-sexp :tag "Command"
+                    ;; Use `symbolp' instead of `functionp' or `fboundp', in
+                    ;; case the library defining the function is not loaded.
+                    :match-alternatives (symbolp) :value ignore))
+    :group 'isearch-plus)
+
+
+
+(isearchp-update-edit-init-commands)
+
 
 ; case sensitive search by default
 (setq case-fold-search nil)
