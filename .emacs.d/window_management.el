@@ -218,6 +218,7 @@
 	    (eshell-mode . main)
 	    (term-mode . main)
 	    (dired-mode . popup)
+	    (TeX-output-mode . info)
 	    (occur-mode . info)
 	    (grep-mode . info)
 	    (compilation-mode . info)
@@ -239,8 +240,10 @@
    (add-to-list 'purpose-user-regexp-purposes '(".*Flycheck errors.*" . messages))
 
    (add-to-list 'purpose-user-name-purposes '(".gitignore" . main))
+   (add-to-list 'purpose-user-name-purposes '("COMMIT_EDITMSG" . info))
    (add-to-list 'purpose-user-name-purposes '(".hgignore" . main))
    (add-to-list 'purpose-user-name-purposes '("*shell*" . terminal))
+   (add-to-list 'purpose-user-name-purposes '("*TeX errors*" . messages))
 
 
    (add-to-list 'purpose-user-regexp-purposes '("^ \\*Minibuf-[0-9]*\\*$" . minibuf))
@@ -273,6 +276,7 @@
    (define-key purpose-mode-map (kbd "C-x f") nil)
    (define-key purpose-mode-map (kbd "C-x C-f") nil)
    (define-key purpose-mode-map (kbd "C-x b") nil)
+   (define-key purpose-mode-map (kbd "C-x C-b") nil)
 
    ;; install our own function for creating helm popups
    (setq helm-display-function #'my-helm-display-function)
@@ -282,3 +286,19 @@
    ;; maybe this should go somewhere else?
    (advice-add 'split-window :around #'split-window-main-window-aware)
 )
+
+
+(defalias 'helm-find-files-without-purpose
+  (without-purpose-command #'helm-find-files))
+
+
+(defalias 'helm-for-files-without-purpose
+  (without-purpose-command #'helm-for-files))
+
+
+(defalias 'helm-buffers-list-without-purpose
+  (without-purpose-command #'helm-buffers-list))
+
+(define-key global-map (kbd "C-x C-f") 'helm-find-files-without-purpose)
+(define-key global-map (kbd "C-x b") 'helm-for-files-without-purpose)
+(define-key global-map (kbd "C-x C-b") 'helm-buffers-list-without-purpose)
