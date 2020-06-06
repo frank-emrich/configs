@@ -1389,6 +1389,9 @@ point reaches the beginning or end of the buffer, stop there."
 (defun flycheck-disable-error-list-update ()
   (remove-hook 'post-command-hook 'flycheck-error-list-highlight-errors 'local))
 
+(setq-default left-fringe-width 1 right-fringe-width 8
+              left-margin-width 1 right-margin-width 0)
+
 (use-package flycheck
   :defer t
   :pin MELPA ;; MELPA-STABLE version 31 is from 2017
@@ -1399,6 +1402,7 @@ point reaches the beginning or end of the buffer, stop there."
   ;; properly with lsp-ui though.
   (setq flycheck-check-syntax-automatically (quote (save mode-enabled)))
   (setq flycheck-highlighting-mode nil) ;; do not highlight errors in buffer itself
+  (setq flycheck-indication-mode 'left-margin)
 
   ;; do not show errors in minibuffer when the cursor is on them
   (setq flycheck-display-errors-function #'ignore)
