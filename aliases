@@ -4,6 +4,9 @@ alias e-="${MY_DOTFILE_CONFIGS_DIR}/.emacs.d/piper.sh"
 
 
 alias l1='ls -1'
+#sorted by most recent
+alias lr='ls -t'
+alias llr='ls -lt'
 
 #let less ignore case, obey color code
 alias less='less -ri'
