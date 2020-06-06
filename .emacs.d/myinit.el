@@ -1443,5 +1443,8 @@ point reaches the beginning or end of the buffer, stop there."
        (or (get-tmux-session) "notmux")))
 (savehist-mode 1)
 
+(setq fill-column 80)
+
+
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))
