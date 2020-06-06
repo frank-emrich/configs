@@ -1077,6 +1077,15 @@ point reaches the beginning or end of the buffer, stop there."
 
 
 
+
+;; we need to load unpackaged.el.
+;; It use-packages smerge-mode and installs the unpackaged/smerge-hydra
+;; there seems no way of autoloading this :(
+(require 'unpackaged)
+(defalias 'smerge-hydra 'unpackaged/smerge-hydra/body)
+
+
+
 (use-package imenu-list
   :defer t
   :init
