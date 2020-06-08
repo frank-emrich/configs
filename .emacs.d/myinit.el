@@ -1507,8 +1507,6 @@ and act on the buffer text."
 	(format "%s.%s" (expand-file-name ".cache/recentf" user-emacs-directory) (or (get-tmux-session) "notmux"))))
 
 
-(use-package visual-regexp-steroids)
-
 
 
 (defun flycheck-disable-error-list-update ()
