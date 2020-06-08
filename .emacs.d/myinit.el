@@ -1542,7 +1542,9 @@ and act on the buffer text."
 
 
 ; After typing prefix key show help popup after some idle time
-(use-package which-key)
+(use-package which-key
+  :delight
+)
 ;; Allow C-h to trigger which-key before it is done automatically
 ;; (setq which-key-show-early-on-C-h t)
 ;; make sure which-key doesn't show normally but refreshes quickly after it is
