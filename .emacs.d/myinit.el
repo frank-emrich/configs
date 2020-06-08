@@ -371,20 +371,23 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 (use-package git-gutter :delight)
 
 
-(defun setup-magit-inbuffer-keys ()
-  ;; (define-prefix-command 'emacs-inbuffer-map)
-  ;; (define-key emacs-inbuffer-map (kbd "s") 'magit-stage-file)
-  ;; (define-key emacs-inbuffer-map (kbd "u") 'magit-unstage-file)
-  ;; (global-set-key (kbd "C-x G") 'emacs-inbuffer-map)
-  (define-key magit-file-mode-map (kbd "C-x G") 'magit-file-popup)
+;; (defun setup-magit-inbuffer-keys ()
+;;   ;; (define-prefix-command 'emacs-inbuffer-map)
+;;   ;; (define-key emacs-inbuffer-map (kbd "s") 'magit-stage-file)
+;;   ;; (define-key emacs-inbuffer-map (kbd "u") 'magit-unstage-file)
+;;   ;; (global-set-key (kbd "C-x G") 'emacs-inbuffer-map)
+;;   (define-key magit-file-mode-map (kbd "C-x G") 'magit-file-popup)
+;;   (define-key magit-file-mode-map (kbd "C-c G") 'magit-file-popup)
 
-)
+;; )
 
 (use-package magit
-  ;; :defer t
-  :bind (("C-x g" . magit-status))
+   :defer t
+  ;;:bind (("C-x g" . magit-status))
   :init
     (setq magit-auto-revert-mode nil)
+    (global-set-key (kbd "C-x g") 'magit-status)
+    (global-set-key (kbd "C-c g") 'magit-file-popup)
   :config
     ;get rid of rebase mode
     (setq
@@ -393,7 +396,7 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 
     (setq ediff-split-window-function 'split-window-horizontally)
     (add-hook 'magit-post-commit-hook 'git-gutter:update-all-windows)
-    (setup-magit-inbuffer-keys)
+    ;(setup-magit-inbuffer-keys)
 
     ; add switches for rebasing and autostashing to pull menu
     (magit-define-popup-switch 'magit-pull-popup ?r "Rebase" "--rebase")
