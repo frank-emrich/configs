@@ -1566,7 +1566,7 @@ and act on the buffer text."
        (or (get-tmux-session) "notmux")))
 (savehist-mode 1)
 
-(setq fill-column 80)
+(setq-default fill-column 80)
 
 
 ;; Make gc pauses faster by decreasing the threshold.
