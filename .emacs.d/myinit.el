@@ -959,7 +959,8 @@ and act on the buffer text."
 
 (define-key global-map (kbd "<S-return>") 'avy-goto-word-0)
 (global-set-key (kbd "C-j") 'avy-goto-word-0)
-
+(global-set-key (kbd "<M-return>") 'avy-goto-word-0)
+(global-set-key (kbd "M-RET") 'avy-goto-word-0)
 
 
 (use-package golden-ratio-scroll-screen
