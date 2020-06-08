@@ -709,7 +709,16 @@ point reaches the beginning or end of the buffer, stop there."
           helm-yas-display-key-on-candidate t
           helm-quick-update t
           helm-M-x-requires-pattern nil
+	  helm-M-x-always-save-history t ;; save failing commands in M-x history
           helm-ff-skip-boring-files t)
+
+    ; sources that helm-for-files uses
+    (setq helm-for-files-preferred-list
+	  (quote
+	   (helm-source-buffers-list
+	    helm-source-projectile-files-list
+	    helm-source-recentf
+	    helm-source-files-in-current-dir)))
     (helm-mode))
   :bind (("C-c h" . helm-mini)
          ("C-h a" . helm-apropos)
@@ -718,6 +727,7 @@ point reaches the beginning or end of the buffer, stop there."
          ("M-y" . helm-show-kill-ring)
          ("M-x" . helm-M-x)
 	 ("C-x C-f" . helm-find-files)
+;;	 ("M-:" . helm-eval-expression)
 ;         ("C-x c o" . helm-occur)
 ;         ("C-x c s" . helm-swoop)
 ;         ("C-x c y" . helm-yas-complete)
@@ -728,7 +738,9 @@ point reaches the beginning or end of the buffer, stop there."
 (use-package helm-descbinds
   :defer t
   :bind (("C-h b" . helm-descbinds)
-         ("C-h w" . helm-descbinds)))
+         ("C-h w" . helm-descbinds))
+  :config (helm-descbinds-mode)
+)
 
 ; quickly shows all occurences inside the current file
 (use-package helm-swoop
