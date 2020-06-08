@@ -942,9 +942,10 @@ and act on the buffer text."
 (use-package avy
   :pin MELPA ; the MELPA-stable version is outdated
   :init
+     (require 'avy) ;; load immediately to prevent delay on first usages
 
   :config
-    (setq avy-all-windows nil)
+    (setq avy-all-windows t) ;; show stuff in all windows
     (setq avy-goto-word-0-regexp
       "\\([-_a-zA-Z0-9]\\{3,1000\\}\\|[-_a-zA-Z0-9]\\{2\\}$\\|[-_a-zA-Z0-9]\\{2\\}[^-_a-zA-Z0-9]\\{2\\}\\|[-_a-zA-Z0-9]$\\|[-_a-zA-Z0-9][^-_a-zA-Z0-9]\\{3\\}\\|^[ \\t]*?[ \\t]\\{0,3\\}[;/,(){}]+$\\)")
    (setq avy-style (quote words))
