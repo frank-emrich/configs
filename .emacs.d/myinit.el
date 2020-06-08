@@ -404,6 +404,9 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 
     ; Force magit-diff-visit-file to always open in other window
     (setq magit-display-file-buffer-function 'magit-display-file-buffer-other-window)
+
+    ;; easiest way to get column-like look (we cycle styles once)
+    (add-hook 'magit-blame-mode-hook 'magit-blame-cycle-style)
 )
 
 
