@@ -927,6 +927,10 @@ and act on the buffer text."
   :init
    (global-set-key (kbd "M-£") 'mc/edit-lines)
    (global-set-key (kbd "M-§") 'mc/edit-lines)
+   (global-unset-key (kbd "C-<down-mouse-1>"))
+   (global-set-key (kbd "C-<mouse-1>") 'mc/add-cursor-on-click)
+   ;(define-key mc/keymap (kbd "C-<down-mouse-1>") nil)
+   ;(define-key mc/keymap (kbd "C-<mouse-1>") 'mc/add-cursor-on-click)
   :config
     ; make return in mc mode insert new line rather than aborting
      (define-key mc/keymap (kbd "<return>") nil))
