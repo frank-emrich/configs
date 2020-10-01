@@ -323,6 +323,8 @@ bind-key -T prefix       Left              select-pane -L
 bind-key -T prefix       Right             select-pane -R
 
 
+# C-T X (captial X!) asks to respawn pane
+bind-key    -T prefix       X                     confirm-before -p "respawn-pane #P? (y/n)" "respawn-pane -k"
 
 run-shell ~/.config/configs/tmux/tmux-resurrect/resurrect.tmux
 
