@@ -1578,5 +1578,10 @@ and act on the buffer text."
 (setq-default fill-column 80)
 
 
+(defun dos2unix ()
+  "Convert dos to unix file endings (save afterwards)"
+  (interactive)
+  (set-buffer-file-coding-system 'unix 't))
+
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))
