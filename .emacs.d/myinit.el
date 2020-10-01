@@ -1585,3 +1585,112 @@ and act on the buffer text."
 
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))
+
+(defun qk-goto-next-error ()
+  (interactive)
+  (cond
+     ((bound-and-true-p flycheck-mode) (flycheck-next-error))
+     ((eq major-mode 'latex-mode) (TeX-next-error))
+     (t (warn-echo-area "Don't know how to go to next error"))))
+
+(defun qk-list-errors ()
+  (interactive)
+  (cond
+     ((bound-and-true-p flycheck-mode) (flycheck-list-errors))
+     (t (warn-echo-area "Don't know how to list errors"))))
+
+(defun qk-goto-previous-error ()
+  (interactive)
+  (cond
+     ((bound-and-true-p flycheck-mode) (flycheck-previous-error))
+     (t (warn-echo-area "Don't know how to go to previous error"))))
+
+
+;; (defhydra hydra-errors
+;;   (:exit t)
+;;   "resize window with C + left/right arrow keys"
+;;   ("C-<right>" (windsize-right 10) nil)
+;;   ("C-<left>" (windsize-left 10) nil)
+;;   ("C-<up>" (windsize-up 10) nil)
+;;   ("C-<down>" (windsize-down 10) nil)
+;; )
+
+
+(defhydra hydra-errors (:color pink
+                            :hint nil :exit t)
+ "
+^Errors:^
+^^^^^^^^-----------
+_n_: next error (also at C-c n)
+_l_: list errors
+_p_: previous error
+"
+("n" qk-goto-next-error)
+("p" qk-goto-previous-error)
+("l" qk-list-errors)
+("q" nil "cancel")
+ ("c" nil "cancel"))
+
+
+(defhydra hydra-git (:color pink
+                            :hint nil :exit t)
+ "
+^Git:^
+_g_: open magit file popup
+_s_: stage hunk
+_d_: diff hunk
+"
+("g" magit-file-popup)
+("s" git-gutter:stage-hunk)
+("d" git-gutter:popup-hunk)
+("q" nil "cancel"))
+
+
+
+(defhydra hydra-search (:color pink
+                            :hint nil :exit t)
+ "
+^Search:^
+_r_: query-replace (non-regex)
+_R_: query-replace (PRCRE)
+_s_: search (non-regex)
+_S_: search (PCRE)
+_P_: search in project (PCRE, helm-ag)
+"
+("r" query-replace)
+("R" vr/query-replace)
+("s" isearch-forward)
+("S" vr/isearch-forward)
+("P" helm-projectile-ag)
+("q" nil "cancel"))
+
+
+(defun qk-hydra-errors ()
+  (interactive)
+  (hydra-errors/body))
+
+;; C-t Keybindings plan:
+;;
+;; f: format
+;; e: error map (hydra?)
+;; e execute ? or use a?
+;; g: magit-file-popup
+;; s: show type
+;; i: imenu
+;; l toggle LSP code lens
+;; h LSP toggle highlight symbol
+;; r (LSP) rename
+;; c compile
+;; b treemacs "browse"
+;; d debug?
+;; r run?
+;;
+(global-set-key (kbd "C-c t") 'treemacs)
+(global-set-key (kbd "C-c s") 'hydra-search/body)
+(global-set-key (kbd "C-c r") 'lsp-rename)
+(global-set-key (kbd "C-c f") 'lsp-format-buffer)
+(global-set-key (kbd "C-c g") 'hydra-git/body)
+(global-set-key (kbd "C-c i") 'imenu-list-smart-toggle)
+(global-set-key (kbd "C-c c") 'projectile-compile-project)
+(global-set-key (kbd "C-c n") 'qk-goto-next-error)
+(global-set-key (kbd "C-c e") 'qk-hydra-errors)
