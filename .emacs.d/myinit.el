@@ -508,15 +508,15 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 
 
 ; after loading file with active LSP, set the LSP workspace root as default-directory
-(defun set-default-dir-lsp-root ()
-  (let ((workspace-root  (lsp-workspace-root)))
-    (when (stringp workspace-root)
-      (let* ((workspace-root-with-slash
-	      (if (string-match ".*/$" workspace-root)
-		  workspace-root
-		(concat workspace-root "/"))))
-	(setq default-directory workspace-root-with-slash)))))
-(add-hook 'lsp-after-open-hook 'set-default-dir-lsp-root)
+;; (defun set-default-dir-lsp-root ()
+;;   (let ((workspace-root  (lsp-workspace-root)))
+;;     (when (stringp workspace-root)
+;;       (let* ((workspace-root-with-slash
+;; 	      (if (string-match ".*/$" workspace-root)
+;; 		  workspace-root
+;; 		(concat workspace-root "/"))))
+;; 	(setq default-directory workspace-root-with-slash)))))
+;; (add-hook 'lsp-after-open-hook 'set-default-dir-lsp-root)
 
 
 ;;  lsp-ui-flycheck gets initialized during lsp-mode auto config
