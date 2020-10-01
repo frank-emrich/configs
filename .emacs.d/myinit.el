@@ -818,6 +818,7 @@ point reaches the beginning or end of the buffer, stop there."
 (use-package visual-regexp
   :defer t
   ;; trying to defer this seems to cause trouble
+  :config (require 'visual-regexp-steroids)
 )
 
 (use-package visual-regexp-steroids
