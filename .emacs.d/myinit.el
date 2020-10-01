@@ -368,7 +368,12 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 
 
 ; highlight differences with version control base
-(use-package git-gutter :delight)
+(use-package git-gutter :delight
+  :pin MELPA
+  :config
+  (custom-set-variables
+ '(git-gutter:update-interval 2))
+)
 
 
 ;; (defun setup-magit-inbuffer-keys ()
