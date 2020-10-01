@@ -571,7 +571,7 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 (load "~/.emacs.d/agda")
 (load "~/.emacs.d/llvm")
 (load "~/.emacs.d/hack")
-
+(load "~/.emacs.d/rust")
 
 
 
