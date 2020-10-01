@@ -1393,6 +1393,7 @@ and act on the buffer text."
       (shell-command-to-string "tmux display-message -p '#S'"))))
 
 
+(use-package treemacs-projectile :defer t)
 
 (use-package treemacs
   :ensure t
@@ -1400,6 +1401,8 @@ and act on the buffer text."
   :init
   (with-eval-after-load 'winum
     (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+  (with-eval-after-load 'treemacs
+    (require 'treemacs-projectile))
   :config
   (progn
     (setq treemacs-collapse-dirs                 (if treemacs-python-executable 3 0)
@@ -1422,8 +1425,9 @@ and act on the buffer text."
           treemacs-no-png-images                 nil
           treemacs-no-delete-other-windows       t
           treemacs-project-follow-cleanup        nil
-          treemacs-persist-file                  (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
-	  ;;treemacs-persist-file                  (format "%s.%s" (expand-file-name ".cache/treemacs-persist" user-emacs-directory) (or (get-tmux-session) "notmux")))
+          ;; treemacs-persist-file                  (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
+	  ;; treemacs-persist-file                  (format "%s.%s" (expand-file-name ".cache/treemacs-persist" user-emacs-directory) (or (get-tmux-session) "notmux")))
+          treemacs-persist-file                  (concat (expand-file-name ".cache/treemacs-persist" user-emacs-directory) "." (or (get-tmux-session) "notmux"))
           treemacs-position                      'left
           treemacs-recenter-distance             0.1
           treemacs-recenter-after-file-follow    nil
@@ -1438,7 +1442,7 @@ and act on the buffer text."
           treemacs-space-between-root-nodes      t
           treemacs-tag-follow-cleanup            t
           treemacs-tag-follow-delay              1.5
-          treemacs-width                         50)
+          treemacs-width                         40)
 
     ;; The default width and height of the icons is 22 pixels. If you are
     ;; using a Hi-DPI display, uncomment this to double the icon size.
