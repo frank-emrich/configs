@@ -1308,6 +1308,9 @@ and act on the buffer text."
 (global-set-key (kbd "“")  (lambda () (interactive) (my/forward-word t -1)))
 
 
+(setq initial-major-mode (quote text-mode))
+
+
 
 (load "~/.emacs.d/window_management")
 
