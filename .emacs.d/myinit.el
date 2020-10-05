@@ -1714,6 +1714,14 @@ _p_rev       _u_pper                _=_: upper/lower                 _r_esolve m
      "Save and bury buffer" :color blue)
     ("q" nil "cancel" :color blue))
 
+
+(defhydra hydra-move-text
+  (global-map "C-c")
+  "move text with up down arrows"
+  ("<up>" move-text-up nil)
+  ("<down>" move-text-down nil)
+)
+
 ;; C-t Keybindings plan:
 ;;
 ;; f: format
