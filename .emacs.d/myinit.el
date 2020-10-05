@@ -1679,6 +1679,41 @@ _P_: search in project (PCRE, helm-ag)
   (interactive)
   (hydra-errors/body))
 
+
+(defhydra smerge-hydra
+    (:color pink :hint nil :exit t)
+    "
+^Move^       ^Keep snippet          ^Diff^                           ^Other^
+^^-----------^^---------------------^^-------------------------------^^-------
+_n_ext       _b_ase                 _<_: upper/base                  _C_ombine with next conflict
+_p_rev       _u_pper                _=_: upper/lower                 _r_esolve magically
+^^           _l_ower                _>_: base/lower                  _k_ill version under cursor
+^^           _a_ll                  _R_efine (highlight differences)
+^^           _RET_: under cursor    _E_diff
+"
+    ("n" smerge-next)
+    ("p" smerge-prev)
+    ("b" smerge-keep-base)
+    ("u" smerge-keep-upper)
+    ("l" smerge-keep-lower)
+    ("a" smerge-keep-all)
+    ("RET" smerge-keep-current)
+    ("\C-m" smerge-keep-current)
+    ("<" smerge-diff-base-upper)
+    ("=" smerge-diff-upper-lower)
+    (">" smerge-diff-base-lower)
+    ("R" smerge-refine)
+    ("E" smerge-ediff)
+    ("C" smerge-combine-with-next)
+    ("r" smerge-resolve)
+    ("k" smerge-kill-current)
+    ("ZZ" (lambda ()
+            (interactive)
+            (save-buffer)
+            (bury-buffer))
+     "Save and bury buffer" :color blue)
+    ("q" nil "cancel" :color blue))
+
 ;; C-t Keybindings plan:
 ;;
 ;; f: format
@@ -1704,5 +1739,6 @@ _P_: search in project (PCRE, helm-ag)
 (global-set-key (kbd "C-c c") 'projectile-compile-project)
 (global-set-key (kbd "C-c n") 'qk-goto-next-error)
 (global-set-key (kbd "C-c e") 'qk-hydra-errors)
+(global-set-key (kbd "C-c m") 'smerge-hydra/body)
 (global-set-key (kbd "C-c RET") 'avy-goto-word-0)
 (global-set-key (kbd "C-c SPC") 'avy-goto-word-0)
