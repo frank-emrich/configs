@@ -757,6 +757,7 @@ point reaches the beginning or end of the buffer, stop there."
 )
 
 (use-package helm-ag :defer t)
+(use-package helm-rg :defer t)
 
 (use-package helm-projectile
   :init
@@ -1670,7 +1671,7 @@ _P_: search in project (PCRE, helm-ag)
 ("R" vr/query-replace)
 ("s" isearch-forward)
 ("S" vr/isearch-forward)
-("P" helm-projectile-ag)
+("P" helm-projectile-rg)
 ("q" nil "cancel"))
 
 
