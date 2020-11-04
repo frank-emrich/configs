@@ -1580,7 +1580,14 @@ and act on the buffer text."
 
 
 ; save history of commands, searches, etc
-(setq savehist-additional-variables '(kill-ring search-ring regexp-search-ring query-replace-history extended-command-history))
+(setq savehist-additional-variables
+      '(kill-ring
+	search-ring
+	regexp-search-ring
+	query-replace-history
+	extended-command-history
+	comint-input-ring ;; for gdb/gud
+	))
 (setq savehist-file
       (format
        "%s.%s"
