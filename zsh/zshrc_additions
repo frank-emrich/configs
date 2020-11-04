@@ -143,9 +143,6 @@ fi
 
 #History config:
 
-## normal history browsing (shared history)
-bindkey "${key[Up]}" up-line-or-history
-bindkey "${key[Down]}" down-line-or-history
 
 up-line-or-local-history() {
     zle set-local-history 1
@@ -161,9 +158,13 @@ down-line-or-local-history() {
 zle -N down-line-or-local-history
 
 
-# with Ctrl, browse local history only
-bindkey "^[[1;5A" up-line-or-local-history    # [CTRL] + Cursor up
-bindkey "^[[1;5B" down-line-or-local-history  # [CTRL] + Cursor down
+## without Ctrl: browse local history
+bindkey "^[[A" up-line-or-local-history
+bindkey "^[[B" down-line-or-local-history
+
+# with Ctrl, browse normal (non-shared shared) history
+bindkey "^[[1;5A" up-line-or-history    # [CTRL] + Cursor up
+bindkey "^[[1;5B" down-line-or-history  # [CTRL] + Cursor down
 
 HISTSIZE=5000                #How many lines of history to keep in memory
 HISTFILE=~/.zsh_histories/"$cname"      #Where to save history to disk
