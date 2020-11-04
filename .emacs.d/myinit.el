@@ -1573,6 +1573,11 @@ and act on the buffer text."
 (which-key-setup-side-window-bottom)
 
 
+(require 'osc52)
+;(load "~/.emacs.d/custom-packages/ocs52.el")
+(osc52-set-cut-function)
+
+
 
 ; save history of commands, searches, etc
 (setq savehist-additional-variables '(kill-ring search-ring regexp-search-ring query-replace-history extended-command-history))
