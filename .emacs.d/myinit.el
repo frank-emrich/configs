@@ -1637,6 +1637,16 @@ and act on the buffer text."
      (t (warn-echo-area "Don't know how to go to previous error"))))
 
 
+(defun qk-format ()
+  (interactive)
+  (cond
+     ((bound-and-true-p lsp-mode)
+      (if (region-active-p)
+	  (call-interactively 'lsp-format-region)
+	(lsp-format-buffer)))
+     (t (warn-echo-area "Don't know how to format!"))))
+
+
 ;; (defhydra hydra-errors
 ;;   (:exit t)
 ;;   "resize window with C + left/right arrow keys"
@@ -1762,7 +1772,7 @@ _p_rev       _u_pper                _=_: upper/lower                 _r_esolve m
 (global-set-key (kbd "C-c t") 'treemacs)
 (global-set-key (kbd "C-c s") 'hydra-search/body)
 (global-set-key (kbd "C-c r") 'lsp-rename)
-(global-set-key (kbd "C-c f") 'lsp-format-buffer)
+(global-set-key (kbd "C-c f") 'qk-format)
 (global-set-key (kbd "C-c g") 'hydra-git/body)
 (global-set-key (kbd "C-c i") 'imenu-list-smart-toggle)
 (global-set-key (kbd "C-c c") 'projectile-compile-project)
