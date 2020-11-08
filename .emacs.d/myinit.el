@@ -1088,12 +1088,18 @@ and act on the buffer text."
 
 ; cycle through buffers with C-Tab
 (use-package pc-bufsw
-  :init
-  (setq pc-bufsw-quit-time 3)
+ :init
+  (setq pc-bufsw-quit-time 1)
   ; Use a high-contact face ("tooltip") for the currenctly select buffer
   (setq pc-bufsw-selected-buffer-face (quote tooltip))
+  (global-set-key (kbd "C-c TAB") 'pc-bufsw-mru)
   (pc-bufsw t)
-)
+ :config
+  ;; make sure that TAB alone cycles buffers while pc-bufsw is "active"
+  (if (not (and (fboundp 'pc-bufsw--walk) (fboundp 'pc-bufsw--finish)))
+      (error "The pc-bufsw functions we want to advice changed!")
+    (advice-add 'pc-bufsw--walk :before (lambda (_ignore) (define-key pc-bufsw-map [?\t] 'pc-bufsw-mru)))
+    (advice-add 'pc-bufsw--finish :after (lambda () (define-key pc-bufsw-map [?\t] nil)))))
 
 
 
