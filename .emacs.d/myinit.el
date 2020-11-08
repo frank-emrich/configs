@@ -633,7 +633,8 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
   :delight
   :defer t
   :bind
-    (("C-x u" . undo-tree-visualize))
+    (("C-x U" . undo-tree-visualize))
+    (("C-x u" . undo-tree-undo))
   :config
     (global-undo-tree-mode)
     (setq undo-tree-visualizer-timestamps t)
