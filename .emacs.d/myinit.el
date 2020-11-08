@@ -1633,6 +1633,11 @@ and act on the buffer text."
 
 (setq-default fill-column 80)
 
+; Data read from processes (like language servers) in KB. Default of 4K is too low.
+(setq read-process-output-max (* 1024 1024))
+
+; GC after 100 MB
+(setq gc-cons-threshold (* 100 1024 1024))
 
 (defun dos2unix ()
   "Convert dos to unix file endings (save afterwards)"
