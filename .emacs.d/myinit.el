@@ -400,7 +400,6 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
       (cl-remove "/git-rebase-todo\\'" auto-mode-alist :test 'equal :key 'car))
 
     (setq ediff-split-window-function 'split-window-horizontally)
-    (add-hook 'magit-post-commit-hook 'git-gutter:update-all-windows)
     ;(setup-magit-inbuffer-keys)
 
     ; add switches for rebasing and autostashing to pull menu
@@ -412,6 +411,10 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 
     ;; easiest way to get column-like look (we cycle styles once)
     (add-hook 'magit-blame-mode-hook 'magit-blame-cycle-style)
+
+    (add-hook 'magit-post-commit-hook 'git-gutter:update-all-windows)
+    (add-hook 'magit-post-stage-hook 'git-gutter:update-all-windows)
+    (add-hook 'magit-post-unstage-hook 'git-gutter:update-all-windows)
 )
 
 
