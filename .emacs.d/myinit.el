@@ -480,8 +480,13 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
   (message "%s :: %s" (propertize "Warning" 'face 'warning) (apply #'format format args)))
 
 
+(use-package lsp-treemacs
+  :defer t
+)
 
-
+(use-package helm-lsp
+  :defer t
+)
 
 (use-package lsp-mode
   :commands lsp
@@ -497,7 +502,17 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 
    (setq lsp-enable-snippet nil)
    (setq lsp-eldoc-enable-hover nil) ;; disable showing info in minibuffer about current symbol... it's a bit annoying
-   (setq lsp-eldoc-enable-signature-help nil))
+   (setq lsp-eldoc-enable-signature-help nil)
+   (setq lsp-enable-on-type-formatting nil) ;; do not reformat while typing
+   (setq lsp-enable-indentation t) ;; use LSP to determine how to indent
+
+   ;; Show "breadcrumbs in top line, don't show folder and file name in breadcrumbs
+   (setq lsp-headerline-breadcrumb-enable t)
+   (setq lsp-headerline-breadcrumb-segments (quote (symbols)))
+
+   ;; Make sure that you are using company-capf as the completion provide
+   (setq lsp-completion-provider :capf)
+)
 
 
 

@@ -35,6 +35,8 @@
  '(lsp-face-highlight-read ((t (:background "gray13" :underline t))))
  '(lsp-face-highlight-textual ((t (:background "gray13" :underline t))))
  '(lsp-face-highlight-write ((t (:inherit nil :background "gray13" :underline t))))
+ '(lsp-headerline-breadcrumb-separator-face ((t (:inherit aw-key-face))))
+ '(lsp-headerline-breadcrumb-symbols-face ((t (:inherit avy-background-face))))
  '(lsp-ui-sideline-current-symbol ((t (:background "gray13" :foreground "white" :box (:line-width 2 :color "white") :weight bold :height 0.99))))
  '(merlin-type-face ((t (:background "gray13"))))
  '(rainbow-delimiters-depth-1-face ((t (:inherit rainbow-delimiters-base-face :foreground "gold"))))
