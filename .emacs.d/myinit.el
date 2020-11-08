@@ -446,13 +446,22 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 (use-package company
   :defer t
   :bind
-    ("C-S-SPC" . company-complete)
-    ("\200"    . company-complete)
+    ("C-S-SPC" . company-manual-begin)
+    ("\200"    . company-manual-begin)
   :config
     (setq company-dabbrev-downcase nil) ; make company-dabbrev case-sensitive
     (setq company-idle-delay nil)
+    (setq company-minimum-prefix-length 0)
     ; only complete when specifically asked to
     (setq company-auto-complete 'company-explicit-action-p)
+    ;; (setq company-frontends '(
+    ;; 			       company-pseudo-tooltip-frontend
+    ;;                            ;;company-preview-if-just-one-frontend
+    ;;                            ;;company-echo-metadata-frontend
+    ;; 	  ))
+    ;; (setq company-frontends '(company-pseudo-tooltip-frontend
+    ;;                       company-echo-metadata-frontend))
+    (setq company-tooltip-align-annotations 't)
     (setq company-backends (quote (company-capf company-dabbrev))))
 
 
@@ -1780,4 +1789,4 @@ _p_rev       _u_pper                _=_: upper/lower                 _r_esolve m
 (global-set-key (kbd "C-c e") 'qk-hydra-errors)
 (global-set-key (kbd "C-c m") 'smerge-hydra/body)
 (global-set-key (kbd "C-c RET") 'avy-goto-word-0)
-(global-set-key (kbd "C-c SPC") 'avy-goto-word-0)
+(global-set-key (kbd "C-c SPC") 'company-manual-begin)
