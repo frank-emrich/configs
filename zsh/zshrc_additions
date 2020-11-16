@@ -240,12 +240,6 @@ if which "powerline" > /dev/null ; then
 
 fi
 
-#man via emacs
-man() {
-  emacsclient -a '' -t -e "(man \"$@\")"
-}
-
-
 #start tmux on ssh login into this machine
 if [ -z "$TMUX" ] && [ -n "$SSH_TTY" ] && [[ $- =~ i ]]; then
     tmux attach-session || tmux new-session -s "misc"

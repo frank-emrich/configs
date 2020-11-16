@@ -12,12 +12,6 @@ export START_TIME=0
 #export EXECUTION_TIME
 
 
-# show man pages in emacs
-function man() {
-  emacsclient -a '' -t -e "(man \"$@\")"
-}
-
-
 CTRL_C_EXIT_CODE=130
 
 function _set_exec_time() {
