@@ -1739,7 +1739,7 @@ _P_: search in project (PCRE, helm-ag)
 ("R" vr/query-replace)
 ("s" isearch-forward)
 ("S" vr/isearch-forward)
-("P" helm-projectile-rg)
+("P" helm-projectile-ag)
 ("q" nil "cancel"))
 
 
