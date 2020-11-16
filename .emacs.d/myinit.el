@@ -729,8 +729,7 @@ point reaches the beginning or end of the buffer, stop there."
 
 
 
-
-
+(defun dummy-helm-find-files-initial-input (old-function) nil)
 
 ;; Note that helm-display-function is changed once window-purpose is loaded!!
 (use-package helm
@@ -771,7 +770,12 @@ point reaches the beginning or end of the buffer, stop there."
 ;         ("C-x c y" . helm-yas-complete)
 ;         ("C-x c Y" . helm-yas-create-snippet-on-region)
  ;        ("C-x c b" . my/helm-do-grep-book-notes)
-         ("C-x c SPC" . helm-all-mark-rings)))
+         ("C-x c SPC" . helm-all-mark-rings))
+  :config
+  (unless (version< emacs-version "27")
+    ;; workaround to bug (?) in helm, check later if still needed
+    (advice-add #'helm-find-files-initial-input :around #'dummy-helm-find-files-initial-input))
+)
 
 (use-package helm-descbinds
   :defer t
