@@ -1146,8 +1146,8 @@ and act on the buffer text."
 
 
 
-
-(use-package cl)
+(if (version< emacs-version "27")
+    (use-package cl))
 
 (add-to-list 'load-path "~/.emacs.d/custom-packages/e-sink")
 (require 'tty-format)
