@@ -1651,8 +1651,6 @@ and act on the buffer text."
   (interactive)
   (set-buffer-file-coding-system 'unix 't))
 
-;; Make gc pauses faster by decreasing the threshold.
-(setq gc-cons-threshold (* 2 1000 1000))
 
 (defun qk-goto-next-error ()
   (interactive)
