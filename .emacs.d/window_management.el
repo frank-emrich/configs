@@ -192,7 +192,9 @@
   ;; :after (undo-tree helm)
   :init (require 'helm)
   :config
-    (purpose-mode)
+    (if (version< emacs-version "27")
+      ;; purpose-mode seems to be broken in later versions, check again later.
+      (purpose-mode))
     (require 'window-purpose-x)
     (purpose-x-popwin-setup)
     ;; (set 'purpose-x-popwin-position nil)
