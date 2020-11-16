@@ -507,8 +507,9 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
    (setq lsp-enable-indentation t) ;; use LSP to determine how to indent
 
    ;; Show "breadcrumbs in top line, don't show folder and file name in breadcrumbs
-   (setq lsp-headerline-breadcrumb-enable t)
-   (setq lsp-headerline-breadcrumb-segments (quote (symbols)))
+   ;; Currently disabled due to bugs
+   ;; (setq lsp-headerline-breadcrumb-enable t)
+   ;; (setq lsp-headerline-breadcrumb-segments (quote (symbols)))
 
    ;; Make sure that you are using company-capf as the completion provide
    (setq lsp-completion-provider :capf)
