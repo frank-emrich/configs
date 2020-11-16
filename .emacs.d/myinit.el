@@ -506,6 +506,8 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
    (setq lsp-enable-on-type-formatting nil) ;; do not reformat while typing
    (setq lsp-enable-indentation t) ;; use LSP to determine how to indent
 
+   (setq lsp-ui-sideline-diagnostic-max-line-length 50)
+
    ;; Show "breadcrumbs in top line, don't show folder and file name in breadcrumbs
    ;; Currently disabled due to bugs
    ;; (setq lsp-headerline-breadcrumb-enable t)
