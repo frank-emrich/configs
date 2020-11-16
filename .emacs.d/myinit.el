@@ -655,7 +655,9 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
     (global-undo-tree-mode)
     (setq undo-tree-visualizer-timestamps t)
     (setq undo-tree-visualizer-diff t) ;; show diff view by default
-    (define-key undo-tree-map "\C-_" nil))
+    (define-key undo-tree-map "\C-_" nil)
+    (define-key undo-tree-map (kbd "\C-x u") nil)
+)
 
 
 
