@@ -415,6 +415,9 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
     (add-hook 'magit-post-commit-hook 'git-gutter:update-all-windows)
     (add-hook 'magit-post-stage-hook 'git-gutter:update-all-windows)
     (add-hook 'magit-post-unstage-hook 'git-gutter:update-all-windows)
+
+    (define-key magit-hunk-section-map (kbd "RET") 'magit-diff-visit-file-other-window)
+
 )
 
 
@@ -445,6 +448,7 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 ; auto completion
 (use-package company
   :defer t
+  :delight
   :bind
     ("C-S-SPC" . company-manual-begin)
     ("\200"    . company-manual-begin)
@@ -515,6 +519,12 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 
    ;; Make sure that you are using company-capf as the completion provide
    (setq lsp-completion-provider :capf)
+
+   (setq lsp-signature-auto-activate nil)
+    ;; (define-key (kbd "M-n") #'lsp-signature-next)
+    ;; (define-key (kbd "M-p") #'lsp-signature-previous)
+    ;; (define-key (kbd "M-a") #'lsp-signature-toggle-full-docs)
+    (define-key lsp-signature-mode-map (kbd "C-g") #'lsp-signature-stop)
 )
 
 
@@ -553,11 +563,18 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 (use-package lsp-ui
   :defer t
   :commands lsp-ui-mode
-  :pin MELPA-Stable
+  :pin MELPA
   :config
   ; Don't update flycheck immediately, but according to
   ; flycheck-check-syntax-automatically
   (setq lsp-ui-flycheck-live-reporting nil)
+  (define-key lsp-ui-imenu-mode-map (kbd "q") nil)
+  (define-key lsp-ui-imenu-mode-map (kbd "<right>") nil)
+  (define-key lsp-ui-imenu-mode-map (kbd "<left>") nil)
+  (define-key lsp-ui-imenu-mode-map (kbd "<return>") nil)
+  (define-key lsp-ui-imenu-mode-map (kbd "<M-return>") nil)
+  (define-key lsp-ui-imenu-mode-map (kbd "RET") nil)
+  ;;(define-key lsp-ui-imenu-mode-map (kbd "M-RET") 'lsp-ui-imenu--visit)
 )
 
 
@@ -569,7 +586,7 @@ With prefix ARG, silently save all file-visiting buffers, then kill."
 
 
 (use-package lsp-origami
-  :pin MELPA-Stable
+  :pin MELPA
   :defer t)
 
 ;; When invoking xref-find-*, don't ask which identifier to use if xref can figure it out automatically
@@ -794,7 +811,12 @@ point reaches the beginning or end of the buffer, stop there."
   :pin MELPA
 )
 
-(use-package helm-ag :defer t)
+(use-package helm-ag :defer t
+   :config
+   (define-key helm-ag-mode-map (kbd "RET") 'helm-ag-mode-jump-other-window)
+)
+
+
 (use-package helm-rg :defer t)
 
 (use-package helm-projectile
@@ -1573,6 +1595,11 @@ and act on the buffer text."
 (defun flycheck-disable-error-list-update ()
   (remove-hook 'post-command-hook 'flycheck-error-list-highlight-errors 'local))
 
+;; Only describe errors in minibuffer if not showing error list AND error highlighting is enabled
+(defun my-flycheck-display-error-messages-unless-error-list (errors)
+  (if flycheck-highlighting-mode
+      (flycheck-display-error-messages-unless-error-list errors)))
+
 (setq-default left-fringe-width 1 right-fringe-width 8
               left-margin-width 1 right-margin-width 0)
 
@@ -1588,8 +1615,8 @@ and act on the buffer text."
   (setq flycheck-highlighting-mode nil) ;; do not highlight errors in buffer itself
   (setq flycheck-indication-mode 'left-margin)
 
-  ;; do not show errors in minibuffer when the cursor is on them
-  (setq flycheck-display-errors-function #'ignore)
+
+  (setq flycheck-display-errors-function 'my-flycheck-display-error-messages-unless-error-list)
   ;; alternative: show errors in minibuffer, unless extra error list buffer is visible
   ;;  (setq flycheck-display-errors-function
   ;;    #'flycheck-display-error-messages-unless-error-list)
@@ -1685,6 +1712,13 @@ and act on the buffer text."
      (t (warn-echo-area "Don't know how to format!"))))
 
 
+(defun qk-toggle-highlight-errors ()
+  (interactive)
+  (if flycheck-highlighting-mode
+      (setq flycheck-highlighting-mode nil)
+    (setq flycheck-highlighting-mode 'lines))
+  (flycheck-buffer))
+
 ;; (defhydra hydra-errors
 ;;   (:exit t)
 ;;   "resize window with C + left/right arrow keys"
@@ -1702,11 +1736,13 @@ and act on the buffer text."
 ^^^^^^^^-----------
 _n_: next error (also at C-c n)
 _l_: list errors
+_h_: toggle highlight errors
 _p_: previous error
 "
 ("n" qk-goto-next-error)
 ("p" qk-goto-previous-error)
 ("l" qk-list-errors)
+("h" qk-toggle-highlight-errors)
 ("q" nil "cancel")
  ("c" nil "cancel"))
 
@@ -1724,6 +1760,16 @@ _d_: diff hunk
 ("d" git-gutter:popup-hunk)
 ("q" nil "cancel"))
 
+(defhydra hydra-info (:color pink
+                            :hint nil :exit t)
+ "
+^Info/LSP:^
+_i_: show imenu list
+_h_: toggle symbol highlighting
+"
+("i" lsp-ui-imenu)
+("h" lsp-toggle-symbol-highlight)
+("q" nil "cancel"))
 
 
 (defhydra hydra-search (:color pink
@@ -1783,6 +1829,26 @@ _p_rev       _u_pper                _=_: upper/lower                 _r_esolve m
      "Save and bury buffer" :color blue)
     ("q" nil "cancel" :color blue))
 
+(defhydra gud-hydra
+    (:color pink :hint nil :exit nil)
+; ^^--------^^------------------^^---------------------^^----------------
+    "
+_n_ext    _u_ntil cursor      _r_un                  _p_rint expr at
+_s_tep    _f_inish fun.       _c_ontinue             _j_ump to cur line
+^^        _b_reakpoint        _t_emporary breakp.
+"
+    ("n" gud-next)
+    ("s" gud-step)
+    ("u" gud-until)
+    ("f" gud-finish)
+    ("b" gud-break)
+    ("r" gud-run)
+    ("c" gud-cont)
+    ("t" gud-tbreak)
+    ("p" gud-print)
+    ("j" gud-jump)
+    ("q" nil nil :color blue))
+
 
 (defhydra hydra-move-text
   (global-map "C-c")
@@ -1812,10 +1878,54 @@ _p_rev       _u_pper                _=_: upper/lower                 _r_esolve m
 (global-set-key (kbd "C-c r") 'lsp-rename)
 (global-set-key (kbd "C-c f") 'qk-format)
 (global-set-key (kbd "C-c g") 'hydra-git/body)
-(global-set-key (kbd "C-c i") 'imenu-list-smart-toggle)
+(global-set-key (kbd "C-c I") 'hydra-info/body)
 (global-set-key (kbd "C-c c") 'projectile-compile-project)
-(global-set-key (kbd "C-c n") 'qk-goto-next-error)
-(global-set-key (kbd "C-c e") 'qk-hydra-errors)
+(global-set-key (kbd "C-c e") 'qk-goto-next-error) ;; next error
+(global-set-key (kbd "C-c E") 'qk-hydra-errors)  ;; Error hydra
+(global-set-key (kbd "C-c i") 'lsp-ui-doc-glance) ;; info
 (global-set-key (kbd "C-c m") 'smerge-hydra/body)
+(global-set-key (kbd "C-c d") 'gud-hydra/body)
 (global-set-key (kbd "C-c RET") 'avy-goto-word-0)
+(global-set-key (kbd "C-c j") 'avy-goto-word-0)
+(global-set-key (kbd "C-c (") 'lsp-signature-activate) ;; mnemonic: ( as in function args
 (global-set-key (kbd "C-c SPC") 'company-manual-begin)
+
+
+;; (defun toggle-lsp-symbol-highlight
+;;  (setq lsp-enable-symbol-highlighting (not lsp-enable-symbol-highlighting)))
+
+
+(defun kill-other-buffers ()
+    "Kill all other buffers."
+    (interactive)
+    (mapc 'kill-buffer
+          (delq (current-buffer)
+                (remove-if-not 'buffer-file-name (buffer-list)))))
+
+
+;; Semantically expand the selection
+(use-package expand-region
+;; :defer t
+)
+(global-set-key (kbd "C-c '") 'er/expand-region)
+
+
+;; (defun my-isearch-update-post-hook()
+;;   (let (suffix num-before num-after num-total)
+;;     (setq num-before (count-matches isearch-string (point-min) (point)))
+;;     (setq num-after (count-matches isearch-string (point) (point-max)))
+;;     (setq num-total (+ num-before num-after))
+;;     (setq suffix (if (= num-total 0)
+;;                      ""
+;;                    (format " [%d of %d]" num-before num-total)))
+;;     (setq isearch-message-suffix-add suffix)
+;;     (isearch-message)))
+
+;; (add-hook 'isearch-update-post-hook 'my-isearch-update-post-hook)
+
+
+;; Show number of matches in various search modes
+(use-package anzu
+  :config (global-anzu-mode +1)
+)
+
