@@ -294,7 +294,7 @@ bind-key    -T prefix       C-t                 send-key C-t
 # move status line to top
 #set -g status-position top
 
-bind-key -T prefix       n                new-session 
+bind-key -T prefix       n                new-session
 
 
 bind-key -n F1 select-window -t :1
@@ -326,5 +326,9 @@ bind-key -T prefix       Right             select-pane -R
 # C-T X (captial X!) asks to respawn pane
 bind-key    -T prefix       X                     confirm-before -p "respawn-pane #P? (y/n)" "respawn-pane -k"
 
+set -g @resurrect-save 'M-s'
+set -g @resurrect-restore 'M-r'
+
 run-shell ~/.config/configs/tmux/tmux-resurrect/resurrect.tmux
 
+set-option -g default-shell /usr/bin/zsh
