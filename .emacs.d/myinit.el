@@ -1613,8 +1613,10 @@ and act on the buffer text."
   ;; properly with lsp-ui though.
   (setq flycheck-check-syntax-automatically (quote (save mode-enabled)))
   (setq flycheck-highlighting-mode nil) ;; do not highlight errors in buffer itself
-  (setq flycheck-indication-mode 'left-margin)
 
+ ;; Do not highlight errors in margisn, it messes up formatting in some modes
+ ;; (setq flycheck-indication-mode 'left-margin)
+ (setq flycheck-indication-mode nil)
 
   (setq flycheck-display-errors-function 'my-flycheck-display-error-messages-unless-error-list)
   ;; alternative: show errors in minibuffer, unless extra error list buffer is visible
@@ -1928,4 +1930,93 @@ _s_tep    _f_inish fun.       _c_ontinue             _j_ump to cur line
 (use-package anzu
   :config (global-anzu-mode +1)
 )
+
+;; Organize me
+
+
+
+;(add-to-list 'helm-completing-read-handlers-alist '(switch-to-buffer))
+
+(defun no-helm-switch-buffer ()
+  (interactive)
+  (let ((helm-completing-read-handlers-alist '((switch-to-buffer . nil))))
+    (call-interactively 'switch-to-buffer)))
+
+(defun original-switch-buffer ()
+  (interactive)
+  (if (bound-and-true-p purpose-mode)
+      (without-purpose-command #'no-helm-switch-buffer)
+    ;(helm-quit-and-execute-action 'switch-to-buffer)
+    (no-helm-switch-buffer)))
+
+
+
+
+(global-set-key (kbd "C-x B")  'my-no-helm-switch-buffer)
+;(gdb-many-windows)
+
+(defun temporarily-disable-mouse ()
+  (interactive)
+  (if xterm-mouse-mode
+      (xterm-mouse-mode t)
+      (warn "123"))
+  ;; (run-with-timer 2 nil (lambda () (if (not (bound-and-true-p xterm-mouse-mode))
+  ;;                                  (xterm-mouse-mode))))
+)
+
+(global-set-key (kbd "C-c ~") 'xterm-mouse-mode)
+
+; show longer file names in helm
+(setq helm-buffer-max-length 30)
+
+
+; Auto scroll Compilation output to first error
+(setq compilation-scroll-output 'first-error)
+
+
+; fix package loading
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+
+;; weird new error if tramp isn't loaded?
+(require 'tramp)
+
+
+(defun origami-close-siblings (buffer point)
+  (interactive (list (current-buffer) (point)))
+  (-when-let (tree (origami-get-fold-tree buffer))
+    (-when-let (path (origami-fold-find-path-containing tree point))
+	(-when-let (siblings-and-me (origami-fold-children
+                                                    (origami-fold-parent path)))
+	  (origami-apply-new-tree buffer tree (origami-store-cached-tree
+                                         buffer
+                                         (origami-fold-map
+                                          (lambda (node)
+					    ;(print node)
+					    (if (-contains? siblings-and-me node)
+						(progn
+						  ;;(print node)
+						  (origami-fold-open-set node nil))
+					      node))
+                                          tree)))
+
+        ))))
+
+;; (defface origami-fold-header-face
+
+;;   "Face used to display fold headers.")
+
+;; (defface origami-fold-fringe-face
+;;   '((t ()))
+;;   "Face used to display fringe contents.")
+
+;; (defface origami-fold-replacement-face
+;;   `((t (:box (:line-width 1 :color ,(face-attribute 'highlight :background))
+;;              :background ,(face-attribute 'highlight :background))))
+;;   "Face used to display the fold replacement text.")
+
+(custom-set-faces '(origami-fold-replacement-face ((t (:background "green" )))))
+
+;; Don't search in hidden/folded text
+(setq search-invisible nil)
+
 
