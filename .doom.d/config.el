@@ -157,39 +157,76 @@
   (remove-hook 'flycheck-mode-hook '+syntax-init-popups-h)
   (add-hook! 'flycheck-mode-hook 'custom-syntax-init-popups-h))
 
+;; TMUX interaction
+
+(defun get-tmux-session ()
+  (when
+      (getenv "TMUX")
+    (replace-regexp-in-string "\n$" ""
+      (shell-command-to-string "tmux display-message -p '#S'"))))
+
+;; Helm config
+
 (use-package! helm-projectile
   :init
   (helm-projectile-on)
 )
 
-(after! helm
-  ; (message "doing helm config now!")
+(use-package! helm
+  :config
+
+  ; Show helm by splitting the current window
+  (setq helm-split-window-inside-p t)
+
+
   (setq helm-candidate-number-limit 100)
   (setq helm-for-files-preferred-list
-	  (quote
-	   (helm-source-buffers-list
-	    helm-source-projectile-files-list
-	    helm-source-recentf
-	    helm-source-files-in-current-dir)))
+	(quote
+	 (helm-source-buffers-list
+	  helm-source-projectile-files-list
+	  helm-source-recentf
+	  helm-source-files-in-current-dir)))
   (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
-          helm-input-idle-delay 0.01  ; this actually updates things
+        helm-input-idle-delay 0.01  ; this actually updates things
                                         ; reeeelatively quickly.
 
-	  helm-M-x-always-save-history t ;; save failing commands in M-x history
-          )
-)
+	helm-M-x-always-save-history t ;; save failing commands in M-x history
+        )
+  )
+
 (define-key global-map (kbd "C-x b") 'helm-for-files)
 (define-key global-map (kbd "C-x C-b") 'helm-buffers-list)
 
 
 
-;; (custom-set-faces
-;;  '(rainbow-delimiters-depth-1-face ((t (:inherit rainbow-delimiters-base-face :foreground "gold"))))
-;;  '(rainbow-delimiters-depth-2-face ((t (:inherit rainbow-delimiters-base-face :foreground "green"))))
-;;  '(rainbow-delimiters-depth-3-face ((t (:inherit rainbow-delimiters-base-face :foreground "magenta"))))
-;;  '(rainbow-delimiters-depth-4-face ((t (:inherit rainbow-delimiters-base-face :foreground "dark turquoise"))))
-;;  )
+(load "~/.doom.d/latex")
 
 
+;; Magit
 
- ;; (setq flycheck-indication-mode nil))
+
+(after! transient
+  :config
+    ;; show the popup in the same way as the old magit-popup did
+    (setq transient-display-buffer-action '(display-buffer-below-selected)))
+
+(defun my-magit-display-buffer (buffer)
+  "Display BUFFER the way this has traditionally been done."
+  (display-buffer
+   buffer (if (and (derived-mode-p 'magit-mode)
+                   (not (memq (with-current-buffer buffer major-mode)
+                              '(magit-process-mode
+                                magit-revision-mode
+                                magit-diff-mode
+                                magit-stash-mode
+                                ;; magit-status-mode
+                                ))))
+              '(display-buffer-same-window)
+            nil)))
+
+(after! magit
+  (setq ediff-split-window-function 'split-window-horizontally)
+  (setq magit-display-buffer-function 'my-magit-display-buffer)
+  (setq magit-display-file-buffer-function 'magit-display-file-buffer-other-window)
+  (define-key magit-hunk-section-map (kbd "RET") 'magit-diff-visit-file-other-window)
+  )
