@@ -212,7 +212,7 @@
 (load "~/.doom.d/latex")
 
 
-;; Magit
+;; Version control/magit
 
 
 (after! transient
@@ -220,7 +220,7 @@
     ;; show the popup in the same way as the old magit-popup did
     (setq transient-display-buffer-action '(display-buffer-below-selected)))
 
-(defun my-magit-display-buffer (buffer)
+(defun my/magit-display-buffer (buffer)
   "Display BUFFER the way this has traditionally been done."
   (display-buffer
    buffer (if (and (derived-mode-p 'magit-mode)
@@ -236,10 +236,56 @@
 
 (after! magit
   (setq ediff-split-window-function 'split-window-horizontally)
-  (setq magit-display-buffer-function 'my-magit-display-buffer)
+  (setq magit-display-buffer-function 'my/magit-display-buffer)
   (setq magit-display-file-buffer-function 'magit-display-file-buffer-other-window)
   (define-key magit-hunk-section-map (kbd "RET") 'magit-diff-visit-file-other-window)
-  )
+
+  (let ((magit-post-hooks
+        '(magit-post-commit-hook
+          magit-commit-post-finish-hook
+          magit-post-stage-hook
+          magit-post-unstage-hook
+          magit-post-refresh-hook)))
+    (dolist (hook magit-post-hooks)
+      (progn
+        (message "adding to magit hook")
+        (add-hook hook #'git-gutter:update-all-windows)))))
+
+(defhydra smerge-hydra
+    (:color pink :hint nil :exit t)
+    "
+^Move^       ^Keep snippet          ^Diff^                           ^Other^
+^^-----------^^---------------------^^-------------------------------^^-------
+_n_ext       _b_ase                 _<_: upper/base                  _C_ombine with next conflict
+_p_rev       _u_pper                _=_: upper/lower                 _r_esolve magically
+^^           _l_ower                _>_: base/lower                  _k_ill version under cursor
+^^           _a_ll                  _R_efine (highlight differences)
+^^           _RET_: under cursor    _E_diff
+"
+    ("n" smerge-next)
+    ("p" smerge-prev)
+    ("b" smerge-keep-base)
+    ("u" smerge-keep-upper)
+    ("l" smerge-keep-lower)
+    ("a" smerge-keep-all)
+    ("RET" smerge-keep-current)
+    ("\C-m" smerge-keep-current)
+    ("<" smerge-diff-base-upper)
+    ("=" smerge-diff-upper-lower)
+    (">" smerge-diff-base-lower)
+    ("R" smerge-refine)
+    ("E" smerge-ediff)
+    ("C" smerge-combine-with-next)
+    ("r" smerge-resolve)
+    ("k" smerge-kill-current)
+    ("ZZ" (lambda ()
+            (interactive)
+            (save-buffer)
+            (bury-buffer))
+     "Save and bury buffer" :color blue)
+    ("q" nil "cancel" :color blue))
+
+(global-set-key (kbd "C-c m") 'smerge-hydra/body)
 
 
 ;; Doom integrates its own jump mode, which seems to just work
