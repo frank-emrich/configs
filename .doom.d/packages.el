@@ -52,3 +52,4 @@
 (package! windmove)
 ;; (package! flycheck)
 (package! helm-projectile)
+(package! helm)

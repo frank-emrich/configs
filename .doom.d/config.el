@@ -6,8 +6,8 @@
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.
-(setq user-full-name "John Doe"
-      user-mail-address "john@doe.com")
+(setq user-full-name "Frank Emrich"
+      user-mail-address "git@emrich.io")
 
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
 ;; are the three important ones:
@@ -25,7 +25,9 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-vibrant)
+;(setq doom-theme 'doom-spacegrey)
+(setq doom-theme 'doom-one)
+;;(setq doom-theme 'doom-one-vibrant)
 (setq doom-vibrant-brighter-comments t)
 
 ;; If you use `org' and don't want your org files in the default location below,
@@ -97,9 +99,9 @@
    (setq avy-style (quote words))
    
 
-    (face-spec-set 'avy-lead-face   '((t (:background "brightwhite" :foreground "color-52"))))
-    (face-spec-set 'avy-lead-face-0 '((t (:background "brightwhite" :foreground "color-17"))))
-    (face-spec-set 'avy-lead-face-2 '((t (:background "brightwhite" :foreground "color-22"))))
+    ;; (face-spec-set 'avy-lead-face   '((t (:background "brightwhite" :foreground "color-52"))))
+    ;; (face-spec-set 'avy-lead-face-0 '((t (:background "brightwhite" :foreground "color-17"))))
+    ;; (face-spec-set 'avy-lead-face-2 '((t (:background "brightwhite" :foreground "color-22"))))
 )
 
 (define-key global-map (kbd "<S-return>") 'avy-goto-word-0)
@@ -173,6 +175,9 @@
 )
 
 (use-package! helm
+  :init
+
+   ;; (setq helm-advice-push-mark nil)
   :config
 
   ; Show helm by splitting the current window
@@ -192,6 +197,11 @@
 
 	helm-M-x-always-save-history t ;; save failing commands in M-x history
         )
+
+  ;; Do not override push-mark with helm's special version.
+  ;; We want to advice it with our own my/push-mark!
+  ;; cannot use setq for this, because it has a :set attribute
+  (customize-set-variable 'helm-advice-push-mark nil)
   )
 
 (define-key global-map (kbd "C-x b") 'helm-for-files)
@@ -230,3 +240,63 @@
   (setq magit-display-file-buffer-function 'magit-display-file-buffer-other-window)
   (define-key magit-hunk-section-map (kbd "RET") 'magit-diff-visit-file-other-window)
   )
+
+
+;; Doom integrates its own jump mode, which seems to just work
+;; These bindings don't fully work yet, they are sometimes overwritten again.
+(defun setup-better-jumper-bindings ()
+  (define-key global-map (kbd "M-<left>") 'better-jumper-jump-backward)
+  (define-key global-map (kbd "M-<right>") 'better-jumper-jump-forward))
+(add-hook! 'after-change-major-mode-hook #'setup-better-jumper-bindings)
+
+
+(define-key global-map (kbd "C-c SPC") '+company/complete)
+
+
+(defun dos2unix ()
+  "Convert dos to unix file endings (save afterwards)"
+  (interactive)
+  (set-buffer-file-coding-system 'unix 't))
+
+;; ; Make sure that better jumper can go back to start of isearch
+;; (defun my/isearch-done-set-better-jumper-mark ()
+;;   ;; copied from isearch-done, using better-jumper-set-jump instead of push-mark
+;;   (if (/= (point) isearch-opoint)
+;;       (or (and transient-mark-mode mark-active)
+;;           (better-jumper-set-jump isearch-opoint))))
+
+;; (add-hook! 'isearch-mode-end-hook #'my/isearch-done-set-better-jumper-mark)
+
+
+(defun disable-electric-indent-mode ()
+  (electric-indent-mode -1))
+(add-hook! 'after-change-major-mode-hook #'disable-electric-indent-mode)
+
+
+;; Version of push-mark that also calls better-jumper-set-jump.
+;; The latter calls push-mark, so we must prevent those mutually recursive calls
+(defvar my/push-mark-active nil)
+(defun my/push-mark (original-push-mark &optional LOCATION NOMSG ACTIVATE)
+  ;;(message "my/push-mark called")
+  (funcall original-push-mark LOCATION NOMSG ACTIVATE)
+  (unless my/push-mark-active
+    (let ((my/push-mark-active t))
+      (better-jumper-set-jump LOCATION))))
+
+(advice-add 'push-mark :around #'my/push-mark)
+;;(advice-remove 'push-mark  #'my/push-mark)
+
+
+;; (defun my/push-mark-to-better-jumper (&optional LOCATION NOMSG ACTIVATE)
+;;   (message "advice working")
+;;   (better-jumper-set-jump (or LOCATION (point)))
+;; )
+
+;; (advice-add 'push-mark :after #'my/push-mark-to-better-jumper)
+
+;; Search
+
+;; remove unused stuff from search map:
+;; (let (bad-search-keys (list "O"))
+
+;; doom-leade-search-map
