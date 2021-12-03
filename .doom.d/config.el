@@ -300,3 +300,9 @@
 ;; (let (bad-search-keys (list "O"))
 
 ;; doom-leade-search-map
+
+;; OSC52 clipboard integration
+(add-to-list 'load-path "~/.doom.d/custom-packages/")
+(require 'osc52)
+;(load "~/.emacs.d/custom-packages/ocs52.el")
+(osc52-set-cut-function)
