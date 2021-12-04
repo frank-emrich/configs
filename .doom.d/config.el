@@ -352,3 +352,35 @@ _p_rev       _u_pper                _=_: upper/lower                 _r_esolve m
 (require 'osc52)
 ;(load "~/.emacs.d/custom-packages/ocs52.el")
 (osc52-set-cut-function)
+
+
+;; History saving (setup elsewhere by doom)
+
+(after! savehist
+  ;; doom's config code for savehist changes this, so
+  ;; execute our logic afterwards
+  (setq savehist-additional-variables
+        (append savehist-additional-variables
+                '(query-replace-history
+	          extended-command-history
+	          comint-input-ring ;; for gdb/gud
+                  ))))
+
+;; Save history per tmux-session
+(setq savehist-file
+      (format
+       "%s.%s"
+       (expand-file-name
+	"savehist"
+	doom-cache-dir)
+       (or (get-tmux-session) "notmux")))
+
+;; Recent files (setup elsewhere by doom)
+
+(setq recentf-save-file
+      (format
+       "%s.%s"
+       (expand-file-name
+	"recentf"
+	doom-cache-dir)
+       (or (get-tmux-session) "notmux")))
