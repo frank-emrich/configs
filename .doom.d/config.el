@@ -240,6 +240,19 @@
   (setq magit-display-file-buffer-function 'magit-display-file-buffer-other-window)
   (define-key magit-hunk-section-map (kbd "RET") 'magit-diff-visit-file-other-window)
 
+  ;; add switches for rebasing and autostashing to pull menu
+  (magit-define-popup-switch 'magit-pull-popup ?r "Rebase" "--rebase")
+  (magit-define-popup-switch 'magit-pull-popup ?a "Autostash" "--autostash")
+
+  ;; (transient-append-suffix 'magit-pull "-u"
+  ;;   '("-r" "Rebase" "--rebase"))
+
+  ;; (transient-append-suffix 'magit-pull "-r"
+  ;;   '("-a" "autostash" "--autostash"))
+
+  ;; Ask us to save buffers when refreshing/doing anything with magit
+  (setq magit-save-repository-buffers t)
+
   (let ((magit-post-hooks
         '(magit-post-commit-hook
           magit-commit-post-finish-hook
@@ -248,7 +261,7 @@
           magit-post-refresh-hook)))
     (dolist (hook magit-post-hooks)
       (progn
-        (message "adding to magit hook")
+        ;; (message "adding to magit hook")
         (add-hook hook #'git-gutter:update-all-windows)))))
 
 (defhydra smerge-hydra
@@ -342,6 +355,28 @@ _p_rev       _u_pper                _=_: upper/lower                 _r_esolve m
 
 ;; Search
 
+; make regex builder not require escaped \
+(setq reb-re-syntax 'string)
+
+(use-package! visual-regexp
+  :defer t
+  ;; trying to defer this seems to cause trouble
+  :config (require 'visual-regexp-steroids)
+)
+
+(use-package! visual-regexp-steroids
+  :defer t
+  ;; trying to defer this seems to cause trouble
+  ;;:after visual-regexp
+  ;;:commands (vr/isearch-forward vr/isearch-backward vr/mc-mark vr/replace vr/query-replace vr/select-query-replace vr/select-mc-mark)
+  ;; :bind
+  ;;   (("C-M-s" . vr/isearch-forward)
+  ;;   (("C-M-r" . vr/isearch-backward)))
+  :init
+    (define-key global-map (kbd "C-M-s") 'vr/isearch-forward)
+    (define-key global-map (kbd "C-M-r") 'vr/isearch-backward)
+)
+
 ;; remove unused stuff from search map:
 ;; (let (bad-search-keys (list "O"))
 
@@ -384,3 +419,84 @@ _p_rev       _u_pper                _=_: upper/lower                 _r_esolve m
 	"recentf"
 	doom-cache-dir)
        (or (get-tmux-session) "notmux")))
+
+
+
+(defun forward-word (&optional count)
+  (interactive)
+
+  (setq count (or count 1))
+  ;; The following tricks right-char into handling shift
+  ;; withought visibly moving the point
+  (save-excursion (call-interactively 'right-char))
+  ;;(backward-word 1)
+
+  (let ((first-iteration t))
+    (while (/= count 0)
+
+      (let*
+	  ((forward
+	    (> count 0))
+	   (line-boundary
+	    (if forward (line-end-position) (line-beginning-position)))
+	   (skip-chars-fun
+	    (if forward 'skip-chars-forward 'skip-chars-backward))
+	   (skip-syntax-fun
+	    (if forward 'skip-syntax-forward 'skip-syntax-backward))
+	   (cur-char
+	    (if forward (char-after) (char-before)))
+           (catchall-skip ".()\"<$'")
+           (bonus nil)
+
+           ;; If we see a *single* char of the following, continue
+           ;; (continue-if-single
+           ;;  '(?_
+           ;;    ?\\ ; escape syntax, most notably \
+           ;;    ?.  ; punctuation
+           ;;    ?(  ; opening parantheses
+           ;;    ?)  ; closing parantheses
+           ;;    ?'  ;
+           ;;    ))
+
+           )
+
+        ;; (message "doing an iteration")
+
+        (cond
+         ((eq line-boundary (point))
+	  (funcall skip-chars-fun " \n\t")
+	  (if forward (beginning-of-line) (end-of-line)))
+
+         ;; When seeing whitespace, only skip space and tab, not newline
+         ((eq (char-syntax cur-char) ?\s )
+	  (funcall skip-chars-fun " \t"))
+
+
+         ;; Special handling for end-of-comment:
+         ;; syntax class > may contain \n
+         ((eq (char-syntax cur-char) ?>)
+          (funcall skip-syntax-fun ">"))
+
+         ;; Put this in a separate group, so that we don't continue skipping
+         ;; over, say, parantheses *after* already having read a word part
+         ((member (char-syntax cur-char) '(?w ?_ ?\\))
+          (funcall skip-syntax-fun "w_\\"))
+
+
+         (t
+	  (let ((skipped-chars (funcall skip-syntax-fun catchall-skip)))
+
+            ;; If we read a single special character from the catchall-skip
+            ;; classes, continue. The idea is that in this case we probably
+            ;; meant skipping past that.
+            (if (and (= (abs skipped-chars) 1) first-iteration)
+                (progn ;; (message "bonus!")
+                       (setq bonus t))))))
+
+        (unless bonus
+          (setq count (- count (cl-signum count))))
+
+        (setq first-iteration nil)))))
+
+
+(define-key global-map (kbd "C-c C-s") 'yas-insert-snippet)

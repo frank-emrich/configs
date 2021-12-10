@@ -53,3 +53,5 @@
 ;; (package! flycheck)
 (package! helm-projectile)
 (package! helm)
+(package! visual-regexp)
+(package! visual-regexp-steroids)

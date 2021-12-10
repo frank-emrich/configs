@@ -22,6 +22,16 @@
       (and (boundp 'server-name) (stringp server-name))
     (write-region server-name nil "/tmp/emacs-latex-server" nil 'quiet)))
 
+(defun my/fix-latex-key-bindings ()
+  (dolist (key (list "^" "_" (kbd "C-c C-s")))
+    (unbind-key "^" TeX-mode-map)))
+
+  ;; (let [(keys (list )])
+  ;; )
+
+  ;; (unbind-key "_" TeX-mode-map))
+
+
 (use-package! tex
   :defer t
   :init
@@ -62,6 +72,8 @@
 
   ;; (add-hook 'LaTeX-mode-hook 'company-mode)
   ;; (add-hook 'LaTeX-mode-hook 'TeX-view-update)
+
+  (add-hook 'LaTeX-mode-hook #'my/fix-latex-key-bindings)
 
   (advice-add 'TeX-command-run-all :before #'save-server-name)
   ;; (define-key LaTeX-mode-map (kbd "\"") nil)
