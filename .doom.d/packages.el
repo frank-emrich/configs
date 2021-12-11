@@ -55,3 +55,4 @@
 (package! helm)
 (package! visual-regexp)
 (package! visual-regexp-steroids)
+(package! pc-bufsw)

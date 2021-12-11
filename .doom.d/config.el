@@ -500,3 +500,28 @@ _p_rev       _u_pper                _=_: upper/lower                 _r_esolve m
 
 
 (define-key global-map (kbd "C-c C-s") 'yas-insert-snippet)
+
+;; pc-bufsw does weird stuff with autoloads that break Doom (als see cli.el).
+;; Therefore, we (load ...) the file here directly
+(defun my/init-pc-bufsw ()
+  (load "pc-bufsw.el")
+  (setq pc-bufsw-quit-time 1)
+  ;; Use a high-contrast face ("tooltip") for the currenctly select buffer
+  (setq pc-bufsw-selected-buffer-face (quote tooltip))
+
+  ;; make sure that TAB alone cycles buffers while pc-bufsw is "active"
+  (if (not (and (fboundp 'pc-bufsw--walk) (fboundp 'pc-bufsw--finish)))
+      (error "The pc-bufsw functions we want to advice changed!")
+    (advice-add 'pc-bufsw--walk :before (lambda (_ignore) (define-key pc-bufsw-map [?\t] 'pc-bufsw-mru)))
+    (advice-add 'pc-bufsw--finish :after (lambda () (define-key pc-bufsw-map [?\t] nil))))
+
+  ;;(global-set-key (kbd "C-c TAB") 'pc-bufsw-mru)
+  (pc-bufsw t))
+
+(defun my/do-pc-bufsw ()
+  (interactive)
+  (unless (fboundp 'pc-bufsw-mru)
+    (my/init-pc-bufsw))
+  (pc-bufsw-mru))
+
+(global-set-key (kbd "C-c TAB") 'my/do-pc-bufsw)
