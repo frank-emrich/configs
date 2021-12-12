@@ -382,6 +382,61 @@ _p_rev       _u_pper                _=_: upper/lower                 _r_esolve m
 
 ;; doom-leade-search-map
 
+(defun my/projectile-fileloop-files (directory scan-function operate-function)
+  "Execute `operate-function' on all functions in project satisfying `scan-function'.
+
+With a prefix argument ARG prompts you for a directory on which
+to run the functions."
+  (let* ((files
+          ;; We have to reject directories as a workaround to work with git submodules.
+          ;;q
+          ;; We can't narrow the list of files with
+          ;; `projectile-files-with-string' because those regexp tools
+          ;; don't support Emacs regular expressions.
+          (cl-remove-if
+           #'file-directory-p
+           (mapcar #'(lambda (file) (expand-file-name file directory))
+                   (projectile-dir-files directory))))
+         (files-compated (tags--compat-files (or files t))))
+
+    (fileloop-initialize
+     files-compated
+     scan-function
+     operate-function)
+    ))
+
+
+(defun my/projectile-vr-replace (&optional arg)
+  "Replace a regexp in the project using `vr/query-replace'.
+
+With a prefix argument ARG prompts you for a directory on which
+to run the replacement."
+  (interactive "P")
+  (let* ((directory (if arg
+                        (file-name-as-directory
+                         (read-directory-name "Replace regexp in directory: "))
+                      (projectile-acquire-root)))
+         (old-text (read-string
+                    (projectile-prepend-project-name "Replace regexp: ")
+                    (projectile-symbol-or-selection-at-point)))
+         (new-text (read-string
+                    (projectile-prepend-project-name
+                     (format "Replace regexp %s with: " old-text))))
+         (scan-fun (lambda ()
+                     (let ((translation-table-for-input nil)
+                           (isearch-regexp t)
+                           (isearch-forward t)
+                           (f (vr--isearch-search-fun-function)))
+                       (save-excursion (funcall f old-text nil t)))))
+         (replace-fun (lambda () (save-excursion (vr/query-replace old-text new-text (point-min) (point-max))))))
+    (my/projectile-fileloop-files
+     directory
+     scan-fun
+     replace-fun
+     ))
+  (fileloop-continue))
+
+
 ;; OSC52 clipboard integration
 (add-to-list 'load-path "~/.doom.d/custom-packages/")
 (require 'osc52)
