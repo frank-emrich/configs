@@ -51,6 +51,9 @@
   (add-to-list
    'TeX-view-program-list
    '("remote_SumatraPDF" ("/home/frank/remote_SumatraPDF.sh -reuse-instance %o" (mode-io-correlate " -forward-search \"%b\" %n") ) "/home/frank/remote_SumatraPDF.sh"))
+  (add-to-list
+     'TeX-view-program-list
+     '("display0_Okular" ("/home/frank/display0_okular.sh --noraise --unique %o" (mode-io-correlate "#src:%n%a")) "/home/frank/display0_okular.sh"))
 
 
   :init
