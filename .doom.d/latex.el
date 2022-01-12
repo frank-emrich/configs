@@ -24,7 +24,7 @@
 
 (defun my/fix-latex-key-bindings ()
   (dolist (key (list "^" "_" (kbd "C-c C-s")))
-    (unbind-key "^" TeX-mode-map)))
+    (unbind-key key TeX-mode-map)))
 
   ;; (let [(keys (list )])
   ;; )
