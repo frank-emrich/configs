@@ -554,7 +554,7 @@ to run the replacement."
         (setq first-iteration nil)))))
 
 
-(define-key global-map (kbd "C-c C-s") 'yas-insert-snippet)
+(define-key global-map (kbd "C-c C-s") 'yas-expand)
 
 ;; pc-bufsw does weird stuff with autoloads that break Doom (als see cli.el).
 ;; Therefore, we (load ...) the file here directly
