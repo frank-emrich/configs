@@ -586,9 +586,8 @@ to run the replacement."
 (global-set-key (kbd "C-c R") #'ivy-resume)
 
 
-;; osc52 workaround:
-(setq interprogram-cut-function 'osc52-select-text-tmux)
 
-
-(when window-system
-  (menu-bar-mode +1))
+(if window-system
+    (menu-bar-mode +1)
+  ;; osc52 workaround:
+  (setq interprogram-cut-function 'osc52-select-text-tmux))
