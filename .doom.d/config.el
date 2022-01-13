@@ -588,3 +588,7 @@ to run the replacement."
 
 ;; osc52 workaround:
 (setq interprogram-cut-function 'osc52-select-text-tmux)
+
+
+(when window-system
+  (menu-bar-mode +1))
