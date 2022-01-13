@@ -585,3 +585,5 @@ to run the replacement."
 (global-set-key (kbd "C-c R") #'ivy-resume)
 
 
+;; osc52 workaround:
+(setq interprogram-cut-function 'osc52-select-text-tmux)
