@@ -580,3 +580,8 @@ to run the replacement."
   (pc-bufsw-mru))
 
 (global-set-key (kbd "C-c TAB") 'my/do-pc-bufsw)
+
+
+(defmacro let1 (binding body)
+  `(let (,binding) ,body))
+
