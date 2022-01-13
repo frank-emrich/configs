@@ -581,3 +581,7 @@ to run the replacement."
 (defmacro let1 (binding body)
   `(let (,binding) ,body))
 
+
+(global-set-key (kbd "C-c R") #'ivy-resume)
+
+
