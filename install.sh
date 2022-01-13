@@ -102,6 +102,7 @@ create_redirect_file "zshrc_redirect" "${target}/zsh/zshrc_additions"
 create_redirect_file "bashrc_redirect" "${target}/bash/bashrc_additions"
 
 install_symlink .emacs.d ~/.emacs.d
+install_symlink .doom.d ~/.doom.d
 
 install_symlink powerline ~/.config/powerline
 
