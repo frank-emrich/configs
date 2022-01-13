@@ -423,11 +423,7 @@ to run the replacement."
                     (projectile-prepend-project-name
                      (format "Replace regexp %s with: " old-text))))
          (scan-fun (lambda ()
-                     (let ((translation-table-for-input nil)
-                           (isearch-regexp t)
-                           (isearch-forward t)
-                           (f (vr--isearch-search-fun-function)))
-                       (save-excursion (funcall f old-text nil t)))))
+                       (save-excursion (vr--isearch t old-text))))
          (replace-fun (lambda () (save-excursion (vr/query-replace old-text new-text (point-min) (point-max))))))
     (my/projectile-fileloop-files
      directory
