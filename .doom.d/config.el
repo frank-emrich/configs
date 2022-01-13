@@ -210,6 +210,7 @@
 
 
 (load "~/.doom.d/latex")
+(load "~/.doom.d/org")
 
 
 ;; Version control/magit
