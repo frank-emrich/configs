@@ -588,6 +588,13 @@ to run the replacement."
 
 
 (if window-system
-    (menu-bar-mode +1)
+    (progn
+      (menu-bar-mode +1)
+      (pixel-scroll-precision-mode +1)
+      (setq doom-font (font-spec :family "Ubuntu Mono" :size 20)
+;;            doom-variable-pitch-font (font-spec :family "Fira Sans") ; inherits `doom-font''s :size
+;;            doom-unicode-font (font-spec :family "Input Mono Narrow" :size 12)
+;;           doom-big-font (font-spec :family "Fira Mono" :size 19)
+      ))
   ;; osc52 workaround:
   (setq interprogram-cut-function 'osc52-select-text-tmux))
