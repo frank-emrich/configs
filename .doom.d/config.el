@@ -111,10 +111,6 @@
 (global-set-key (kbd "C-c RET") 'avy-goto-word-0)
 (global-set-key (kbd "C-c j") 'avy-goto-word-0)
 
-(after! helm-rg
-  (setq helm-rg--extra-args "-P"))
-
-
 ;; No auto-closing " and bracktets/braces
 (remove-hook 'doom-first-buffer-hook #'smartparens-global-mode)
 
@@ -166,47 +162,6 @@
       (getenv "TMUX")
     (replace-regexp-in-string "\n$" ""
       (shell-command-to-string "tmux display-message -p '#S'"))))
-
-;; Helm config
-
-(use-package! helm-projectile
-  :init
-  (helm-projectile-on)
-)
-
-(use-package! helm
-  :init
-
-   ;; (setq helm-advice-push-mark nil)
-  :config
-
-  ; Show helm by splitting the current window
-  (setq helm-split-window-inside-p t)
-
-
-  (setq helm-candidate-number-limit 100)
-  (setq helm-for-files-preferred-list
-	(quote
-	 (helm-source-buffers-list
-	  helm-source-projectile-files-list
-	  helm-source-recentf
-	  helm-source-files-in-current-dir)))
-  (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
-        helm-input-idle-delay 0.01  ; this actually updates things
-                                        ; reeeelatively quickly.
-
-	helm-M-x-always-save-history t ;; save failing commands in M-x history
-        )
-
-  ;; Do not override push-mark with helm's special version.
-  ;; We want to advice it with our own my/push-mark!
-  ;; cannot use setq for this, because it has a :set attribute
-  (customize-set-variable 'helm-advice-push-mark nil)
-  )
-
-(define-key global-map (kbd "C-x b") 'helm-for-files)
-(define-key global-map (kbd "C-x C-b") 'helm-buffers-list)
-
 
 
 (load "~/.doom.d/latex")
