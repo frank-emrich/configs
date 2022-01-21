@@ -2,6 +2,21 @@
   (interactive)
   (let*
       ((viewers (mapcar 'car TeX-view-program-list))
+      (builtin-viewers (mapcar 'car TeX-view-program-list-builtin))
+      (all-viewers (append viewers builtin-viewers))
+      (old-selection (nth 1 (assoc 'output-pdf TeX-view-program-selection)))
+      (selection (ivy-read "Select PDF viewer: " all-viewers :require-match t :preselect old-selection)))
+
+    ;; Update selection in all latex buffers
+    (dolist (b (buffer-list))
+      (with-current-buffer b
+        (when (string= "latex-mode" major-mode)
+          (setcar (cdr (assoc 'output-pdf TeX-view-program-selection)) selection))))))
+
+(defun TeX-view-choose-helm ()
+  (interactive)
+  (let*
+      ((viewers (mapcar 'car TeX-view-program-list))
        (builtin-viewers (mapcar 'car TeX-view-program-list-builtin))
        (all-viewers (append viewers builtin-viewers))
        (viewers-source (helm-build-sync-source "viewers"
@@ -9,7 +24,7 @@
        (selection (helm :sources viewers-source
                         :buffer "*helm select PDF viewer*")))
 
-                                        ; Update selection in all latex buffers
+    ;; Update selection in all latex buffers
     (dolist (b (buffer-list))
       (with-current-buffer b
         (when (string= "latex-mode" major-mode)
@@ -25,11 +40,6 @@
 (defun my/fix-latex-key-bindings ()
   (dolist (key (list "^" "_" (kbd "C-c C-s")))
     (unbind-key key TeX-mode-map)))
-
-  ;; (let [(keys (list )])
-  ;; )
-
-  ;; (unbind-key "_" TeX-mode-map))
 
 
 (use-package! tex
