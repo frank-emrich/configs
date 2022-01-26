@@ -5,21 +5,23 @@
 
 
 ;; TODO: only create tmp file if remote
-(defun my/add-latex-macros-to-org-header ()
-  (let ;; ((macros-file  (expand-file-name (concat org-directory "macros.tex"))))
-       ((macros-file  (concat default-directory "macros.tex")))
-    (when (file-exists-p macros-file)
-      (let ((tmp-macros-file (make-temp-file "org-macros")))
-        (copy-file macros-file tmp-macros-file t)
-        (setq org-format-latex-header
-            (concat original-org-format-latex-header "\\input{" tmp-macros-file "}"))))))
+(defun my/add-latex-macros-to-org-header (&rest r)
+  (unless macros-added-to-latex-header
+    (let ;; ((macros-file  (expand-file-name (concat org-directory "macros.tex"))))
+        ((macros-file  (concat default-directory "macros.tex")))
+      (when (file-exists-p macros-file)
+        (let ((tmp-macros-file (make-temp-file "org-macros")))
+          (copy-file macros-file tmp-macros-file t)
+          (setq org-format-latex-header
+                (concat original-org-format-latex-header "\\input{" tmp-macros-file "}")))))
+    (setq macros-added-to-latex-header t)))
 
 
-(setq org-preview-latex-default-process 'dvipng)
 
 (defun my/org-setup ()
-  (my/add-latex-macros-to-org-header)
-  (my/enable-tex-mode-input))
+  (my/enable-tex-mode-input)
+
+  (plist-put org-format-latex-options :scale 1.0))
 
 
 (add-hook! org-mode #'my/org-setup)
@@ -34,7 +36,27 @@
       (apply old-fun args)))
   (advice-add 'org-create-formula-image :around #'my/org-create-formula-image)
 
-  (defvar original-org-format-latex-header org-format-latex-header))
+  (defvar original-org-format-latex-header org-format-latex-header)
+
+  (setq org-preview-latex-default-process 'dvipng)
+
+  ;; Note that we also set the scale value in my/org-setup more cleanly.
+  ;; The value here affects files with +STARTUP: latexpreview
+  (setq org-format-latex-options
+        '(:foreground default
+          :background default
+          :scale 1.0
+          :html-foreground "Black"
+          :html-background "Transparent"
+          :html-scale 1.0 :matchers
+          ("begin" "$1" "$" "$$" "\\(" "\\[")))
+
+
+  ;; org-latex-preview is called very early during org setup when using
+  ;; +STARTUP: latexpreview, before any mode hooks run.
+  ;; Make sure that we insert the latex macros exactly once.
+  (defvar-local macros-added-to-latex-header nil)
+  (advice-add 'org-latex-preview :before #'my/add-latex-macros-to-org-header))
 
 ;; (defun my/org-compile-file (source process ext &optional err-msg log-buf spec)
 ;;   "Compile a SOURCE file using PROCESS.
