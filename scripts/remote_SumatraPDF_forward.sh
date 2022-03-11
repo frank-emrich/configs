@@ -41,5 +41,5 @@ echo 'V:\\'"$target_dir"  "$1" "$file" "$3" "$4" "$5"
 
 # Connect via windows SSH server (on port 22) to WSL SSH server (on port 2222)
 WINDOWS_IP=192.168.122.1
-ssh -p 2222 -J ${WINDOWS_IP}:22 localhost  "/mnt/c/Windows/system32/cmd.exe" '/mnt/c/Users/Frank/configs/scripts/start_Sumatra_forward.bat' 'V:\\'"$target_dir"  "$1" "$file" "$3" "$4" "$5"
+ssh -p 2222 -J ${WINDOWS_IP}:22 localhost  "/mnt/c/Windows/system32/cmd.exe" '/mnt/c/Users/Frank/configs/scripts/start_SumatraPDF_forward.bat' 'V:\\'"$target_dir"  "$1" "$file" "$3" "$4" "$5"
 #ssh -4 frank-pc.ts.emrich.io 'C:\Windows\system32\cmd.exe' '/mnt/c/Users/Frank/start_Sumatra.bat' 'V:\\'"$target_dir"  "$1" "$file" "$3" "$4" "$5"
