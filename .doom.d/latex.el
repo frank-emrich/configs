@@ -57,13 +57,13 @@
 
   (add-to-list
    'TeX-view-program-list
-   '("remote_Okular" ("/home/frank/remote_okular.sh --unique %o" (mode-io-correlate "#src:%n%a")) "/home/frank/remote_okular.sh"))
+   '("remote_Okular" ("/home/frank/.config/configs/scripts/remote_okular.sh --unique %o" (mode-io-correlate "#src:%n%a")) "/home/frank/.config/configs/scripts/remote_okular.sh"))
   (add-to-list
    'TeX-view-program-list
-   '("remote_SumatraPDF" ("/home/frank/remote_SumatraPDF.sh -reuse-instance %o" (mode-io-correlate " -forward-search \"%b\" %n") ) "/home/frank/remote_SumatraPDF.sh"))
+   '("remote_SumatraPDF" ("/home/frank/.config/configs/scripts/remote_SumatraPDF_forward.sh -reuse-instance %o" (mode-io-correlate " -forward-search \"%b\" %n") ) "/home/frank/.config/configs/scripts/remote_SumatraPDF_forward.sh"))
   (add-to-list
      'TeX-view-program-list
-     '("display0_Okular" ("/home/frank/display0_okular.sh --noraise --unique %o" (mode-io-correlate "#src:%n%a")) "/home/frank/display0_okular.sh"))
+     '("display0_Okular" ("/home/frank/.config/configs/scripts/display0_okular.sh --noraise --unique %o" (mode-io-correlate "#src:%n%a")) "/home/frank/.config/configs/scripts/display0_okular.sh"))
 
 
   :init

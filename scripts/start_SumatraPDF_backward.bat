@@ -3,7 +3,7 @@ REM echo %2 >> C:\Users\Frank\test.txt
 
 
 REM In Sumatra, set inverse search command to the following:
-REM wscript "C:\Users\Frank\runHidden.vbs" "C:\Users\Frank\configs\scripts\start_Sumatra_backwards.bat" %l %f
+REM wscript "C:\Users\Frank\runHidden.vbs" "C:\Users\Frank\configs\scripts\start_SumatraPDF_backwards.bat" %l %f
 
 set "variable=%2"
 set "variable=%variable:\=/%"
