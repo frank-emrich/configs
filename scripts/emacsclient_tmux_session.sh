@@ -16,7 +16,8 @@ emacsclient -s "$cname" --eval '"Hello"' &> /dev/null
 
 # Start emacs server if there is none for this session
 if [ $? -ne 0 ]; then
-  emacs --daemon=$cname
+  TERM=xterm-direct emacs --daemon=$cname
 fi
 
-exec emacsclient -s "$cname" -t $*
+# TODO: instead of xterm-direct, pass tmux-direct if in tmux pane and COLORTERM set to truecolor
+TERM=xterm-direct exec emacsclient -s "$cname" -t $*
