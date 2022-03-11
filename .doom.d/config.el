@@ -540,7 +540,13 @@ to run the replacement."
 
 (global-set-key (kbd "C-c R") #'ivy-resume)
 
-
+(defun my/start-named-server ()
+  (require 'server)
+  (unless (server-running-p)
+    (let1 (session (get-tmux-session))
+          (setq server-name (if session (concat "tmux-" session)
+                              "notmux")))
+    (server-start)))
 
 (if window-system
     (progn

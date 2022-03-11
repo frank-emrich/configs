@@ -87,6 +87,7 @@
   ;; (add-hook 'LaTeX-mode-hook 'TeX-view-update)
 
   (add-hook 'LaTeX-mode-hook #'my/fix-latex-key-bindings)
+  (add-hook 'LaTeX-mode-hook #'my/start-named-server)
 
   (advice-add 'TeX-command-run-all :before #'save-server-name)
   ;; (define-key LaTeX-mode-map (kbd "\"") nil)
