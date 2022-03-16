@@ -244,11 +244,11 @@ else
   fi
 fi
 
-#start tmux on ssh login into this machine
-if [ -z "$TMUX" ] && [ -n "$SSH_TTY" ] && [[ $- =~ i ]]; then
-    tmux attach-session || tmux new-session -s "misc"
-    #exit
-else
-  #unset TMUX, was probably due to SSH forwarding
-  #unset TMUX
-fi
+# start tmux on ssh login into this machine
+# if [ -z "$TMUX" ] && [ -n "$SSH_TTY" ] && [[ $- =~ i ]]; then
+#     tmux attach-session || tmux new-session -s "misc"
+#     #exit
+# else
+#   #unset TMUX, was probably due to SSH forwarding
+#   #unset TMUX
+# fi
