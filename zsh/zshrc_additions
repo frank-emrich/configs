@@ -231,13 +231,17 @@ if [ -n "$TMUX" ]; then
 fi
 
 
-
-
-if which "powerline" > /dev/null ; then
-    powerline-daemon -q
-    root_path=$(pip3 show powerline-status | grep "Location: " | cut -c 11-)
-    . ${root_path}/powerline/bindings/zsh/powerline.zsh
-
+if [[ "$TERM" == "dumb" ]] ; then
+  # For Emacs TRAMP
+  unsetopt zle
+  PS1='$ '
+else
+  if which "powerline" > /dev/null ; then
+      powerline-daemon -q
+      root_path=$(pip3 show powerline-status | grep "Location: " | cut -c 11-)
+      . ${root_path}/powerline/bindings/zsh/powerline.zsh
+  
+  fi
 fi
 
 #start tmux on ssh login into this machine
