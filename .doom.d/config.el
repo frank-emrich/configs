@@ -116,12 +116,12 @@
 
 
 
-;; (after! lsp-mode
-;;   (setq lsp-diagnostics-provider :flycheck)
-;;  ;; (lsp-ui-doc-enable nil)
-;;   )
-;;
-;;
+(after! lsp-mode
+  ;; Don't enable lsp lens by default (if available)
+  ;; Can be manually triggered with lsp-lens-mode
+  (setq lsp-lens-enable nil))
+
+
 
 (after! lsp-ui
                                         ; Don't update flycheck immediately, but according to the value of
