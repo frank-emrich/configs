@@ -119,7 +119,10 @@
 (after! lsp-mode
   ;; Don't enable lsp lens by default (if available)
   ;; Can be manually triggered with lsp-lens-mode
-  (setq lsp-lens-enable nil))
+  (setq lsp-lens-enable nil)
+
+  ;; Dont' show info (like function signatures) in the modeline when hovering on a variable
+  (setq lsp-eldoc-enable-hover nil))
 
 
 
