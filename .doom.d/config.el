@@ -117,6 +117,10 @@
 
 
 (after! lsp-mode
+  ;; See
+  ;; https://emacs-lsp.github.io/lsp-mode/tutorials/how-to-turn-off/
+
+
   ;; Don't enable lsp lens by default (if available)
   ;; Can be manually triggered with lsp-lens-mode
   (setq lsp-lens-enable nil)
