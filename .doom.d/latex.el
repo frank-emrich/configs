@@ -60,10 +60,16 @@
    '("remote_Okular" ("/home/frank/.config/configs/scripts/remote_okular.sh --unique %o" (mode-io-correlate "#src:%n%a")) "/home/frank/.config/configs/scripts/remote_okular.sh"))
   (add-to-list
    'TeX-view-program-list
-   '("remote_SumatraPDF frank-pc TS" ("/home/frank/.config/configs/scripts/remote_SumatraPDF_forward.sh frank-pc -reuse-instance %o" (mode-io-correlate " -forward-search \"%b\" %n") ) "/home/frank/.config/configs/scripts/remote_SumatraPDF_forward.sh"))
+   '("SumatraPDF frank-pc TS direct" ("/home/frank/.config/configs/scripts/remote_SumatraPDF_forward.sh direct frank-pc -reuse-instance %o" (mode-io-correlate " -forward-search \"%b\" %n") ) "/home/frank/.config/configs/scripts/remote_SumatraPDF_forward.sh"))
   (add-to-list
    'TeX-view-program-list
-   '("remote_SumatraPDF frank-p50 TS" ("/home/frank/.config/configs/scripts/remote_SumatraPDF_forward.sh frank-p50 -reuse-instance %o" (mode-io-correlate " -forward-search \"%b\" %n") ) "/home/frank/.config/configs/scripts/remote_SumatraPDF_forward.sh"))
+   '("SumatraPDF frank-p50 TS direct" ("/home/frank/.config/configs/scripts/remote_SumatraPDF_forward.sh direct frank-p50 -reuse-instance %o" (mode-io-correlate " -forward-search \"%b\" %n") ) "/home/frank/.config/configs/scripts/remote_SumatraPDF_forward.sh"))
+  (add-to-list
+   'TeX-view-program-list
+   '("SumatraPDF frank-pc TS rsync" ("/home/frank/.config/configs/scripts/remote_SumatraPDF_forward.sh rsync frank-pc -reuse-instance %o" (mode-io-correlate " -forward-search \"%b\" %n") ) "/home/frank/.config/configs/scripts/remote_SumatraPDF_forward.sh"))
+  (add-to-list
+   'TeX-view-program-list
+   '("SumatraPDF frank-p50 TS rsync" ("/home/frank/.config/configs/scripts/remote_SumatraPDF_forward.sh rsync frank-p50 -reuse-instance %o" (mode-io-correlate " -forward-search \"%b\" %n") ) "/home/frank/.config/configs/scripts/remote_SumatraPDF_forward.sh"))
   (add-to-list
      'TeX-view-program-list
      '("display0_Okular" ("/home/frank/.config/configs/scripts/display0_okular.sh --noraise --unique %o" (mode-io-correlate "#src:%n%a")) "/home/frank/.config/configs/scripts/display0_okular.sh"))

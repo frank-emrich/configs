@@ -11,4 +11,4 @@ echo "%variable%"
 
 
 REM echo %variable% >> C:\Users\Frank\test.txt
-wsl ssh -4 frank-lpc.ts.emrich.io /home/frank/.config/configs/scripts/remote_SumatraPDF_backwards.sh "%1" "%variable%"
+wsl ssh -4 frank-lpc.ts.emrich.io /home/frank/.config/configs/scripts/remote_SumatraPDF_backwards.sh "%CD%" "%1" "%variable%"
