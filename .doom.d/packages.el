@@ -49,8 +49,8 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
-(package! windmove)
-;; (package! flycheck)
-(package! visual-regexp)
-(package! visual-regexp-steroids)
-(package! pc-bufsw)
+;; (package! windmove) ; should be included already
+;; (package! flycheck) ; should be included already
+(package! visual-regexp :pin "48457d42a5e0fe10fa3a9c15854f1f127ade09b5")
+(package! visual-regexp-steroids :pin "a6420b25ec0fbba43bf57875827092e1196d8a9e")
+(package! pc-bufsw :pin "a7295e4813d636d5a20605d134acd42e4e4fe8fa")
