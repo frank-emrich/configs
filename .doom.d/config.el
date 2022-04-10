@@ -566,3 +566,49 @@ to run the replacement."
       ))
   ;; osc52 workaround:
   (setq interprogram-cut-function 'osc52-select-text-tmux))
+
+
+;; Remove some of the bindings Doom adds
+(let ((bindings-to-remove
+       '(
+         ("f" . ; file menu
+          (("e" . doom/find-file-in-emacsd)
+           ("E" . doom/browse-in-emacsd)
+           ("l" . counsel-locate)
+           ("p" . doom/find-file-in-private-config)
+           ("P" . doom/open-private-config)
+           ("u" . doom/sudo-this-file)
+           ("U" . doom/sudo-find-file)
+           ("X" . doom/switch-to-scratch-buffer)
+           ("x" . doom/open-scratch-buffer)
+           ))
+         ("s" . ; search
+          (("o" . +lookup/online)
+           ("O" . +lookup/online-select)
+           ("e" . +default/search-emacsd)
+           ("t" . +lookup/dictionary-definition)
+           ("T" . +lookup/synonyms))))))
+
+  (dolist (bindings bindings-to-remove)
+    (let* ((prefix (car bindings))
+           (prefix-keymap (key-binding (kbd (format "C-c %s" prefix)))))
+      (dolist (binding (cdr bindings))
+        (let* ((key (car binding))
+               (expected-function (cdr binding))
+               (binding-string (format "C-c %s %s" prefix key))
+               (kbd-binding (kbd binding-string))
+               (actual-function (key-binding kbd-binding)))
+
+          ;; (message "key is %s, expected function is %s (%s), actual function is %s (%s)"
+          ;;          key expected-function
+          ;;          (type-of expected-function)
+          ;;          actual-function
+          ;;          (type-of actual-function))
+
+          (if actual-function
+              (if (eq expected-function actual-function)
+                  (define-key prefix-keymap (kbd key) nil)
+                (error "Binding %s does exist, but value is %s when we expected"
+                       binding-string actual-function expected-function))
+            (message "Binding %s does not exist. Already removed?" binding-string)))))))
+
