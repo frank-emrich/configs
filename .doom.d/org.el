@@ -27,6 +27,11 @@
 (add-hook! org-mode #'my/org-setup)
 
 (after! org
+
+
+  ;; prevents org mode from stealing shift + arrow bindings
+  (setq org-support-shift-select 'always)
+
   (defun my/org-create-formula-image
       (old-fun &rest args)
     "The actual org-create-formula-image uses absolute /tmp paths but gets
