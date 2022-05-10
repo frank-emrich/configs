@@ -613,3 +613,9 @@ to run the replacement."
                        binding-string actual-function expected-function))
             (message "Binding %s does not exist. Already removed?" binding-string)))))))
 
+
+(setq mac-command-modifier 'meta)
+(setq mac-control-modifier 'control)
+
+
+(setq split-width-threshold 190)
