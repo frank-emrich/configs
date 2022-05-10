@@ -619,3 +619,93 @@ to run the replacement."
 
 
 (setq split-width-threshold 190)
+
+
+(after! counsel
+  ;; (defun my/id-replace-regexp-in-string (regexp rep string &rest ignored)
+  ;;  (message "I'm just the identity!\n%s" string)
+  ;;  string)
+
+  ;; counsel--elisp-to-pcre turns the input regex (which it expects to use emacs syntax)
+  ;; into a PCRE2 regex. Turning this into the identiy such that we can enter
+  ;; PCRE2 directly. Recall that using lookahead and lookbehind requires ripgrep
+  ;; to be build with that feature enabled
+  ;; (defun counsel--grep-regex (str) str)
+  ;; (defun my/counsel--elisp-to-pcre (oldfun regex &optional look-around)
+  ;;   ;; We turn replace-regexp-in-string into the identity, because
+  ;;   ;; it's used to do the actual emacs regexp -> PCRE2 translation
+  ;;   (message "regex is %s" regex)
+  ;;   (cl-letf
+  ;;       (((symbol-function 'replace-regexp-in-string)
+  ;;         'my/id-replace-regexp-in-string))
+  ;;     (funcall oldfun regex look-around)))
+  ;; (advice-add 'counsel--elisp-to-pcre :around #'my/counsel--elisp-to-pcre)
+
+  ;; (defun counsel--elisp-to-pcre (regex &optional look-around)
+;;   "Convert REGEX from Elisp format to PCRE format, on best-effort basis.
+;; REGEX may be of any format returned by an Ivy regex function,
+;; namely a string or a list.  The return value is always a string.
+
+;; Note that incorrect results may be returned for sufficiently
+;; complex regexes."
+;;   (if (consp regex)
+;;       (if (and look-around
+;;                (or (cdr regex)
+;;                    (not (cdar regex))))
+;;           (concat
+;;            "^"
+;;            (mapconcat
+;;             (lambda (pair)
+;;               (let ((subexp (counsel--elisp-to-pcre (car pair))))
+;;                 (format "(?%c.*%s)"
+;;                         (if (cdr pair) ?= ?!)
+;;                         subexp)))
+;;             regex
+;;             ""))
+;;         (mapconcat
+;;          (lambda (pair)
+;;            (let ((subexp (counsel--elisp-to-pcre (car pair))))
+;;              (if (string-match-p "|" subexp)
+;;                  (format "(?:%s)" subexp)
+;;                subexp)))
+;;          (cl-remove-if-not #'cdr regex)
+;;          ".*"))
+;;     regex))
+;;
+  ;; (defun my/counsel--elisp-to-pcre (regex &optional look-around) regex)
+  (defun my/counsel--grep-regex (str)str)
+
+  (defun my/counsel--ag-extra-switches (regex)
+    "Get additional switches needed for look-arounds."
+    (and (stringp counsel--regex-look-around)
+       ;; using look-arounds
+       (string-match-p "(?<\?[!=]" regex)
+       (concat " " counsel--regex-look-around " ")))
+
+  ;;(defun counsel--elisp-to-pcre (regex &optional look-around) regex)
+
+  (defun my-around/counsel-rg (oldfun &optional initial-input initial-directory extra-rg-args rg-prompt)
+    ;; We turn replace-regexp-in-string into the identity, because
+    ;; it's used to do the actual emacs regexp -> PCRE2 translation
+    ;;(interactive)
+    ;; (message "regex is %s" regex)
+    (cl-letf
+        (((symbol-function 'counsel--grep-regex)
+          'my/counsel--grep-regex)
+      ((symbol-function 'counsel--ag-extra-switches)
+          'my/counsel--ag-extra-switches))
+      (funcall oldfun initial-input initial-directory extra-rg-args rg-prompt)))
+  (advice-add 'counsel-rg :around #'my-around/counsel-rg)
+  ;;
+  ;;(defun counsel--grep-regex (str) str)
+
+
+
+  ;; Can be used to see what is actually executed
+  ;;
+  ;; (defun my/log-counsel-ag-command (cmd)
+  ;;   (message "did following function call %s\n" cmd)
+  ;;   cmd)
+  ;; (advice-add 'counsel--format-ag-command :filter-return #'my/log-counsel-ag-command)
+
+  )
