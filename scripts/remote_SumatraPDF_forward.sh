@@ -11,6 +11,11 @@ function log() {
   echo "$*" | tee ~/remote_SumatraPDF_forward.log
 }
 
+function run() {
+  echo "running $@"
+  "$@"
+}
+
 log "pwd is" "$PWD"
 log "3 is" "$3"
 log "4 is" "$4"
@@ -59,7 +64,7 @@ SSH_CONTROL_MASTER_ARGS=(
  '-oControlMaster=auto'
  '-oControlPersist=10m'
 )
-ALL_SSH_CONTROL_MASTER_ARGS="$SSH_CONTROL_MASTER_ARGS[0] $SSH_CONTROL_MASTER_ARGS[1] $SSH_CONTROL_MASTER_ARGS[2]"
+ALL_SSH_CONTROL_MASTER_ARGS="${SSH_CONTROL_MASTER_ARGS[0]} ${SSH_CONTROL_MASTER_ARGS[1]} ${SSH_CONTROL_MASTER_ARGS[2]}"
 
 gunzip -f -k $synctex_gz_file
 sed -i 's|'"$PWD"'/||' "$synctex_file"
@@ -67,8 +72,8 @@ sed -i 's|'"$PWD"'/||' "$synctex_file"
 if [[ "$method" = "direct" ]] ; then
   windows_target_dir='V:\\'"$project_folder_backslash"
 elif [[ "$method" = "rsync" ]] ; then
-  # TODO this breaks when parent directories are missing!
-  rsync --rsh "ssh $ALL_SSH_CONTROL_MASTER_ARGS" --rsync-path="wsl rsync" "$pdf_filename" "$synctex_file" "${windows_host}.ts.emrich.io:${WSL_RSYNC_TARGET_DIR}/$project_folder"
+  run ssh "${SSH_CONTROL_MASTER_ARGS[@]}" "${windows_host}.ts.emrich.io" wsl mkdir -p "${WSL_RSYNC_TARGET_DIR}/$project_folder"
+  run rsync --rsh "ssh $ALL_SSH_CONTROL_MASTER_ARGS" --rsync-path="wsl rsync" "$pdf_filename" "$synctex_file" "${windows_host}.ts.emrich.io:${WSL_RSYNC_TARGET_DIR}/$project_folder"
   windows_target_dir="$WINDOWS_RSYNC_TARGET_DIR"'\\'"$project_folder_backslash"
 else
   echo "unknown method"
