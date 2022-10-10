@@ -515,7 +515,8 @@ to run the replacement."
 
 (define-key global-map (kbd "C-c C-s") 'yas-expand)
 
-;; pc-bufsw does weird stuff with autoloads that break Doom (als see cli.el).
+;; pc-bufsw does weird stuff with autoloads that break Doom
+;; (also see setup of doom-autoloads-excluded-packages in init.el).
 ;; Therefore, we (load ...) the file here directly
 (defun my/init-pc-bufsw ()
   (load "pc-bufsw.el")

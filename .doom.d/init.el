@@ -14,6 +14,12 @@
 ;;      Alternatively, press 'gd' (or 'C-c c d') on a module to browse its
 ;;      directory (for easy access to its source code).
 
+;; pc-bufsw does something weird with autoloads. The following ensures that we
+;; skip it when putting stuff into Doom's autloads.el
+;; Note that we put this in init.el, which is loaded in cli mode, too.
+(with-eval-after-load "lib/autoloads.el"
+  (add-to-list 'doom-autoloads-excluded-packages "pc-bufsw"))
+
 (doom! :input
        ;;chinese
        ;;japanese
