@@ -78,6 +78,9 @@
    '("Skim sync" ("/Applications/Skim.app/Contents/SharedSupport/displayline -r %n %o %b") "/Applications/Skim.app/Contents/SharedSupport/displayline"))
 
 
+
+  (setq LaTeX-item-indent 0)
+  (setq LaTeX-indent-level 0)
   :init
   ;; (add-hook 'LaTeX-mode-hook
   ;;           (lambda()
@@ -100,6 +103,9 @@
 
   (add-hook 'LaTeX-mode-hook #'my/fix-latex-key-bindings)
   (add-hook 'LaTeX-mode-hook #'my/start-named-server)
+  (add-hook 'LaTeX-mode-hook
+          (lambda ()
+            (kill-local-variable 'line-indent-function)))
 
   (advice-add 'TeX-command-run-all :before #'save-server-name)
   ;; (define-key LaTeX-mode-map (kbd "\"") nil)
