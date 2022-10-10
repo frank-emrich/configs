@@ -709,3 +709,82 @@ to run the replacement."
   ;; (advice-add 'counsel--format-ag-command :filter-return #'my/log-counsel-ag-command)
 
   )
+
+;;
+;; Spelling
+;;
+
+
+(defun my/string-list-p (list)
+  (and (listp list) (seq-every-p #'stringp list)))
+
+;; ispell-buffer-session-localwords is safe for any list of strings
+(put 'ispell-buffer-session-localwords 'safe-local-variable #'my/string-list-p)
+
+(put 'ispell-local-dictionary 'safe-local-variable #'string-p)
+
+
+(defun update-ispell-local-personal-dictionary ()
+  ;; (ispell-change-dictionary
+  (if ispell-local-dictionary
+      (ispell-change-dictionary ispell-local-dictionary))
+  (let ((dict (or ispell-local-dictionary ispell-dictionary)))
+    (if (and dict (boundp 'ispell-personal-dictionary))
+        (setq ispell-personal-dictionary
+              (expand-file-name (concat "~/.aspell." dict ".pws"))))))
+
+(after! ispell
+  (add-hook 'hack-local-variables-hook #'update-ispell-local-personal-dictionary)
+  (setq ispell-dictionary "en_US")
+
+  (let ((new-skips (car ispell-tex-skip-alists)))
+    (add-to-list 'new-skips '("\\\\citet" TeX-ispell-tex-arg-end 1 1 0))
+    (add-to-list 'new-skips '("\\\\citep" TeX-ispell-tex-arg-end 1 1 0))
+    (add-to-list 'new-skips '("\\\\input" TeX-ispell-tex-arg-end 0 1 0))
+    (setcar ispell-tex-skip-alists new-skips)))
+
+
+
+(defun *-ispell-buffer-local-words-list ()
+  (let (words)
+    (or ispell-buffer-local-name
+        (setq ispell-buffer-local-name (buffer-name)))
+    (save-excursion
+      (goto-char (point-min))
+      (while (search-forward ispell-words-keyword nil t)
+        (let ((end (point-at-eol))
+              (ispell-casechars (ispell-get-casechars))
+              string)
+          (while (re-search-forward " *\\([^ ]+\\)" end t)
+            (setq string (match-string-no-properties 1))
+            (if (and (< 1 (length string))
+                     (equal 0 (string-match ispell-casechars string)))
+                (push string words))))))
+    words))
+
+
+(defun my/ispell-move-localwords-to-dir-locals ()
+  (interactive)
+  (unless (buffer-file-name)
+    (user-error "buffer not attached to file"))
+  (let ((words (*-ispell-buffer-local-words-list)))
+    (save-excursion
+      (add-dir-local-variable
+       'latex-mode ; or make mode-independent by setting to nil
+       'ispell-buffer-session-localwords
+       (setq ispell-buffer-session-localwords
+             (sort
+              (cl-remove-duplicates
+               (append ispell-buffer-session-localwords words)
+               :test #'string=)
+              (lambda (s1 s2) (string-collate-lessp s1 s2 "POSIX" t))
+              )))
+      (when (y-or-n-p "Save .dir-locals.el?")
+        (save-buffer))
+      (bury-buffer))
+    (or ispell-buffer-local-name
+        (setq ispell-buffer-local-name (buffer-name)))
+    (save-excursion
+      (goto-char (point-min))
+      (while (search-forward ispell-words-keyword nil t)
+        (delete-region (point-at-bol) (1+ (point-at-eol)))))))
