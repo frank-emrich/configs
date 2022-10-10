@@ -73,6 +73,9 @@
   (add-to-list
      'TeX-view-program-list
      '("display0_Okular" ("/home/frank/.config/configs/scripts/display0_okular.sh --noraise --unique %o" (mode-io-correlate "#src:%n%a")) "/home/frank/.config/configs/scripts/display0_okular.sh"))
+  (add-to-list
+   'TeX-view-program-list
+   '("Skim sync" ("/Applications/Skim.app/Contents/SharedSupport/displayline -r %n %o %b") "/Applications/Skim.app/Contents/SharedSupport/displayline"))
 
 
   :init
