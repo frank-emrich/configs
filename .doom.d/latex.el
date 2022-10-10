@@ -110,3 +110,46 @@
   ;; do not format superscripts and subscripts as such
   (setq font-latex-fontify-script nil)
   )
+
+(defun my/LaTeX-should-format-at-point (point)
+  (save-excursion
+    (goto-char point)
+    (and (not (texmathp)) (string-equal (LaTeX-current-environment) "document"))))
+
+
+(defun my/LaTeX-format ()
+  (interactive)
+
+  (if (use-region-p)
+      (call-interactively 'LaTeX-fill-region)
+    (save-mark-and-excursion
+      (goto-char (point-min))
+
+      (while (< (point) (point-max))
+        (forward-sentence)
+
+        (if (and (not (TeX-current-macro)) (my/LaTeX-should-format-at-point (point)))
+            (progn
+              (backward-char)
+              (if (or (looking-at "? ") (looking-at "\. ") (looking-at "! "))
+                  (progn
+                    (forward-char)
+                    (insert "\n%\n")
+                    (delete-char 1 nil))
+                (forward-char))
+
+              ))))
+    (goto-char (point-min))
+    (while (< (point) (point-max))
+      (forward-sentence)
+
+      (let ((my-sentence-end (point))
+            (my-sentence-start (save-mark-and-excursion (backward-sentence) (point))))
+
+        (if (and (not (TeX-current-macro)) (my/LaTeX-should-format-at-point (point)))
+            (progn
+              (LaTeX-fill-region my-sentence-start my-sentence-end)
+              ;; wrapping the filling in save-excursion doesn't work
+              (if (<= my-sentence-end (point-max))
+                  (goto-char my-sentence-end))))))))
+
