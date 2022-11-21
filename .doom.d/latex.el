@@ -144,7 +144,8 @@
                     (delete-char 1 nil))
                 (forward-char))
 
-              ))))
+              )))
+
     (goto-char (point-min))
     (while (< (point) (point-max))
       (forward-sentence)
@@ -152,10 +153,9 @@
       (let ((my-sentence-end (point))
             (my-sentence-start (save-mark-and-excursion (backward-sentence) (point))))
 
-        (if (and (not (TeX-current-macro)) (my/LaTeX-should-format-at-point (point)))
+        (if (and (not (TeX-current-macro)) (my/LaTeX-should-format-at-point (point)) (my/LaTeX-should-format-at-point my-sentence-start))
             (progn
               (LaTeX-fill-region my-sentence-start my-sentence-end)
               ;; wrapping the filling in save-excursion doesn't work
               (if (<= my-sentence-end (point-max))
-                  (goto-char my-sentence-end))))))))
-
+                  (goto-char my-sentence-end)))))))))
