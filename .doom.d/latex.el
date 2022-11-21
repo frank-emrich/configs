@@ -79,8 +79,6 @@
 
 
 
-  (setq LaTeX-item-indent 0)
-  (setq LaTeX-indent-level 0)
   :init
   ;; (add-hook 'LaTeX-mode-hook
   ;;           (lambda()
@@ -116,6 +114,18 @@
   ;; do not format superscripts and subscripts as such
   (setq font-latex-fontify-script nil)
   )
+
+
+(use-package! latex
+  :defer t
+  :after tex
+  :config
+  (setq LaTeX-item-indent 0)
+  (setq LaTeX-indent-level 0)
+  (add-to-list 'LaTeX-fill-excluded-macros "citep")
+  (add-to-list 'LaTeX-fill-excluded-macros "citet")
+)
+
 
 (defun my/LaTeX-should-format-at-point (point)
   (save-excursion
