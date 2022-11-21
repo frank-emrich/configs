@@ -1,14 +1,18 @@
-personal_ws-1.1 en 13 
-monomorphically
-polymorphism
-kinded
+personal_ws-1.1 en 18 
 Compositional
 Emrich
-monomorphic
-extensibility
+OCaml
 arity
 decidability
-polymorphically
-injective
-instantiation
+extensibility
 functors
+impredicativity
+injective
+injectively
+instantiation
+kinded
+monomorphic
+monomorphically
+polymorphically
+polymorphism
+satisfiable
