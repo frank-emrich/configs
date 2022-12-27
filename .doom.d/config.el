@@ -714,6 +714,10 @@ to run the replacement."
 
   )
 
+
+;; FIXME proper lazy loading
+(require 'links-mode)
+
 ;;
 ;; Spelling
 ;;
