@@ -1,6 +1,7 @@
 #!/bin/bash
 
 
+# TODO: add inclusion of ~/.config/configs/path_additions_login_only
 target="$PWD"
 
 script_path=$(dirname "$0" | xargs realpath )

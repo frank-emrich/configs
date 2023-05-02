@@ -1,0 +1,18 @@
+# Loaded both by zsh and bash, but only in login shells
+# This file must be bash and zsh compatible
+
+
+additional_paths=(
+    "$HOME/bin"
+    "$HOME/.local/bin"
+    "$HOME/.cabal/bin"
+    "$HOME/.cargo/bin"
+)
+
+for d in "${additional_paths[@]}"; do
+    if ! [ -d "$d" ]; then continue; fi # skip nonexistent directory
+    case ":$PATH:" in
+      *":$d:"*) :;; #  Don't append if already present
+      *) PATH=$PATH:$d;;
+    esac
+  done
