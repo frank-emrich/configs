@@ -168,4 +168,4 @@ install_symlink konsole/konsoleui.rc ~/.local/share/kxmlgui5/konsole/konsoleui.r
 # SSH config
 mkdir -p ~/.ssh/controlmasters
 touch ~/.ssh/config
-append_line_if_not_present "Include $target/ssh/shared.config" "~/.ssh/config"
+append_line_if_not_present "Include $target/ssh/shared.config" ~/.ssh/config
