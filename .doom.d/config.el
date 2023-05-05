@@ -180,6 +180,11 @@
 ;; TODO move to rust-specific file?
 (add-hook 'rust-mode-hook 'eglot-ensure)
 
+;; tramp
+(after! tramp
+  (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
+
+
 ;; Version control/magit
 
 
