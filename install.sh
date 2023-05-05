@@ -52,6 +52,19 @@ function install_symlink {
 
 }
 
+function append_line_if_not_present {
+  line="$1"
+  file="$2"
+
+
+
+  if grep -q "${line}" "${file}"; then
+      ok "Line $line already present in $file"
+  else
+      echo "Appending  '$line' to $file"
+      echo "$line" >> "$file"
+  fi
+}
 
 function install_source {
   source_to="$target/$1"
@@ -151,3 +164,7 @@ mkdir -p ~/.local/share/kxmlgui5/konsole
 install_symlink konsole/share ~/.local/share/konsole
 install_symlink konsole/sessionui.rc ~/.local/share/kxmlgui5/konsole/sessionui.rc
 install_symlink konsole/konsoleui.rc ~/.local/share/kxmlgui5/konsole/konsoleui.rc
+
+# SSH config
+mkdir -p ~/.ssh/controlmasters
+append_line_if_not_present "Include $target/ssh/shared.config" "~/.ssh/config"
