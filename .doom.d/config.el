@@ -177,6 +177,8 @@
 (load "~/.doom.d/latex")
 (load "~/.doom.d/org")
 
+;; TODO move to rust-specific file?
+(add-hook 'rust-mode-hook 'eglot-ensure)
 
 ;; Version control/magit
 
