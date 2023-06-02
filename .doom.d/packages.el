@@ -54,3 +54,5 @@
 (package! visual-regexp :pin "48457d42a5e0fe10fa3a9c15854f1f127ade09b5")
 (package! visual-regexp-steroids :pin "a6420b25ec0fbba43bf57875827092e1196d8a9e")
 (package! pc-bufsw :pin "a7295e4813d636d5a20605d134acd42e4e4fe8fa")
+(package! wat-mode :recipe (:host github :repo "devonsparks/wat-mode"  ) :pin "46b4df8...")
+
