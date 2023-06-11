@@ -213,10 +213,6 @@
   (setq magit-display-file-buffer-function 'magit-display-file-buffer-other-window)
   (define-key magit-hunk-section-map (kbd "RET") 'magit-diff-visit-file-other-window)
 
-  ;; add switches for rebasing and autostashing to pull menu
-  (magit-define-popup-switch 'magit-pull-popup ?r "Rebase" "--rebase")
-  (magit-define-popup-switch 'magit-pull-popup ?a "Autostash" "--autostash")
-
   ;; (transient-append-suffix 'magit-pull "-u"
   ;;   '("-r" "Rebase" "--rebase"))
 
