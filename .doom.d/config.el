@@ -799,3 +799,6 @@ to run the replacement."
       (goto-char (point-min))
       (while (search-forward ispell-words-keyword nil t)
         (delete-region (point-at-bol) (1+ (point-at-eol)))))))
+
+(use-package! wat-mode
+  :commands wat-mode)
