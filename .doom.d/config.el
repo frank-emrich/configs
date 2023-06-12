@@ -811,3 +811,16 @@ to run the replacement."
                             (list
                              (cons wasmfx-instrs 'font-lock-builtin-face)
                              (cons wasmfx-misc 'font-lock-keyword-face)))))
+
+;; In general, do not ask for confirmation to exit
+(setq confirm-kill-emacs nil)
+
+;; We use this version that *does* ask for confirmation
+;; when quitting from a key binding
+(defun my/save-buffers-kill-terminal (&optional arg)
+  (interactive "P")
+  (let ((confirm-kill-emacs 'y-or-n-p))
+        (funcall-interactively 'save-buffers-kill-terminal arg)))
+(define-key global-map
+  [remap save-buffers-kill-terminal]
+  'my/save-buffers-kill-terminal)
