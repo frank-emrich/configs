@@ -801,4 +801,12 @@ to run the replacement."
         (delete-region (point-at-bol) (1+ (point-at-eol)))))))
 
 (use-package! wat-mode
-  :commands wat-mode)
+  :commands wat-mode
+  :config
+  (require 'rx)
+  (let ((wasmfx-instrs (rx (or "cont.new" "cont.bind" "resume" "suspend")))
+        (wasmfx-misc (rx (or "cont" "ref" "tag"))))
+    (font-lock-add-keywords 'wat-mode
+                            (list
+                             (cons wasmfx-instrs 'font-lock-builtin-face)
+                             (cons wasmfx-misc 'font-lock-keyword-face)))))
