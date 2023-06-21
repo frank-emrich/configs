@@ -111,6 +111,9 @@
   ;; (define-key LaTeX-mode-map (kbd "C-c RET") nil)
   ;; (define-key LaTeX-mode-map (kbd "C-c TAB") nil)
 
+
+  (add-hook 'LaTeX-mode-hook (lambda () (flycheck-mode 0)))
+
   ;; do not format superscripts and subscripts as such
   (setq font-latex-fontify-script nil)
   )
