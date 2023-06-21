@@ -327,6 +327,9 @@ _p_rev       _u_pper                _=_: upper/lower                 _r_esolve m
 ; make regex builder not require escaped \
 (setq reb-re-syntax 'string)
 
+;; Make isearch show match numbers
+(setq isearch-lazy-count t)
+
 (use-package! visual-regexp
   :defer t
   ;; trying to defer this seems to cause trouble
