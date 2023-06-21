@@ -578,6 +578,7 @@ to run the replacement."
   ;; osc52 workaround:
   (setq interprogram-cut-function 'osc52-select-text-tmux))
 
+(after! projectile
 
 ;; Remove some of the bindings Doom adds
 (let ((bindings-to-remove
@@ -598,7 +599,58 @@ to run the replacement."
            ("O" . +lookup/online-select)
            ("e" . +default/search-emacsd)
            ("t" . +lookup/dictionary-definition)
-           ("T" . +lookup/synonyms))))))
+           ("T" . +lookup/synonyms)))
+         ("p" . ; projectile
+          (
+           ;; TODO this doesn't quite work yet
+           ;; ("F" . doom/find-file-in-other-project)
+           ;; ("t" . magit-todos-list)
+           ;; ("x"       . doom/open-project-scratch-buffer)
+           ;; ("X"       . doom/switch-to-project-scratch-buffer)
+           ;; many of the remaining keys are added by inserting
+           ;; projectile-command-map at C-c p! See below
+          ))))
+      (projectile-command-map-bindings-to-remove
+       '(
+         ("!" . projectile-run-shell-command-in-root)
+         ("&" . projectile-run-async-shell-command-in-root)
+         ("E" . projectile-edit-dir-locals)
+         ("S" . projectile-save-project-buffers)
+         ("ESC"     . projectile-project-buffers-other-buffer)
+         ("<left>"  . projectile-previous-project-buffer)
+         ("<right>" . projectile-next-project-buffer)
+         ("C"       . projectile-configure-project)
+         ("D"       . projectile-dired)
+         ("F"       . projectile-find-file-in-known-projects)
+         ("I"       . projectile-ibuffer)
+         ("K"       . projectile-package-project)
+         ("L"       . projectile-install-project)
+         ("P"       . projectile-test-project)
+         ("R"       . projectile-regenerate-tags)
+         ("S"       . projectile-save-project-buffers)
+         ("V"       . projectile-browse-dirty-projects)
+         ("b"       . projectile-switch-to-buffer)
+         ("d"       . projectile-find-dir)
+         ("e"       . projectile-recentf)
+         ("p"       . projectile-switch-project)
+         ("q"       . projectile-switch-open-project)
+         ("m"       . projectile-commander)
+         ("t"       . projectile-toggle-between-implementation-and-test)
+         ("T"       . projectile-find-test-file)
+         ("u"       . projectile-run-project)
+         ("v"       . projectile-vc)
+         ("z"       . projectile-cache-current-file)
+       ))
+      )
+
+
+  (defun remove-binding-if-match (actual-function expected-function keymap key full-binding-string)
+     (if actual-function
+         (if (eq expected-function actual-function)
+             (define-key keymap (kbd key) nil)
+           (error "Binding %s does exist, but value is %s when we expected %s"
+                  full-binding-string actual-function expected-function))
+       (message "Binding %s does not exist. Already removed?" full-binding-string)))
 
   (dolist (bindings bindings-to-remove)
     (let* ((prefix (car bindings))
@@ -609,20 +661,18 @@ to run the replacement."
                (binding-string (format "C-c %s %s" prefix key))
                (kbd-binding (kbd binding-string))
                (actual-function (key-binding kbd-binding)))
+          (remove-binding-if-match actual-function expected-function prefix-keymap key binding-string)))))
 
-          ;; (message "key is %s, expected function is %s (%s), actual function is %s (%s)"
-          ;;          key expected-function
-          ;;          (type-of expected-function)
-          ;;          actual-function
-          ;;          (type-of actual-function))
+  (dolist (p-binding projectile-command-map-bindings-to-remove)
+    (let* ((key (car p-binding))
+           (expected-function (cdr p-binding))
+           (binding-string (format "C-c p %s" key))
+           (actual-function (lookup-key 'projectile-command-map (kbd key))))
+      (remove-binding-if-match actual-function expected-function projectile-command-map key binding-string)))))
 
-          (if actual-function
-              (if (eq expected-function actual-function)
-                  (define-key prefix-keymap (kbd key) nil)
-                (error "Binding %s does exist, but value is %s when we expected"
-                       binding-string actual-function expected-function))
-            (message "Binding %s does not exist. Already removed?" binding-string)))))))
 
+;; insert the map with macro stuff under C-c k
+(define-key global-map (kbd "C-c k") 'kmacro-keymap)
 
 (setq mac-command-modifier 'meta)
 (setq mac-control-modifier 'control)
