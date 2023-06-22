@@ -349,6 +349,9 @@ _p_rev       _u_pper                _=_: upper/lower                 _r_esolve m
     (define-key global-map (kbd "C-M-r") 'vr/isearch-backward)
 )
 
+(after! isearch
+  (define-key isearch-mode-map (kbd "M-s s") 'swiper-isearch-toggle))
+
 ;; remove unused stuff from search map:
 ;; (let (bad-search-keys (list "O"))
 
