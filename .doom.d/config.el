@@ -921,5 +921,14 @@ It handles the case of remote files as well."
 ;;     (treesit-buffer-root-node language)
 ;;     (combobulate-mode))))
 
+(after! flycheck
+(setq flycheck-error-list-format
+  `[("File" 20)
+    ("Line" 5 flycheck-error-list-entry-< :right-align t)
+    ("Col" 3 nil :right-align t)
+    ("Level" 8 flycheck-error-list-entry-level-<)
+    ("ID" 6 t)
+    (,(flycheck-error-list-make-last-column "Message" 'Checker) 0 t)]))
+
 
 (use-package! breadcrumb)
