@@ -446,6 +446,23 @@ to run the replacement."
 	doom-cache-dir)
        (or (get-tmux-session) "notmux")))
 
+;; A recentf-keep predicate that returns false for all remote files (in
+;; particular: tramp files), and defers to recentf-keep-default-predicate
+;; otherwise.
+(defun my/recentf-keep-predicate (file)
+  (cond
+   ((file-remote-p file) nil)
+   (t (recentf-keep-default-predicate file))))
+
+(setq recentf-keep '(my/recentf-keep-predicate))
+
+(defun recentf-keep-default-predicate (file)
+  "Return non-nil if FILE should be kept in the recent list.
+It handles the case of remote files as well."
+  (cond
+   ((file-remote-p file nil t) (file-readable-p file))
+   ((file-remote-p file))
+   ((file-readable-p file))))
 
 
 (defun forward-word (&optional count)
