@@ -880,3 +880,29 @@ to run the replacement."
 (define-key global-map
   [remap save-buffers-kill-terminal]
   'my/save-buffers-kill-terminal)
+;; (require 'tree-sitter)
+;; (defun enable-tree-sitter-if-available ()
+;;   (let ((lang-symbol (alist-get major-mode tree-sitter-major-mode-language-alist)))
+;;       (when lang-symbol
+;;         (tree-sitter-mode t)
+;;         (ts-fold-indicators-mode t))))
+
+;; (add-hook 'prog-mode-hook #'enable-tree-sitter-if-available)
+
+
+;; (when (treesit-available-p)
+;;     (use-package! combobulate)
+;;     (setq treesit-extra-load-path  '("/home/frank/build/emacs-ts-langs/")))
+
+;; (defun my/start-combobulate ()
+;;   (interactive)
+;;   (let1 (language (intern (completing-read
+;;                                "Language: "
+;;                                (mapcar #'treesit-parser-language
+;;                                        (treesit-parser-list)))))
+;;   (when language
+;;     (treesit-buffer-root-node language)
+;;     (combobulate-mode))))
+
+
+(use-package! breadcrumb)

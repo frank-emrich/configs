@@ -55,4 +55,6 @@
 (package! visual-regexp-steroids :pin "a6420b25ec0fbba43bf57875827092e1196d8a9e")
 (package! pc-bufsw :pin "a7295e4813d636d5a20605d134acd42e4e4fe8fa")
 (package! wat-mode :recipe (:host github :repo "devonsparks/wat-mode"  ) :pin "46b4df8...")
+(package! breadcrumb :recipe (:host github :repo "joaotavora/breadcrumb"  ) :pin "dcb6e2e...")
 
+(package! combobulate :pin "582f896...")
