@@ -95,3 +95,32 @@
 ;;(advice-add 'gdb-display-buffer :around #'my/gdb-display-buffer)
 
 (add-hook 'kill-buffer-hook 'comint-write-input-ring)
+
+
+(defhydra gud-hydra
+    (:color pink :hint nil :exit nil)
+    "
+^Execute^    ^Breakpoints^          ^Moving^                           ^Other^
+^^-----------^^---------------------^^-------------------------------^^-------
+_n_ext       _b_reak                _<_: up (outer) frame           _p_rint
+_s_tep       _t_emp break           _<_: down (inner) frame
+_c_ont       ^^                     _l_: refresh/go to line
+_u_ntil      ^^
+_f_inish
+_r_un
+"
+    ("n" gud-next)
+    ("s" gud-step)
+    ("c" gud-cont)
+    ("u" gud-until)
+    ("f" gud-finish)
+    ("r" gud-run)
+    ("b" gud-break)
+    ("t" gud-tbreak)
+    ("l" gud-refresh)
+    ("<" gud-up)
+    (">" gud-down)
+    ("p" gud-print)
+    ("q" nil "cancel" :color blue))
+
+(global-set-key (kbd "C-c d") 'gud-hydra/body)
