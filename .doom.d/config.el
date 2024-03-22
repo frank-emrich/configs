@@ -220,18 +220,7 @@
   ;;   '("-a" "autostash" "--autostash"))
 
   ;; Ask us to save buffers when refreshing/doing anything with magit
-  (setq magit-save-repository-buffers t)
-
-  (let ((magit-post-hooks
-        '(magit-post-commit-hook
-          magit-commit-post-finish-hook
-          magit-post-stage-hook
-          magit-post-unstage-hook
-          magit-post-refresh-hook)))
-    (dolist (hook magit-post-hooks)
-      (progn
-        ;; (message "adding to magit hook")
-        (add-hook hook #'git-gutter:update-all-windows)))))
+  (setq magit-save-repository-buffers t))
 
 (defhydra smerge-hydra
     (:color pink :hint nil :exit t)
