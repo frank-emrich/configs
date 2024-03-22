@@ -56,5 +56,6 @@
 (package! pc-bufsw :pin "a7295e4813d636d5a20605d134acd42e4e4fe8fa")
 (package! wat-mode :recipe (:host github :repo "devonsparks/wat-mode"  ) :pin "46b4df8...")
 (package! breadcrumb :recipe (:host github :repo "joaotavora/breadcrumb"  ) :pin "dcb6e2e...")
+(package! difftastic :recipe (:host github :repo "pkryger/difftastic.el"  ) :pin "763e5f25925a8a625a943953a5f13d21b9a3bc51")
 
 (package! combobulate :pin "582f896...")

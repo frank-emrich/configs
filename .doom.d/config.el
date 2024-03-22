@@ -932,3 +932,13 @@ It handles the case of remote files as well."
 
 
 (use-package! breadcrumb)
+
+(use-package difftastic
+  :bind (:map magit-blame-read-only-mode-map
+         ("D" . difftastic-magit-show)
+         ("S" . difftastic-magit-show))
+  :init
+  (eval-after-load 'magit-diff
+    '(transient-append-suffix 'magit-diff '(-1 -1)
+       [("D" "Difftastic diff (dwim)" difftastic-magit-diff)
+        ("S" "Difftastic show" difftastic-magit-show)])))
