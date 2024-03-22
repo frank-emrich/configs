@@ -920,6 +920,10 @@ It handles the case of remote files as well."
     (,(flycheck-error-list-make-last-column "Message" 'Checker) 0 t)]))
 
 
+
+;; Debugging
+(load-file (concat doom-user-dir "gud.el"))
+
 (use-package! breadcrumb)
 
 (use-package difftastic
