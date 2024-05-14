@@ -930,8 +930,23 @@ It handles the case of remote files as well."
   :bind (:map magit-blame-read-only-mode-map
          ("D" . difftastic-magit-show)
          ("S" . difftastic-magit-show))
+  :config
+  (setq difftastic-display-buffer-function
+        #'my/difftastic-pop-to-buffer)
+  (setq difftastic-requested-window-width-function
+        #'my/difftastic-requested-window-width)
   :init
   (eval-after-load 'magit-diff
     '(transient-append-suffix 'magit-diff '(-1 -1)
        [("D" "Difftastic diff (dwim)" difftastic-magit-diff)
         ("S" "Difftastic show" difftastic-magit-show)])))
+
+(defun my/difftastic-pop-to-buffer (buffer-or-name requested-width)
+  (let ((window (display-buffer-pop-up-frame buffer-or-name '())))
+    (toggle-frame-maximized (window-frame window))
+    (set-window-dedicated-p window t)))
+
+(defun my/difftastic-requested-window-width ()
+  (frame-width))
+
+
