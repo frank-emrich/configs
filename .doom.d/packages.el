@@ -57,5 +57,6 @@
 (package! wat-mode :recipe (:host github :repo "devonsparks/wat-mode"  ) :pin "46b4df8...")
 (package! breadcrumb :recipe (:host github :repo "joaotavora/breadcrumb"  ) :pin "dcb6e2e...")
 (package! difftastic :recipe (:host github :repo "pkryger/difftastic.el"  ) :pin "763e5f25925a8a625a943953a5f13d21b9a3bc51")
+(package! deadgrep :recipe (:host github :repo "Wilfred/deadgrep"  ) :pin "0bf2601ce1d52187b0c589657f7179de5a98dd75")
 
 (package! combobulate :pin "582f896...")
