@@ -25,3 +25,6 @@
 [submodule ".emacs.d/my-elpa-mirror"]
 	path = .emacs.d/my-elpa-mirror
 	url = https://github.com/frank-emrich/my-elpa.git
+[submodule "doomemacs"]
+	path = doomemacs
+	url = https://github.com/doomemacs/doomemacs.git
