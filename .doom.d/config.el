@@ -950,3 +950,16 @@ It handles the case of remote files as well."
   (frame-width))
 
 
+
+(use-package org-drill
+   :config (setq org-drill-save-buffers-after-drill-sessions-p nil)
+)
+(after! org-drill
+  ;; workaround for time format problem when using recent org versions
+  (defun org-drill-time-to-inactive-org-timestamp (time)
+    "Convert TIME into org-mode timestamp."
+    (format-time-string
+     (concat "[" (cdr org-time-stamp-formats) "]")
+     time))
+)
+
